@@ -63,7 +63,7 @@ export function  expisen1(SP){
   dvdp = R*SP.T*Gibbs.Gpp*1.0e-3/(Pn*Pn);
   dpdv = 1.0/dvdp;
   Cp   = -tau*tau*Gibbs.Gtt*R;
-  Cv   = (-tau*tau*Gibbs.Gtt+Npow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
+  Cv   = (-tau*tau*Gibbs.Gtt+Math.pow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
   dpdvs= Cp/Cv*dpdv;
   kappa=-dpdvs*v/SP.P;
   
@@ -103,7 +103,7 @@ export function expisen2(SP){
   dvdp = R*SP.T*Gibbs.Gpp*1.0e-3;
   dpdv = 1.0/dvdp;
   Cp   = -tau*tau*Gibbs.Gtt*R;
-  Cv   = (-tau*tau*Gibbs.Gtt+Npow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
+  Cv   = (-tau*tau*Gibbs.Gtt+Math.pow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
   dpdvs= Cp/Cv*dpdv;
   kappa=-dpdvs*v/SP.P;
   
@@ -187,7 +187,7 @@ export function expisen3h(SP){
   var Helm;
   
   SP1 = {};
-  Helm {};
+  Helm = {};
   
   Tn  = 647.096;
   rhon= 322.0;
@@ -204,7 +204,7 @@ export function expisen3h(SP){
   v    = SP.v;
   dpdd = R*t*rhon*(2.0*dlt*Helm.Fd+dlt*dlt*Helm.Fdd)*1.0e-3;
   dpdv = -dpdd/(rhon*v*v);
-  Cp   = (-tau*tau*Helm.Ftt+Npow(dlt*Helm.Fd-dlt*tau*Helm.Fdt,2)/(2.0*dlt*Helm.Fd+dlt*dlt*Helm.Fdd))*R;
+  Cp   = (-tau*tau*Helm.Ftt+Math.pow(dlt*Helm.Fd-dlt*tau*Helm.Fdt,2)/(2.0*dlt*Helm.Fd+dlt*dlt*Helm.Fdd))*R;
   Cv   = (-tau*tau*Helm.Ftt)*R;
   dpdvs= Cp/Cv*dpdv;
   kappa= -dpdvs*v/p;
@@ -245,7 +245,7 @@ export function expisen5(SP){
   dvdp = R*SP.T*Gibbs.Gpp*1.0e-3;
   dpdv = 1.0/dvdp;
   Cp   = -tau*tau*Gibbs.Gtt*R;
-  Cv   = (-tau*tau*Gibbs.Gtt+Npow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
+  Cv   = (-tau*tau*Gibbs.Gtt+Math.pow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
   dpdvs= Cp/Cv*dpdv;
   kappa=-dpdvs*v/SP.P;
   

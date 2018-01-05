@@ -11,10 +11,11 @@ import {ZPH_5,ZPS_5} from './Aux_5.js'
 import {RegPT} from './Reg_pt.js'
 import {RegPH} from './Reg_ph.js'
 import {RegPS} from './Reg_ps.js'
+import {expisen1,expisen2} from './expisen.js'
 
 var SP= {
-  P: 5, 
-  s: 8,
+  P: 1, 
+  T: 700 
 };
-RegPS(SP)
+expisen2(SP)
 console.log(SP)
