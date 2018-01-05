@@ -172,7 +172,7 @@ function Helm_3(dlt, tau, Helm){
 }
 
 
-function PVT_3(SP){
+export function PVT_3(SP){
   var i;
   var II = [];
   var JJ = [];
@@ -253,7 +253,7 @@ function PVT_3(SP){
   return 1;
 }
 
-function dPdV_3(SP){
+export function dPdV_3(SP){
   var i;
   var II = [];
   var JJ = [];
