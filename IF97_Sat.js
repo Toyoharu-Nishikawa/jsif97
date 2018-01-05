@@ -4,6 +4,7 @@
 /*******************************************************************/
 
 // saturation pressure and temperature based on Eq.(30) and Eq.(31) of IAPWS-IF97
+"use strict"
 export function PsatT(SP){
   var teta;
   var A;

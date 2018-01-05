@@ -8,6 +8,7 @@
 /*************************************/
 /* boundary between regions 2 and 3*/
 /* based on Eqs.(5) and (6) of IAPWS-IF97*/
+"use strict"
 export function Pb23T(SP){
   var P;
   var N1;

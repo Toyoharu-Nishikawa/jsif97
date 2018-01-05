@@ -6,6 +6,7 @@
 /*******************************************************************/
 
 // region 3 based on Eq.(15) of IAPWS-IF97
+"use strict"
 export function region_3(SP){
   var v;
   var T;

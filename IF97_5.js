@@ -4,6 +4,7 @@
 /*******************************************************************/
 
 // region 5 based on Eq.(32) of IAPWS-IF97
+"use strict"
 export function region_5(SP){
   var P;
   var T;
