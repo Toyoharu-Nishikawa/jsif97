@@ -27,14 +27,14 @@ export function ZPH_5(SP){
   for(n=1;n<=10;n++){
     if(region_5(SP)==-1){SP = null;return -1;}
     dlt = H - SP.h;
-    if (fabs(dlt) <= eps){
+    if (Math.abs(dlt) <= eps){
       Flag=1;
       break;
     } 
     SP.T = SP.T + dlt/SP.cp;
   }
   if(Flag==0){
-    console.log("ZPH_5 not converged");
+    console.Math.log("ZPH_5 not converged");
     return -1;
   }  
   return 1;
@@ -66,15 +66,15 @@ export function ZPS_5(SP){
   
   S=SP.s;
   pai=SP.P;
-  SP.T=(S-a*log(SP.P)-c)/b; //1st guess using linear function
+  SP.T=(S-a*Math.log(SP.P)-c)/b; //1st guess using linear function
 
   Flag=0;
   for(n=1;n<=10;n++){
           tau = 1000.0 / SP.T;
-          if(Gibbs_5(pai,tau,&Gibbs)==-1){SP = null;return -1;}
+          if(Gibbs_5(pai,tau,Gibbs)==-1){SP = null;return -1;}
           s1= (tau*Gibbs.Gt - Gibbs.G0) * R;
           dlt = S - s1;
-    if (fabs(dlt) <= eps){
+    if (Math.abs(dlt) <= eps){
       Flag=1;
       break;
     } 
@@ -82,7 +82,7 @@ export function ZPS_5(SP){
     SP.T = SP.T + dlt/dsdt;
    }
   if(Flag==0){
-    console.log("ZPS_5 not converged");
+    console.Math.log("ZPS_5 not converged");
     return -1;
   }
   SP.g  =Gibbs.G0*R*SP.T;
