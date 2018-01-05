@@ -6,10 +6,11 @@ import {PsatT,TsatP} from './IF97_Sat.js'
 import {ZPH_1,ZPS_1} from './Aux_1.js'
 import {ZPH_2,ZPS_2} from './Aux_2.js'
 import {ZHS_2} from './Aux_2HS.js'
+import {VPT_30} from './Aux_3.js'
 
 var SP= {
-  h: 3000, 
-  s: 7,
+  P: 80, 
+  T: 800,
 };
-ZHS_2(SP)
+VPT_30(SP)
 console.log(SP)

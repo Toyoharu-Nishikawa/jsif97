@@ -46,9 +46,6 @@
 /*   below critical pressure)
 /*           
 /*********************************************************************/ 
-#include"IF97_3.h"
-#include"IF97_SAT.h"
-#include"IF97_B23.h"
 
 import {region_3, PVT_3,dPdV_3} from './IF97_3.js'
 import {PsatT,TsatP} from './IF97_Sat.js'

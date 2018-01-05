@@ -26,7 +26,7 @@ export function Pb23T(SP){
   return 1;
 }
 
-export function Tb23P(SteamProp *SP){
+export function Tb23P(SP){
   var D;
   var T;
   var N3;
