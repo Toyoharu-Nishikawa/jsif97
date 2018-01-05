@@ -13,7 +13,7 @@ export function region_1(SP){
   var Gt;
   var Gtt;
   var Gpt;
-  var Gibbs = {};
+  var Gibbs;
 
   P = SP.P;
   T = SP.T;
@@ -26,6 +26,7 @@ export function region_1(SP){
     tau = 1386.0/T;
   }
   R = 0.461526;
+  Gibbs = {};
   if(Gibbs_1(pai, tau, Gibbs)==-1){
     SP = null;
     return -1;
@@ -44,6 +45,7 @@ export function region_1(SP){
   SP.s = (tau * Gt - G0) * R;
   SP.cp = -tau * tau * Gtt * R;
   w2 = Gp * Gp / ((Gp - tau * Gpt)*(Gp - tau * Gpt)/(tau * tau * Gtt)-Gpp)* R * T * 1.0e3;
+  if(w2 <0.0){ w2=0.0;}
   SP.w = Math.sqrt(w2);
   return 1;
 }

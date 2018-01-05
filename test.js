@@ -1,8 +1,9 @@
 import {region_1} from './IF97_1.js'
+import {region_2} from './IF97_2.js'
 
 var SP= {
-  P: 10,
-  T: 300,
+  P: 1,
+  T: 500,
 };
-region_1(SP)
+region_2(SP)
 console.log(SP)
