@@ -8,10 +8,11 @@ import {ZPH_2,ZPS_2} from './Aux_2.js'
 import {ZHS_2} from './Aux_2HS.js'
 import {VPT_30} from './Aux_3.js'
 import {ZPH_5,ZPS_5} from './Aux_5.js'
+import {RegPT} from './Reg_pt.js'
 
 var SP= {
   P: 1, 
-  s: 9.18,
+  T: 1500,
 };
-ZPS_5(SP)
+RegPT(SP)
 console.log(SP)
