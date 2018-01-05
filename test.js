@@ -1,10 +1,11 @@
 import {region_1} from './IF97_1.js'
 import {region_2} from './IF97_2.js'
 import {region_3} from './IF97_3.js'
+import {region_5} from './IF97_5.js'
+import {PsatT,TsatP} from './IF97_Sat.js'
 
 var SP= {
-  v: 1,
-  T: 500,
+  T: 500
 };
-region_3(SP)
+PsatT(SP)
 console.log(SP)
