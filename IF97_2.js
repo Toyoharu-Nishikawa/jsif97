@@ -55,7 +55,7 @@ export function region_2(SP){
   return 1; 
 }
 
-function Gibbs_2(pai,tau,Gibbs){
+export function Gibbs_2(pai,tau,Gibbs){
   var i;
   var J = [];
   var an = [];

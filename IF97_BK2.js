@@ -49,7 +49,7 @@ export function Tps2(SP){
   return 1;
 }
 
-export function Tph2A(SP){
+function Tph2A(SP){
   var i;
   var eta;
   var Hn;
@@ -104,7 +104,7 @@ export function Tph2A(SP){
   return 1;
 }
 
-export function Tph2B(SP){
+function Tph2B(SP){
   var i;
   var eta;
   var Hn;
@@ -162,7 +162,7 @@ export function Tph2B(SP){
   return 1;
 }
 
-export function Tph2C(SP){
+function Tph2C(SP){
   var i;
   var eta;
   var Hn;
@@ -206,7 +206,7 @@ export function Tph2C(SP){
 }
 
 
-export function Tps2A(SP){
+function Tps2A(SP){
   var i;
   var Sn;
   var sigma;
@@ -276,7 +276,7 @@ export function Tps2A(SP){
   return 1;
 }
 
-export function Tps2B(SP){
+function Tps2B(SP){
   var i;
   var Sn;
   var sigma;
@@ -342,7 +342,7 @@ export function Tps2B(SP){
   return 1;
 }
 
-export function Tps2C(SP){
+function Tps2C(SP){
   var i;
   var Sn;
   var sigma;
