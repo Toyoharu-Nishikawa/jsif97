@@ -71,7 +71,7 @@ export function region_3(SP){
 }
 
 
-function Helm_3(dlt, tau, Helm){
+export function Helm_3(dlt, tau, Helm){
   var i;
   var II = [];
   var JJ = [];
