@@ -9,8 +9,8 @@
 /* Backward functions for region 1*/
 /* iteration process */
 "use strict" 
-import {Tph1,Tps1} from "./IF97_BK2.js" 
-import {region_1} from "./IF97_1.js" 
+import {Tph1,Tps1} from "./IF97_BK1.js" 
+import {region_1,Gibbs_1} from "./IF97_1.js" 
 export function ZPH_1(SP){
   var n;
   var Flag;
@@ -27,7 +27,7 @@ export function ZPH_1(SP){
   for(n=1;n<=10;n++){
     if(region_1(SP)==-1){SP = null;return -1;}
     dlt = H - SP.h;
-    if (fabs(dlt) <= eps){
+    if (Math.abs(dlt) <= eps){
       Flag=1;
       break;
     } 
@@ -81,7 +81,7 @@ export function ZPS_1(SP){
     Gibbs_1(pai,tau,Gibbs);
     s1= (tau*Gibbs.Gt - Gibbs.G0) * R;
     dlt = S - s1;
-    if (fabs(dlt) <= eps){
+    if (Math.abs(dlt) <= eps){
       Flag=1;
       break;
     } 
@@ -101,7 +101,7 @@ export function ZPS_1(SP){
   SP.cp = -tau*tau * Gibbs.Gtt * R;
   w2 = Gibbs.Gp*Gibbs.Gp/(Math.pow(Gibbs.Gp-tau*Gibbs.Gpt,2)/(tau*tau*Gibbs.Gtt)-Gibbs.Gpp)*R*T*1e+3;
   if (w2 < 0.0) w2=0.0;
-  SP.w  = sqrt(w2);
+  SP.w  = Math.sqrt(w2);
   
   return 1;
   }

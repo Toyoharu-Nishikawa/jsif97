@@ -50,7 +50,7 @@ export function region_1(SP){
   return 1;
 }
 
-function Gibbs_1(pai, tau, Gibbs){
+export function Gibbs_1(pai, tau, Gibbs){
   var i;
   var II = [] // lengthen is 35
   var JJ = [] // lengthen is 35
