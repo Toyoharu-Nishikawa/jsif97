@@ -3,14 +3,6 @@
 /*  (given P and S find the region)
 /*******************************************************************/
 
-include"IF97_1.h"
-#include"IF97_2.h"
-#include"IF97_3.h"
-#include"IF97_SAT.h"
-#include"IF97_5.h"
-#include"IF97_B23.h"
-#include"AUX_3.h"
-
 //     M= 1: region 1
 //        2: region 2
 //       12: wet steam region below 350 degC
@@ -33,7 +25,7 @@ import {Vsatg_3,Vsatl_3} from "./Aux_3.js"
 
 "use strict"
 
-var RegPS(SteamProp *SP){
+export function RegPS(SP){
   /* input P: MPa, S: kJ/kgK */
   /* output M                */
   var S;
@@ -42,7 +34,7 @@ var RegPS(SteamProp *SP){
   var Stest;
   var SP1;
   
-  SP1 = null;
+  SP1 = {};
   
   S=SP.s;
   P=SP.P;

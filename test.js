@@ -10,10 +10,11 @@ import {VPT_30} from './Aux_3.js'
 import {ZPH_5,ZPS_5} from './Aux_5.js'
 import {RegPT} from './Reg_pt.js'
 import {RegPH} from './Reg_ph.js'
+import {RegPS} from './Reg_ps.js'
 
 var SP= {
-  P: 16, 
-  h: 1650,
+  P: 5, 
+  s: 8,
 };
-RegPH(SP)
+RegPS(SP)
 console.log(SP)
