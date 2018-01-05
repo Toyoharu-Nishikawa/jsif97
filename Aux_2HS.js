@@ -48,7 +48,7 @@ function deri_2HS(SP){
   pai=SP.P;
   tau=540.0/SP.T;
   
-  Gibbs = null;
+  Gibbs = {};
   if(Gibbs_2(pai,tau,Gibbs)==-1){SP = null;return -1;}
   
   dhdt=-R*tau*tau*Gibbs.Gtt;
@@ -84,7 +84,7 @@ function ZsatS(SP){
   t1=273.16; //start from triple povar
   dt=0.01;
   
-  SP1 =null;
+  SP1 = {};
   
   S=SP.s;
   SP1.T=t1;
@@ -108,7 +108,7 @@ function ZsatS(SP){
     s1=s2;
   }
   if(Flag==0){
-    console.log("ZsatS not converged");
+    console.Math.log("ZsatS not converged");
     return -1;
   }
   SP.T=t2;
@@ -149,7 +149,7 @@ function ZmaxS(SP){
   gg = 235.9643342  ;
 
   if(S>=s100){
-    p=exp(((S*aa+bb)*S+cc)*S+dd); // approximation of isotherm 800 degC
+    p=Math.exp(((S*aa+bb)*S+cc)*S+dd); // approximation of isotherm 800 degC
     t=1073.15;
   }
   else{
@@ -235,9 +235,9 @@ export function ZHS_2(SP){
   var SP2;
   var SP3;
   
-  SP1 = null;
-  SP2 = null;
-  SP3 = null;
+  SP1 = {};
+  SP2 = {};
+  SP3 = {};
   
   S=SP.s;
   H=SP.h;
@@ -299,10 +299,10 @@ export function ZHS_2(SP){
     //first guess
     rdeps=(H-hsat)/(hmax-hsat);
     t=rdeps*(tmax-tsat)+tsat;
-    pmaxl=log(pmax);
-    psatl=log(psat);
+    pmaxl=Math.log(pmax);
+    psatl=Math.log(psat);
     p=rdeps*(pmaxl-psatl)+psatl;
-    p=exp(p);
+    p=Math.exp(p);
     for(n=1;n<=20;n++){
       SP3.P=p;
       SP3.T=t;
@@ -334,7 +334,7 @@ export function ZHS_2(SP){
       t   =t-delt;
     }
     if(Flag==0){
-      console.log("ZHS_2 not converged, dry region");
+      console.Math.log("ZHS_2 not converged, dry region");
       return -1;
     }
   }
@@ -347,8 +347,8 @@ export function ZHS_2(SP){
       dm=(d1+d2)*0.5;
       SP1.T=dm;
       SP2.T=dm;
-      PsatT(&SP1);
-      PsatT(&SP2);
+      PsatT(SP1);
+      PsatT(SP2);
       p=SP1.P;
       region_1(SP1);
       region_2(SP2);
