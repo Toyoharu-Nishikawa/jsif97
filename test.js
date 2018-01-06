@@ -13,13 +13,15 @@ import {RegPH} from './Reg_ph.js'
 import {RegPS} from './Reg_ps.js'
 import {expisen1,expisen2} from './expisen.js'
 import {satproP} from './satproP.js'
+import {satproT} from './satproT.js'
 
 var P = 80;
+var T = 500;
 var SP= {
   P: 1, 
   T: 700 
 };
 var SPl={}, SPg={};
-satproP(P,SPl,SPg);
+satproT(T,SPl,SPg);
 console.log(SPl,SPg)
 
