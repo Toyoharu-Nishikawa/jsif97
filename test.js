@@ -18,11 +18,12 @@ import {propPT} from './propPT.js'
 import {propPH} from './propPH.js'
 import {propPS} from './propPS.js'
 import {propHS} from './propHS.js'
+import {viscos, conduc} from './transp.js'
 
 var SP= {
-  h: 2500, 
-  s: 6 
+  T: 800, 
+  v: 0.36 
 };
-propHS(SP);
+conduc(SP);
 console.log(SP);
 
