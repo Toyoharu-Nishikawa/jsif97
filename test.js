@@ -12,10 +12,14 @@ import {RegPT} from './Reg_pt.js'
 import {RegPH} from './Reg_ph.js'
 import {RegPS} from './Reg_ps.js'
 import {expisen1,expisen2} from './expisen.js'
+import {satproP} from './satproP.js'
 
+var P = 80;
 var SP= {
   P: 1, 
   T: 700 
 };
-expisen2(SP)
-console.log(SP)
+var SPl={}, SPg={};
+satproP(P,SPl,SPg);
+console.log(SPl,SPg)
+

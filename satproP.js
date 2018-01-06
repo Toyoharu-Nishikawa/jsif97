@@ -3,21 +3,15 @@
 /*  (given P calculates properties of saturated liquid and vapor)
 /*******************************************************************/
 
-#include"IF97_1.h"
-#include"IF97_2.h"
-#include"IF97_3.h"
-#include"IF97_SAT.h"
-#include"IF97_B23.h"
-#include"AUX_3.h"
-
 import {region_1} from "./IF97_1.js"
 import {region_2} from "./IF97_2.js"
-import {region_3, Vsatl_3, Vsatg_3} from "./IF97_3.js"
+import {region_3} from "./IF97_3.js"
+import {Vsatl_3, Vsatg_3} from "./Aux_3.js"
 import {TsatP, PsatT} from "./IF97_Sat.js"
 
 "use strict"
 
-export function SATPROP(P, SPl, SPg){
+export function satproP(P, SPl, SPg){
   /* input P: MPa  */
   var Pmin;
   var T;
