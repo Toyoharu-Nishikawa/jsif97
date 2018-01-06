@@ -2,6 +2,12 @@ import {propPT} from "propPT.js"
 import {propPH} from "propPH.js"
 import {propPS} from "propPS.js"
 import {propHS} from "propHS.js"
+import {expisPT} from "expisPT.js"
+import {transPT} from "transPT.js"
+import {transPT} from "transPT.js"
+import {transatP} from "transatP.js"
+import {satproP} from "satproP.js"
+import {satproT} from "satproT.js"
 
 
 //version
@@ -140,7 +146,7 @@ export function pt2MM(P, T){
   // output
   // MM: Region
   
-  int MM;
+  var MM;
   var SP;
   
   SP = {};
@@ -167,7 +173,7 @@ export function pt2cp(p, t) {
   SP.P = p;
   SP.T = t;
   
-  if (EXPISPT(SP) == -1) { SP = null; return -1; }
+  if (expisPT(SP) == -1) { SP = null; return -1; }
   cp = SP.cp;
   return cp;
 }
@@ -186,7 +192,7 @@ export function pt2cv(p, t) {
   SP.P = p;
   SP.T = t;
   
-  if (EXPISPT(SP) == -1) { SP = null; return -1; }
+  if (expisPT(SP) == -1) { SP = null; return -1; }
   cv = SP.cv;
   return cv;
 }
@@ -205,13 +211,13 @@ export function pt2k(P, T){
   SP.P = P;
   SP.T = T;
   
-  if (EXPISPT(SP) == -1) { SP = null; return -1; }
+  if (expisPT(SP) == -1) { SP = null; return -1; }
   kappa = SP.kappa;
   
   return kappa;
 }
   
-export function pt2mu(p, t) {
+export function pt2mu(P, T) {
   // input
   // p:puressure [MPa] , t:temperature [K]
   
@@ -222,16 +228,16 @@ export function pt2mu(p, t) {
   
   var SP;
   
-  SP = null;
-  SP.P = p;
-  SP.T = t;
+  SP = {};
+  SP.P = P;
+  SP.T = T;
   
-  if (TRANSPT(SP) == -1) { SP = null; return -1; }
+  if (transPT(SP) == -1) { SP = null; return -1; }
   mu = SP.mu;
   return mu;
 }
   
-  //ph
+ //ph
 export function ph2g(P, h) {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
@@ -242,7 +248,7 @@ export function ph2g(P, h) {
   var g;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.h = h;
   
@@ -262,7 +268,7 @@ export function ph2u(P, h) {
   var u;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.h = h;
   
@@ -282,7 +288,7 @@ export function ph2v(P, h) {
   var v;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.h = h;
   
@@ -302,7 +308,7 @@ export function ph2t(P, h) {
   var T;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.h = h;
   
@@ -322,7 +328,7 @@ export function ph2s(P, h) {
   var s;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.h = h;
   
@@ -345,10 +351,10 @@ export function ph2w(P, h) {
   var SP;
   var SP1;
   
-  del = 1.0E-6;
+  del = 1.0e-6;
   
-  SP = null;
-  ZeroSetSP(SP1);
+  SP = {};
+  SP1 = {};
   SP.P = P;
   SP.h = h;
   
@@ -360,8 +366,8 @@ export function ph2w(P, h) {
   SP1.P = P + del;
   SP1.s = SP.s;
   if (propPS(SP1) == -1) { SP = null; return -1; }
-  kappa = -log(SP1.P / P) / log(SP1.v / SP.v);
-  w = sqrt(kappa*SP.v*SP.P*1.0E+6);
+  kappa = -Math.log(SP1.P / P) / Math.log(SP1.v / SP.v);
+  w = Math.sqrt(kappa*SP.v*SP.P*1.0e+6);
 }
   
   return w;
@@ -377,7 +383,7 @@ export function ph2x(P, h) {
   var x;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.h = h;
   
@@ -387,17 +393,17 @@ export function ph2x(P, h) {
   return x;
 }
   
-  int IF97_ph2MM(P, h) {
+export function ph2MM(P, h) {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // MM:region [-]
   
-  int MM;
+  var MM;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.h = h;
   
@@ -407,7 +413,7 @@ export function ph2x(P, h) {
   return MM;
 }
   
-export function ph2mu(p, h, n) {
+export function ph2mu(P, h, n) {
   // input
   // p:puressure [MPa] , h:specific enthalpy [kJ/kg]
   // n:0:harmonic mean, 1:weighted mean, 2:gas viscosity, 3:liquid viscosity,else: harmonic mean
@@ -416,46 +422,46 @@ export function ph2mu(p, h, n) {
   // mu:viscosity [Pa-s]
   
   var mu;
-  int MM;
+  var MM;
   var x;
   
   var SP;
   var SP1;
   
-  SP = null;
-  ZeroSetSP(SP1);
-  SP.P = p;
+  SP = {};
+  SP1 = {};
+  SP.P = P; 
   SP.h = h;
   
   if (propPH(SP) == -1) { SP = null; return -1; }
   MM = SP.MM;
   if (MM != 4) {
-  if (TRANSPT(SP) == -1) { SP = null; return -1; }
-  mu = SP.mu;
-}
+    if (transPT(SP) == -1) { SP = null; return -1; }
+    mu = SP.mu;
+  }
   else {
-  x = SP.x;
-  if (TRANSATP(p, SP, SP1) == -1) { SP = null; return -1; }
-  if (n == 0) {
-  mu = 1 / (x / SP1.mu + (1.0 - x) / SP.mu);
-}
-  else if (n == 1) {
-  mu = SP1.mu*x + SP.mu*(1.0 - x);
-}
-  else if (n == 2) {
-  mu = SP1.mu;
-}
-  else if (n == 3) {
-  mu = SP.mu;
-}
-  else {
-  mu = 1 / (x / SP1.mu + (1.0 - x) / SP.mu);
-}
-}
+    x = SP.x;
+    if (transatP(p, SP, SP1) == -1) { SP = null; return -1; }
+    if (n == 0) {
+      mu = 1 / (x / SP1.mu + (1.0 - x) / SP.mu);
+    }
+    else if (n == 1) {
+      mu = SP1.mu*x + SP.mu*(1.0 - x);
+    } 
+    else if (n == 2) {
+      mu = SP1.mu;
+    }
+    else if (n == 3) {
+      mu = SP.mu;
+    }
+    else {
+      mu = 1 / (x / SP1.mu + (1.0 - x) / SP.mu);
+    }
+  }
   return mu;
 }
   
-export function ph2cp(p, h) {
+export function ph2cp(P, h) {
   // input
   // p:puressure [MPa] , h:specific enthalpy [kJ/kg]
   
@@ -463,27 +469,27 @@ export function ph2cp(p, h) {
   // cp:heat capacity [kJ/(kg-K)]
   
   var cp;
-  int MM;
+  var MM;
   
   var SP;
   
-  SP = null;
-  SP.P = p;
+  SP = {};
+  SP.P = P;
   SP.h = h;
   
   if (propPH(SP) == -1) { SP = null; return -1; }
   MM = SP.MM;
   if (MM != 4) {
-  if (EXPISPT(SP) == -1) { SP = null; return -1; }
-  cp = SP.cp;
-}
+    if (expisPT(SP) == -1) { SP = null; return -1; }
+    cp = SP.cp;
+  }
   else {
-  return -1;
-}
+    return -1;
+  }
   return cp;
 }
   
-export function ph2cv(p, h) {
+export function ph2cv(P, h) {
   // input
   // p:puressure [MPa] , h:specific enthalpy [kJ/kg]
   
@@ -491,27 +497,27 @@ export function ph2cv(p, h) {
   // cv:heat capacity [kJ/(kg-K)]
   
   var cv;
-  int MM;
+  var MM;
   
   var SP;
   
-  SP = null;
-  SP.P = p;
+  SP = {};
+  SP.P = P;
   SP.h = h;
   
   if (propPH(SP) == -1) { SP = null; return -1; }
   MM = SP.MM;
   if (MM != 4) {
-  if (EXPISPT(SP) == -1) { SP = null; return -1; }
-  cv = SP.cv;
-}
+    if (expisPT(SP) == -1) { SP = null; return -1; }
+    cv = SP.cv;
+  }
   else {
-  return -1;
-}
+    return -1;
+  }
   return cv;
 }
   
-export function ph2k(p, h) {
+export function ph2k(P, h) {
   // input
   // p:puressure [MPa] , h:specific enthalpy [kJ/kg]
   
@@ -520,34 +526,34 @@ export function ph2k(p, h) {
   
   var kappa;
   var del;
-  int MM;
+  var MM;
   
   var SP;
   var SP1;
   
-  del = 1.0E-6;
+  del = 1.0e-6;
   
-  SP = null;
-  ZeroSetSP(SP1);
-  SP.P = p;
+  SP = {};
+  SP1 = {};
+  SP.P = P;
   SP.h = h;
   
   if (propPH(SP) == -1) { SP = null; return -1; }
   MM = SP.MM;
   if (MM != 4) {
-  EXPISPT(SP);
-  kappa = SP.kappa;
-}
+    expisPT(SP);
+    kappa = SP.kappa;
+  }
   else {
-  SP1.P = p + del;
-  SP1.s = SP.s;
-  if (propPS(SP1) == -1) { SP = null; return -1; }
-  kappa = -log(SP1.P / p) / log(SP1.v / SP.v);
-}
+    SP1.P = p + del;
+    SP1.s = SP.s;
+    if (propPS(SP1) == -1) { SP = null; return -1; }
+      kappa = -Math.log(SP1.P / p) / Math.log(SP1.v / SP.v);
+  }
   return kappa;
 }
   
-  //ps
+//ps
 export function ps2g(P, s) {
   // input
   // P:pressure [Pa], s:specific entropy [kJ/kgK]
@@ -558,7 +564,7 @@ export function ps2g(P, s) {
   var g;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.s = s;
   
@@ -581,7 +587,7 @@ export function ps2u(P, s) {
   SP.P = P;
   SP.s = s;
   
-  SP = null;
+  SP = {};
   if (propPS(SP) == -1) { SP = null; return -1; }
   u = SP.u;
   
@@ -598,7 +604,7 @@ export function ps2v(P, s) {
   var v;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.s = s;
   
@@ -618,7 +624,7 @@ export function ps2t(P, s) {
   var t;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.s = s;
   
@@ -638,7 +644,7 @@ export function ps2h(P, s) {
   var h;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.s = s;
   
@@ -661,25 +667,25 @@ export function ps2w(P, s) {
   var SP;
   var SP1;
   
-  del = 1.0E-6;
+  del = 1.0e-6;
   
-  SP = null;
-  ZeroSetSP(SP1);
+  SP = {}; 
+  SP1 = {};
   
   SP.P = P;
   SP.s = s;
   
   if (propPS(SP) == -1) { SP = null; return -1; }
   if (SP.MM != 4) {
-  w = SP.w;
-}
+    w = SP.w;
+  }
   else {
-  SP1.P = P + del;
-  SP1.s = SP.s;
-  if (propPS(SP1) == -1) { SP = null; return -1; }
-  kappa = -log(SP1.P / P) / log(SP1.v / SP.v);
-  w = sqrt(kappa*SP.v*SP.P*1.0E+6);
-}
+    SP1.P = P + del;
+    SP1.s = SP.s;
+    if (propPS(SP1) == -1) { SP = null; return -1; }
+    kappa = -Math.log(SP1.P / P) / Math.log(SP1.v / SP.v);
+    w = Math.sqrt(kappa*SP.v*SP.P*1.0e+6);
+  }
   
   return w;
 }
@@ -694,7 +700,7 @@ export function ps2x(P, s) {
   var x;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.s = s;
   
@@ -716,39 +722,39 @@ export function ps2k(P, s) {
   var SP;
   var SP1;
   
-  del = 1.0E-6;
+  del = 1.0e-6;
   
-  SP = null;
-  ZeroSetSP(SP1);
+  SP = {};
+  SP1 = {};
   
   SP.P = P;
   SP.s = s;
   
   if (propPS(SP) == -1) { SP = null; return -1; }
   if (SP.MM != 4) {
-  EXPISPT(SP);
-  kappa = SP.kappa;
-}
+    expisPT(SP);
+    kappa = SP.kappa;
+  }
   else {
-  SP1.P = P + del;
-  SP1.s = SP.s;
-  if (propPS(SP1) == -1) { SP = null; return -1; }
-  kappa = -log(SP1.P / P) / log(SP1.v / SP.v);
-}
+    SP1.P = P + del;
+    SP1.s = SP.s;
+    if (propPS(SP1) == -1) { SP = null; return -1; }
+    kappa = -Math.log(SP1.P / P) / Math.log(SP1.v / SP.v);
+  }
   return kappa;
 }
   
-  int IF97_ps2MM(P, s) {
+export function ps2MM(P, s) {
   // input
   // P:pressure [MPa], s:specific entropy [kJ/kgK]
   
   // output
   // MM:Region [-]
   
-  int MM;
+  var MM;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.P = P;
   SP.s = s;
   
@@ -769,7 +775,7 @@ export function hs2g(h, s) {
   var g;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.h = h;
   SP.s = s;
   
@@ -789,7 +795,7 @@ export function hs2u(h, s) {
   var u;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.h = h;
   SP.s = s;
   
@@ -809,7 +815,7 @@ export function hs2p(h, s) {
   var p;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.h = h;
   SP.s = s;
   
@@ -829,7 +835,7 @@ export function hs2t(h, s) {
   var t;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.h = h;
   SP.s = s;
   
@@ -849,7 +855,7 @@ export function hs2v(h, s) {
   var v;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.h = h;
   SP.s = s;
   
@@ -869,7 +875,7 @@ export function hs2w(h, s) {
   var w;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.h = h;
   SP.s = s;
   
@@ -889,7 +895,7 @@ export function hs2x(h, s) {
   var x;
   var SP;
   
-  SP = null;
+  SP = {};
   SP.h = h;
   SP.s = s;
   
@@ -899,7 +905,7 @@ export function hs2x(h, s) {
   return x;
 }
   
-  //SAT
+//SAT
 export function SATp2t(p) {
   // input
   // p:pressure [MPa]
@@ -914,7 +920,7 @@ export function SATp2t(p) {
   SPl = {};
   SPg = {};
   
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   t = SPl.T;
   
   return t;
@@ -934,7 +940,7 @@ export function SATt2p(t) {
   SPl = {};
   SPg = {};
   
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   p = SPl.P;
   
   return p;
@@ -955,7 +961,7 @@ export function SATlp2g(p) {
   SPl = {};
   SPg = {};
   
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   g = SPl.g;
   
   return g;
@@ -974,7 +980,7 @@ export function SATlp2u(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   u = SPl.u;
   
   return u;
@@ -993,7 +999,7 @@ export function SATlp2t(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   t = SPl.T;
   
   return t;
@@ -1012,7 +1018,7 @@ export function SATlp2v(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   v = SPl.v;
   
   return v;
@@ -1031,7 +1037,7 @@ export function SATlp2h(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   h = SPl.h;
   
   return h;
@@ -1050,7 +1056,7 @@ export function SATlp2s(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   s = SPl.s;
   
   return s;
@@ -1069,7 +1075,7 @@ export function SATlp2w(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   w = SPl.w;
   
   return w;
@@ -1088,7 +1094,7 @@ export function SATlp2cp(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   cp = SPl.cp;
   
   return cp;
@@ -1107,7 +1113,7 @@ export function SATlp2cv(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   expisen1(SPl);
   
   cv = SPl.cv;
@@ -1128,7 +1134,7 @@ export function SATlp2k(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   expisen1(SPl);
   
   kappa = SPl.kappa;
@@ -1150,7 +1156,7 @@ export function SATgp2g(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   g = SPg.g;
   
   return g;
@@ -1169,7 +1175,7 @@ export function SATgp2u(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   u = SPg.u;
   
   return u;
@@ -1188,7 +1194,7 @@ export function SATgp2t(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   t = SPg.T;
   
   return t;
@@ -1207,7 +1213,7 @@ export function SATgp2v(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   v = SPg.v;
   
   return v;
@@ -1226,7 +1232,7 @@ export function SATgp2h(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   h = SPg.h;
   
   return h;
@@ -1245,7 +1251,7 @@ export function SATgp2s(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   s = SPg.s;
   
   return s;
@@ -1264,7 +1270,7 @@ export function SATgp2w(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   w = SPg.w;
   
   return w;
@@ -1283,7 +1289,7 @@ export function SATgp2cp(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   cp = SPg.cp;
   
   return cp;
@@ -1302,7 +1308,7 @@ export function SATgp2cv(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   expisen1(SPg);
   
   cv = SPg.cv;
@@ -1323,7 +1329,7 @@ export function SATgp2k(p) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   expisen1(SPg);
   
   kappa = SPg.kappa;
@@ -1331,7 +1337,7 @@ export function SATgp2k(p) {
   return kappa;
 }
   
-  //SATlt
+//SATlt
 export function SATlt2g(t) {
   // input
   // t:temperature [K]
@@ -1345,7 +1351,7 @@ export function SATlt2g(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   g = SPl.g;
   
   return g;
@@ -1364,7 +1370,7 @@ export function SATlt2u(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   u = SPl.u;
   
   return u;
@@ -1383,7 +1389,7 @@ export function SATlt2p(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   p = SPl.P;
   
   return p;
@@ -1402,7 +1408,7 @@ export function SATlt2v(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   v = SPl.v;
   
   return v;
@@ -1421,7 +1427,7 @@ export function SATlt2h(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   h = SPl.h;
   
   return h;
@@ -1440,7 +1446,7 @@ export function SATlt2s(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   s = SPl.s;
   
   return s;
@@ -1459,7 +1465,7 @@ export function SATlt2w(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   w = SPl.w;
   
   return w;
@@ -1478,7 +1484,7 @@ export function SATlt2cp(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   cp = SPl.cp;
   
   return cp;
@@ -1497,7 +1503,7 @@ export function SATlt2cv(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   expisen1(SPl);
   
   cv = SPl.cv;
@@ -1518,7 +1524,7 @@ export function SATlt2k(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   expisen1(SPl);
   
   kappa = SPl.kappa;
@@ -1540,7 +1546,7 @@ export function SATgt2g(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   g = SPg.g;
   
   return g;
@@ -1559,7 +1565,7 @@ export function SATgt2u(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   u = SPg.u;
   
   return u;
@@ -1578,7 +1584,7 @@ export function SATgt2p(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   p = SPg.P;
   
   return p;
@@ -1597,7 +1603,7 @@ export function SATgt2v(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   v = SPg.v;
   
   return v;
@@ -1616,7 +1622,7 @@ export function SATgt2h(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   h = SPg.h;
   
   return h;
@@ -1635,7 +1641,7 @@ export function SATgt2s(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   s = SPg.s;
   
   return s;
@@ -1654,7 +1660,7 @@ export function SATgt2w(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   w = SPg.w;
   
   return w;
@@ -1673,7 +1679,7 @@ export function SATgt2cp(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   cp = SPg.cp;
   
   return cp;
@@ -1692,7 +1698,7 @@ export function SATgt2cv(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   expisen1(SPg);
   
   cv = SPg.cv;
@@ -1713,7 +1719,7 @@ export function SATgt2k(t) {
   
   SPl = {};
   SPg = {};
-  if (SATPROP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
+  if (satproP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
   expisen1(SPg);
   
   kappa = SPg.kappa;

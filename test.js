@@ -20,8 +20,8 @@ import {propPS} from './propPS.js'
 import {propHS} from './propHS.js'
 import {viscos, conduc} from './transp.js'
 import {transPT} from './transPT.js'
-import {trasatT} from './trasatT.js'
-import {trasatP} from './trasatP.js'
+import {transatT} from './transatT.js'
+import {transatP} from './transatP.js'
 
 var T = 500;
 var P =16;
