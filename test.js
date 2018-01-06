@@ -21,8 +21,10 @@ import {propHS} from './propHS.js'
 import {viscos, conduc} from './transp.js'
 import {transPT} from './transPT.js'
 import {trasatT} from './trasatT.js'
+import {trasatP} from './trasatP.js'
 
 var T = 500;
+var P =16;
 var SPl = {}
 var SPg = {}
 var SP= {
@@ -30,8 +32,6 @@ var SP= {
   T: 300, 
 };
 
-trasatT(T, SPl, SPg);
+trasatP(P, SPl, SPg);
 console.log(SPl, SPg);
 
-transPT(SP)
-console.log(SP)
