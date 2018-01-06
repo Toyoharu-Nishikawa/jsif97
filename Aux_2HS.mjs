@@ -15,11 +15,11 @@
 
 "use strict"
 
-import {region_1,Gibbs_1} from "./IF97_1.js" 
-import {region_2,Gibbs_2} from "./IF97_2.js" 
-import {Tph2,Tps2} from "./IF97_BK2.js" 
-import {PsatT,TsatP} from './IF97_Sat.js'
-import {ZPH_2,ZPS_2} from './Aux_2.js'
+import {region_1,Gibbs_1} from "./IF97_1.mjs" 
+import {region_2,Gibbs_2} from "./IF97_2.mjs" 
+import {Tph2,Tps2} from "./IF97_BK2.mjs" 
+import {PsatT,TsatP} from './IF97_Sat.mjs'
+import {ZPH_2,ZPS_2} from './Aux_2.mjs'
 
 
 // Auxiliary subroutines for propHS

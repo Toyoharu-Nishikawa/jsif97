@@ -3,8 +3,8 @@
 /*  (given P and T find the region)
 /*******************************************************************/
 
-import {TsatP,PsatT} from "./IF97_Sat.js"
-import {Tb23P} from "./IF97_B23.js"
+import {TsatP,PsatT} from "./IF97_Sat.mjs"
+import {Tb23P} from "./IF97_B23.mjs"
 
 //     M=1: region 1
 //       2: region 2

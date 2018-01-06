@@ -7,7 +7,7 @@
 /*  (Newton method)
 /*******************************************************************/
 
-import {region_5, Gibbs_5} from "./IF97_5.js"
+import {region_5, Gibbs_5} from "./IF97_5.mjs"
 
 /* Backward functions for region 2*/
 /* iteration process */

@@ -4,7 +4,7 @@
 /*   and wet steam region) 
 /*******************************************************************/
 
-import {ZHS_2} from "./Aux_2HS.js"
+import {ZHS_2} from "./Aux_2HS.mjs"
 
 "use strict"
 

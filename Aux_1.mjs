@@ -9,8 +9,8 @@
 /* Backward functions for region 1*/
 /* iteration process */
 "use strict" 
-import {Tph1,Tps1} from "./IF97_BK1.js" 
-import {region_1,Gibbs_1} from "./IF97_1.js" 
+import {Tph1,Tps1} from "./IF97_BK1.mjs" 
+import {region_1,Gibbs_1} from "./IF97_1.mjs" 
 export function ZPH_1(SP){
   var n;
   var Flag;
