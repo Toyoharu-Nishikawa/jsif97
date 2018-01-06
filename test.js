@@ -14,14 +14,12 @@ import {RegPS} from './Reg_ps.js'
 import {expisen1,expisen2} from './expisen.js'
 import {satproP} from './satproP.js'
 import {satproT} from './satproT.js'
+import {propPT} from './propPT.js'
 
-var P = 80;
-var T = 500;
 var SP= {
   P: 1, 
   T: 700 
 };
-var SPl={}, SPg={};
-satproT(T,SPl,SPg);
-console.log(SPl,SPg)
+propPT(SP);
+console.log(SP:
 
