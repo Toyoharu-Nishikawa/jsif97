@@ -16,11 +16,12 @@ import {satproP} from './satproP.js'
 import {satproT} from './satproT.js'
 import {propPT} from './propPT.js'
 import {propPH} from './propPH.js'
+import {propPS} from './propPS.js'
 
 var SP= {
   P: 1, 
-  h: 3000 
+  s: 6 
 };
-propPH(SP);
+propPS(SP);
 console.log(SP);
 
