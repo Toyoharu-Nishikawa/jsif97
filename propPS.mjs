@@ -4,15 +4,15 @@
 /*   and wet steam region)
 /*******************************************************************/
 
-import {region_1} from "./IF97_1.js"
-import {region_2} from "./IF97_2.js"
-import {region_3} from "./IF97_3.js"
-import {TsatP} from './IF97_Sat.js'
-import {ZPS_1} from "./Aux_1.js"
-import {ZPS_2} from "./Aux_2.js"
-import {Vsatl_3, Vsatg_3,ZPS_30, ZPS_31 ,ZPS_32} from "./Aux_3.js"
-import {ZPS_5} from "./Aux_5.js"
-import {RegPS} from "./Reg_ps.js"
+import {region_1} from "./IF97_1.mjs"
+import {region_2} from "./IF97_2.mjs"
+import {region_3} from "./IF97_3.mjs"
+import {TsatP} from './IF97_Sat.mjs'
+import {ZPS_1} from "./Aux_1.mjs"
+import {ZPS_2} from "./Aux_2.mjs"
+import {Vsatl_3, Vsatg_3,ZPS_30, ZPS_31 ,ZPS_32} from "./Aux_3.mjs"
+import {ZPS_5} from "./Aux_5.mjs"
+import {RegPS} from "./Reg_ps.mjs"
 
 "use strict"
 

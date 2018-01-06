@@ -3,12 +3,12 @@
 /*  (given P and T calculate properties of the regions 1, 2, 3, and 5) 
 /*******************************************************************/
 
-import {region_1} from "./IF97_1.js"
-import {region_2} from "./IF97_2.js"
-import {region_3} from "./IF97_3.js"
-import {region_5} from "./IF97_5.js"
-import {VPT_3} from "./Aux_3.js"
-import {RegPT} from "./Reg_pt.js"
+import {region_1} from "./IF97_1.mjs"
+import {region_2} from "./IF97_2.mjs"
+import {region_3} from "./IF97_3.mjs"
+import {region_5} from "./IF97_5.mjs"
+import {VPT_3} from "./Aux_3.mjs"
+import {RegPT} from "./Reg_pt.mjs"
 
 "use strict"
 

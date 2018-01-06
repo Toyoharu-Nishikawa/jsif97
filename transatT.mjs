@@ -1,42 +1,35 @@
 /*******************************************************************/
-/*  trasatP.for
-/*(given P calculates mu, nu, lambda, and Pr for saturated liquid 
-/* and satureted vapor)
+/*  trasatT.for                                                    */
+/*(given T calculates mu, nu, lambda, and Pr for saturated liquid 
+/* and satureted vapor) 
 /*******************************************************************/
 
-import {region_1} from "./IF97_1.js"
-import {region_2} from "./IF97_2.js"
-import {region_3} from "./IF97_3.js"
-import {PsatT, TsatP} from './IF97_Sat.js'
-import {Vsatl_3, Vsatg_3} from "./Aux_3.js"
-import {viscos, conduc} from "./transp.js"
+
+
+import {region_1} from "./IF97_1.mjs"
+import {region_2} from "./IF97_2.mjs"
+import {region_3} from "./IF97_3.mjs"
+import {PsatT} from './IF97_Sat.mjs'
+import {Vsatl_3, Vsatg_3} from "./Aux_3.mjs"
+import {viscos, conduc} from "./transp.mjs"
 
 "use strict"
 
-export function transatP(P, SPl, SPg){
-  var SP1;
+export function transatT(T, SPl, SPg){
   
-  SP1 = {};
-  
-  if(P<=0.0){
-    console.log("Pressure is lower than zero.\n");
-    return -1;
-  }
-  SP1.T=273.15;
-  if(PsatT(SP1)==-1){SPl = null;SPg = null;return -1;}
-  if(P<SP1.P){
-    console.log("Pressure is lower than the minimum pressure.\n");
+  if(T<273.15){
+    console.log("Temperature is lower than the minimum temperature.\n");
     return -1;    
   }
-  if(P>22.064){
-    console.log("Pressure is higher than the maximum pressure.\n");
+  if(T>647.096){
+    console.log("Temperature is higher than the maximum temperature.\n");
     return -1;    
   }
   
-  SPl.P=P;
-  SPg.P=P;
-  if(TsatP(SPl)==-1){SPl = null;SPg = null;return -1;}
-  if(TsatP(SPg)==-1){SPl = null;SPg = null;return -1;}
+  SPl.T=T;
+  SPg.T=T;
+  if(PsatT(SPl)==-1){SPl = null;SPg = null;return -1;}
+  if(PsatT(SPg)==-1){SPl = null;SPg = null;return -1;}
   if(SPl.T<=623.15){
     if(region_1(SPl)==-1){SPl = null;SPg = null;return -1;}
     if(region_2(SPg)==-1){SPl = null;SPg = null;return -1;}
