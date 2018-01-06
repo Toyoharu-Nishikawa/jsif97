@@ -4,8 +4,8 @@
 /*   regions 1, 2, 3, and 5)
 /*******************************************************************/
 
-import {RegPT} from "Reg_pt.js"
-import {expisen1, expisen2, expisen3, expisen5} from "expisen.js"
+import {RegPT} from "./Reg_pt.js"
+import {expisen1, expisen2, expisen3, expisen5} from "./expisen.js"
  
 export function expisPT(SP){
   SP.NP=2;

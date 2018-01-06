@@ -1,14 +1,97 @@
-import {propPT} from "propPT.js"
-import {propPH} from "propPH.js"
-import {propPS} from "propPS.js"
-import {propHS} from "propHS.js"
-import {expisPT} from "expisPT.js"
-import {transPT} from "transPT.js"
-import {transPT} from "transPT.js"
-import {transatP} from "transatP.js"
-import {satproP} from "satproP.js"
-import {satproT} from "satproT.js"
+import {propPT} from "./propPT.js"
+import {propPH} from "./propPH.js"
+import {propPS} from "./propPS.js"
+import {propHS} from "./propHS.js"
+import {expisPT} from "./expisPT.js"
+import {transPT} from "./transPT.js"
+import {transatP} from "./transatP.js"
+import {satproP} from "./satproP.js"
+import {satproT} from "./satproT.js"
 
+//version()g
+//pt2g(P, T)g 
+//pt2u(P, T){
+//pt2v(P, T){
+//pt2h(P, T){
+//pt2s(P, T){
+//pt2w(P, T)g 
+//pt2MM(P, T){ 
+//pt2cp(p, t)g
+//pt2cv(p, t)g
+//pt2k(P, T){
+//pt2mu(P, T)g
+//ph2g(P, h)g
+//ph2u(P, h)g
+//ph2v(P, h)g
+//ph2t(P, h)g
+//ph2s(P, h)g
+//ph2w(P, h)g
+//ph2x(P, h)g
+//ph2MM(P, h)g
+//ph2mu(P, h, n)g
+//ph2cp(P, h)g
+//ph2cv(P, h)g
+//ph2k(P, h)g
+//ps2g(P, s)g
+//ps2u(P, s)g
+//ps2v(P, s)g
+//ps2t(P, s)g
+//ps2h(P, s)g
+//ps2w(P, s)g
+//ps2x(P, s)g
+//ps2k(P, s)g
+//ps2MM(P, s)g
+//hs2g(h, s)g
+//hs2u(h, s)g
+//hs2p(h, s)g
+//hs2t(h, s)g
+//hs2v(h, s)g
+//hs2w(h, s)g
+//hs2x(h, s)g
+//SATp2t(p)g
+//SATt2p(t)g
+//SATlp2g(p)g
+//SATlp2u(p)g
+//SATlp2t(p)g
+//SATlp2v(p)g
+//SATlp2h(p)g
+//SATlp2s(p)g
+//SATlp2w(p)g
+//SATlp2cp(p)g
+//SATlp2cv(p)g
+//SATlp2k(p)g
+//SATgp2g(p)g
+//SATgp2u(p)g
+//SATgp2t(p)g
+//SATgp2v(p)g
+//SATgp2h(p)g
+//SATgp2s(p)g
+//SATgp2w(p)g
+//SATgp2cp(p)g
+//SATgp2cv(p)g
+//SATgp2k(p)g
+//SATlt2g(t)g
+//SATlt2u(t)g
+//SATlt2p(t)g
+//SATlt2v(t)g
+//SATlt2h(t)g
+//SATlt2s(t)g
+//SATlt2w(t)g
+//SATlt2cp(t)g
+//SATlt2cv(t)g
+//SATlt2k(t)g
+//SATgt2g(t)g
+//SATgt2u(t)g
+//SATgt2p(t)g
+//SATgt2v(t)g
+//SATgt2h(t)g
+//SATgt2s(t)g
+//SATgt2w(t)g
+//SATgt2cp(t)g
+//SATgt2cv(t)g
+//SATgt2k(t)g
+
+"use strict"
 
 //version
 export function version() {
