@@ -15,11 +15,12 @@ import {expisen1,expisen2} from './expisen.js'
 import {satproP} from './satproP.js'
 import {satproT} from './satproT.js'
 import {propPT} from './propPT.js'
+import {propPH} from './propPH.js'
 
 var SP= {
   P: 1, 
-  T: 700 
+  h: 3000 
 };
-propPT(SP);
-console.log(SP:
+propPH(SP);
+console.log(SP);
 
