@@ -6,6 +6,7 @@
 /*******************************************************************/
 
 // region 3 based on Eq.(15) of IAPWS-IF97
+"use strict"
 export function region_3(SP){
   var v;
   var T;
@@ -70,7 +71,7 @@ export function region_3(SP){
 }
 
 
-function Helm_3(dlt, tau, Helm){
+export function Helm_3(dlt, tau, Helm){
   var i;
   var II = [];
   var JJ = [];
@@ -171,7 +172,7 @@ function Helm_3(dlt, tau, Helm){
 }
 
 
-function PVT_3(SP){
+export function PVT_3(SP){
   var i;
   var II = [];
   var JJ = [];
@@ -252,7 +253,7 @@ function PVT_3(SP){
   return 1;
 }
 
-function dPdV_3(SP){
+export function dPdV_3(SP){
   var i;
   var II = [];
   var JJ = [];
