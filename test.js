@@ -19,11 +19,19 @@ import {propPH} from './propPH.js'
 import {propPS} from './propPS.js'
 import {propHS} from './propHS.js'
 import {viscos, conduc} from './transp.js'
+import {transPT} from './transPT.js'
+import {trasatT} from './trasatT.js'
 
+var T = 500;
+var SPl = {}
+var SPg = {}
 var SP= {
-  T: 800, 
-  v: 0.36 
+  P: 10,  
+  T: 300, 
 };
-conduc(SP);
-console.log(SP);
 
+trasatT(T, SPl, SPg);
+console.log(SPl, SPg);
+
+transPT(SP)
+console.log(SP)

@@ -109,7 +109,7 @@ export function viscos(SP){
   
   x=0.0;
   for(i=0;i<=5;i++){
-    for(j=0;j<=5;j++){
+    for(j=0;j<=6;j++){
       x=x+Hij[i][j]*Math.pow(tauR1,i)*Math.pow(rx1,j);
     }
   }
