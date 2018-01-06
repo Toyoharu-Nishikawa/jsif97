@@ -3,11 +3,11 @@
 /*  (given P calculates properties of saturated liquid and vapor)
 /*******************************************************************/
 
-import {region_1} from "./IF97_1.js"
-import {region_2} from "./IF97_2.js"
-import {region_3} from "./IF97_3.js"
-import {Vsatl_3, Vsatg_3} from "./Aux_3.js"
-import {TsatP, PsatT} from "./IF97_Sat.js"
+import {region_1} from "./IF97_1.mjs"
+import {region_2} from "./IF97_2.mjs"
+import {region_3} from "./IF97_3.mjs"
+import {Vsatl_3, Vsatg_3} from "./Aux_3.mjs"
+import {TsatP, PsatT} from "./IF97_Sat.mjs"
 
 "use strict"
 

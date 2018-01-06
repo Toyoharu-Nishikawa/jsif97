@@ -22,11 +22,11 @@
 /*   in the region 5)
 /*******************************************************************/
 
-import {region_1, Gibbs_1} from "./IF97_1.js"
-import {region_2, Gibbs_2} from "./IF97_2.js"
-import {region_3, Helm_3} from "./IF97_3.js"
-import {region_5, Gibbs_5} from "./IF97_5.js"
-import {Vsatl_3, Vsatg_3, VPT_3} from "./Aux_3.js"
+import {region_1, Gibbs_1} from "./IF97_1.mjs"
+import {region_2, Gibbs_2} from "./IF97_2.mjs"
+import {region_3, Helm_3} from "./IF97_3.mjs"
+import {region_5, Gibbs_5} from "./IF97_5.mjs"
+import {Vsatl_3, Vsatg_3, VPT_3} from "./Aux_3.mjs"
 
 
 "use strict"

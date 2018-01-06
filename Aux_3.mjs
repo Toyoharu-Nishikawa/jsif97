@@ -47,9 +47,9 @@
 /*           
 /*********************************************************************/ 
 
-import {region_3, PVT_3,dPdV_3} from './IF97_3.js'
-import {PsatT,TsatP} from './IF97_Sat.js'
-import {Pb23T} from './IF97_B23.js'
+import {region_3, PVT_3,dPdV_3} from './IF97_3.mjs'
+import {PsatT,TsatP} from './IF97_Sat.mjs'
+import {Pb23T} from './IF97_B23.mjs'
 
 "use strict"
 

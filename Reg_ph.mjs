@@ -1,6 +1,6 @@
 /*******************************************************************/
-/*RegPS(P, S, M)
-/*  (given P and S find the region)
+/*RegPH(P, H, M)
+/*  (given P and H find the region)
 /*******************************************************************/
 
 //     M= 1: region 1
@@ -13,30 +13,28 @@
 //       33: wet steam region above 350 degC
 //        0: out of IF97
 
-import {region_1} from "./IF97_1.js"
-import {region_2} from "./IF97_2.js"
-import {region_3} from "./IF97_3.js"
-import {region_5} from "./IF97_5.js"
-import {PsatT,TsatP} from './IF97_Sat.js'
-import {Tb23P} from "./IF97_B23.js"
-import {Vsatg_3,Vsatl_3} from "./Aux_3.js"
-
-
+import {region_1} from "./IF97_1.mjs"
+import {region_2} from "./IF97_2.mjs"
+import {region_3} from "./IF97_3.mjs"
+import {region_5} from "./IF97_5.mjs"
+import {PsatT,TsatP} from './IF97_Sat.mjs'
+import {Tb23P} from "./IF97_B23.mjs"
+import {Vsatg_3,Vsatl_3} from "./Aux_3.mjs"
 
 "use strict"
 
-export function RegPS(SP){
-  /* input P: MPa, S: kJ/kgK */
-  /* output M                */
-  var S;
+export function RegPH(SP){
+  /* input P: MPa, H: kJ/kg */
+  /* output M               */
+  var H;
   var P;
   var P1;
-  var Stest;
+  var Htest;
   var SP1;
   
   SP1 = {};
   
-  S=SP.s;
+  H=SP.h;
   P=SP.P;
   
   /* Test of maximum pressure */
@@ -49,38 +47,38 @@ export function RegPS(SP){
     SP1.T=2273.15;
     SP1.P=SP.P;
     if(region_5(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S > Stest){
+    Htest=SP1.h;
+    if(H > Htest){
       SP.M=0;
       return 1;
     }
     SP1.T=1073.15;
     SP1.P=SP.P;
     if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S > Stest){
+    Htest=SP1.h;
+    if(H > Htest){
       SP.M=5;
       return 1;
     }
     SP1.P=SP.P;
-    TsatP(SP1);
+    if(TsatP(SP1)==-1){SP = null;return -1;}
     if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S >= Stest){
+    Htest=SP1.h;
+    if(H >= Htest){
       SP.M=2;
       return 1;
     }
     if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S >= Stest){
+    Htest=SP1.h;        
+    if(H>Htest){
       SP.M=12;
       return 1;
-    }    
+    }
     SP1.T=273.15;
     SP1.P=SP.P;
     if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S >= Stest){
+    Htest=SP1.h;
+    if(H >= Htest){
       SP.M=1;
       return 1;
     }
@@ -91,38 +89,36 @@ export function RegPS(SP){
   }    
   /*Test below saturation pressure at 350 degC */
   SP1.T = 623.15;
-  SP1.P = SP.P;
   if(PsatT(SP1)==-1){SP = null;return -1;}
   P1=SP1.P;
   if(P<=P1){
     SP1.T = 1073.15;
     SP1.P = SP.P;
     if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;        
-    if(S > Stest){
+    Htest=SP1.h;        
+    if(H > Htest){
       SP.M=0;
       return 1;
     }
-    SP1.P = SP.P;
     if(TsatP(SP1)==-1){SP = null;return -1;}
     SP1.P = SP.P;
     if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;        
-    if(S>=Stest){
+    Htest=SP1.h;        
+    if(H>=Htest){
       SP.M=2;
       return 1;
     }
     if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;        
-    if(S>Stest){
+    Htest=SP1.h;        
+    if(H>Htest){
       SP.M=12;
       return 1;
     }
     SP1.T = 273.15;
     SP1.P = SP.P;
     if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;        
-    if(S >= Stest){
+    Htest=SP1.h;        
+    if(H >= Htest){
       SP.M=1;
       return 1;
     }
@@ -140,48 +136,48 @@ export function RegPS(SP){
     SP1.T = 1073.15;
     SP1.P = SP.P;
     if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>Stest){
+    Htest=SP1.h;
+    if(H>Htest){
       SP.M=0;
       return 1;
     }
     SP1.P = SP.P;
     if(Tb23P(SP1)==-1){SP = null;return -1;}
     if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
+    Htest=SP1.h;
+    if(H>=Htest){
       SP.M=2;
       return 1;
     }
     SP1.P = SP.P;
     if(TsatP(SP1)==-1){SP = null;return -1;}
     if(Vsatg_3(SP1)==-1){SP = null;return -1;}
-    if(region_3(SP1)==1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
+    if(region_3(SP1)==-1){SP = null;return -1;}
+    Htest=SP1.h;
+    if(H>=Htest){
       SP.M=32;
       return 1;
     }
     if(Vsatl_3(SP1)==-1){SP = null;return -1;}
     if(region_3(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
+    Htest=SP1.h;
+    if(H>=Htest){
       SP.M=33;
       return 1;
     }
     SP1.P = SP.P;
     SP1.T = 623.15;
     if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
+    Htest=SP1.h;
+    if(H>=Htest){
       SP.M=31;
       return 1;
     }
     SP1.P = SP.P;
     SP1.T = 273.15;
     if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
+    Htest=SP1.h;
+    if(H>=Htest){
       SP.M=1;
       return 1;
     }
@@ -194,32 +190,32 @@ export function RegPS(SP){
   SP1.T = 1073.15;
   SP1.P = SP.P;
   if(region_2(SP1)==-1){SP = null;return -1;}
-  Stest=SP1.s;
-  if(S>Stest){
+  Htest=SP1.h;
+  if(H>Htest){
       SP.M=0;
       return 1;      
   }
   SP1.P = SP.P;
   if(Tb23P(SP1)==-1){SP = null;return -1;}
-  if(region_2(SP1)==1){SP = null;return -1;}
-  Stest=SP1.s;
-  if(S>=Stest){
+  if(region_2(SP1)==-1){SP = null;return -1;}
+  Htest=SP1.h;
+  if(H>=Htest){
       SP.M=2;
       return 1;      
   }
   SP1.T = 623.15;
   SP1.P = SP.P;
   if(region_1(SP1)==-1){SP = null;return -1;}
-  Stest=SP1.s;
-  if(S>Stest){
+  Htest=SP1.h;
+  if(H>Htest){
       SP.M=30;
       return 1;      
   }
   SP1.T = 273.15;
   SP1.P = SP.P;
   if(region_1(SP1)==-1){SP = null;return -1;}
-  Stest=SP1.s;
-  if(S>Stest){
+  Htest=SP1.h;
+  if(H>Htest){
       SP.M=1;
       return 1;      
   }
@@ -228,3 +224,5 @@ export function RegPS(SP){
       return 1;      
   }
 }
+
+    

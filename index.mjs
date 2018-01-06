@@ -1,12 +1,12 @@
-import {propPT} from "./propPT.js"
-import {propPH} from "./propPH.js"
-import {propPS} from "./propPS.js"
-import {propHS} from "./propHS.js"
-import {expisPT} from "./expisPT.js"
-import {transPT} from "./transPT.js"
-import {transatP} from "./transatP.js"
-import {satproP} from "./satproP.js"
-import {satproT} from "./satproT.js"
+import {propPT} from "./propPT.mjs"
+import {propPH} from "./propPH.mjs"
+import {propPS} from "./propPS.mjs"
+import {propHS} from "./propHS.mjs"
+import {expisPT} from "./expisPT.mjs"
+import {transPT} from "./transPT.mjs"
+import {transatP} from "./transatP.mjs"
+import {satproP} from "./satproP.mjs"
+import {satproT} from "./satproT.mjs"
 
 //version()g
 //pt2g(P, T)g 

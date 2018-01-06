@@ -10,8 +10,8 @@
 /* Backward functions for region 2*/
 /* iteration process */
 "use strict"
-import {Tph2,Tps2} from "./IF97_BK2.js" 
-import {region_2,Gibbs_2} from "./IF97_2.js" 
+import {Tph2,Tps2} from "./IF97_BK2.mjs" 
+import {region_2,Gibbs_2} from "./IF97_2.mjs" 
 
 export function ZPH_2(SP){
   var n;
