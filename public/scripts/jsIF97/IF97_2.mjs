@@ -1,76 +1,13 @@
 // region2
 // calculate state in region2 by using pressure and temperature
+  const R = 0.461526
 
-"use strict"
-export function region_2(SP){
-  var P;
-  var T;
-  var pai;
-  var tau;
-  var R;
-  var w2;
-  var G0;
-  var Gp;
-  var Gpp
-  var Gt;
-  var Gtt;
-  var Gpt;
-  var Gibbs;
-
-  P = SP.P;
-  T = SP.T;
-
-  pai = P;
-  
-  if(P<=0.0 || T<=0.0){
-    SP = null;
-    return -1;
-  }
-  else{
-    tau = 540.0/T;
-  }
-  R = 0.461526;
-  Gibbs = {};
-  if(Gibbs_2(pai, tau, Gibbs)==-1){
-    SP =null;
-    return -1;
-  }
-
-  G0 =Gibbs.G0;
-  Gp =Gibbs.Gp;
-  Gpp=Gibbs.Gpp;
-  Gt =Gibbs.Gt;
-  Gtt=Gibbs.Gtt;
-  Gpt=Gibbs.Gpt;
-
-  SP.g = G0 * R * T;
-  SP.u = (tau * Gt - pai * Gp) * R * T;
-  SP.v = pai * Gp * R * T / (P*1.0e3);
-  SP.h = tau * Gt * R * T;
-  SP.s = (tau * Gt - G0) * R;
-  SP.cp = -tau * tau * Gtt * R;
-  w2 = Gp * Gp / ((Gp - tau * Gpt)*(Gp - tau * Gpt)/(tau * tau * Gtt)-Gpp)* R * T * 1.0e3;
-  if(w2 <0.0){ w2=0.0;}
-  SP.w = Math.sqrt(w2);
-  return 1; 
-}
-
-export function Gibbs_2(pai,tau,Gibbs){
-  var i;
-  var J = [];
-  var an = [];
-  var II = [];
-  var JJ = [];
-  var bn = [];
-  var tn;
-
-  var G0;
-  var Gp;
-  var Gpp
-  var Gt;
-  var Gtt;
-  var Gpt;
-
+  const J = [];
+  const an = [];
+  const II = [];
+  const JJ = [];
+  const bn = [];
+ 
   J[ 1]=   0  ;  an[ 1]=  -0.96927686500217e+1  ;
   J[ 2]=   1  ;  an[ 2]=   0.10086655968018e+2  ;
   J[ 3]=  -5  ;  an[ 3]=  -0.56087911283020e-2  ;
@@ -113,7 +50,7 @@ export function Gibbs_2(pai,tau,Gibbs){
   II[30]=  10  ;  JJ[30]=  10  ;  bn[30]=  -0.10234747095929e-12  ;
   II[31]=  10  ;  JJ[31]=  14  ;  bn[31]=  -0.10018179379511e-8  ;
   II[32]=  16  ;  JJ[32]=  29  ;  bn[32]=  -0.80882908646985e-10  ;
-  II[33]=  16  ;  JJ[33]=  50  ;  bn[33]=   0.10693031879409e+0  ;
+  II[33]=  16  ;  JJ[33]=  50  ;  bn[33]=   0.10693031879409e+0  ; 
   II[34]=  18  ;  JJ[34]=  57  ;  bn[34]=  -0.33662250574171e+0  ;
   II[35]=  20  ;  JJ[35]=  20  ;  bn[35]=   0.89185845355421e-24  ;
   II[36]=  20  ;  JJ[36]=  35  ;  bn[36]=   0.30629316876232e-12  ;
@@ -125,56 +62,103 @@ export function Gibbs_2(pai,tau,Gibbs){
   II[42]=  24  ;  JJ[42]=  40  ;  bn[42]=   0.55414715350778e-16  ;
   II[43]=  24  ;  JJ[43]=  58  ;  bn[43]=  -0.94369707241210e-6  ;
  
-
-  tn = tau - 0.5;
+"use strict"
+export const region_2 = (P, T) => {
   
-  G0 = 0.0;
-  Gp = 0.0;
-  Gpp= 0.0;
-  Gt = 0.0;
-  Gtt= 0.0;
-  Gpt= 0.0;
+  if(P<=0.0 || T<=0.0){
+    throw new RangeError("function reginon_2, P<=0,T<=0 in IF97_2.mjs")
+  }
+
+  const pai = P
+  const tau = 540.0/T
+  
+
+  const {G0,Gp,Gpp,Gt,Gtt,Gpt}= Gibbs_2(pai, tau)
+
+  const g = G0 * R * T;
+  const u = (tau * Gt - pai * Gp) * R * T
+  const v = pai * Gp * R * T / (P*1.0e3)
+  const h = tau * Gt * R * T
+  const s = (tau * Gt - G0) * R
+  const cp = -tau * tau * Gtt * R
+  const w2 = Gp * Gp / ((Gp - tau * Gpt)*(Gp - tau * Gpt)/(tau * tau * Gtt)-Gpp)* R * T * 1.0e3
+  const w = w2 < 0 ? 0 : Math.sqrt(w2)
+  const state = {
+    g: g,
+    u: u,
+    v: v,
+    h: h,
+    s: s,
+    cp: cp,
+    w: w,
+    MM:2,
+  }
+  return state
+}
+
+export const Gibbs_2 = (pai,tau) => {
+  const tn = tau - 0.5;
+  const pai2 = pai*pai
+  const tn2 = tn*tn
+  const tau2 = tau*tau
+  
+  const paiPow = []
+  const tnPow = []
+  const tauPow = []
+
+  for(let i=1;i<=43;i++){
+    paiPow[i] = Math.pow(pai,II[i])
+    tnPow[i] = Math.pow(tn,JJ[i])
+  }
+  for(let i=1;i<=9;i++){
+    tauPow[i] = Math.pow(tau,J[i])
+  }
+
+  let G0 = 0.0
+  let Gp = 0.0
+  let Gpp= 0.0
+  let Gt = 0.0
+  let Gtt= 0.0
+  let Gpt= 0.0
 
   /*residual part*/
-  for(i=1;i<=43;i++){
-    G0 = G0 + bn[i]*Math.pow(pai,II[i])*Math.pow(tn,JJ[i]);
-    Gp = Gp + bn[i]*II[i]*Math.pow(pai,II[i]-1)*Math.pow(tn,JJ[i]);
+  for(let i=1;i<=43;i++){
+    G0 +=  bn[i]*paiPow[i]*tnPow[i]
+    Gp +=  bn[i]*II[i]*paiPow[i]/pai*tnPow[i]
   }
-  for(i=6;i<=43;i++){
-    Gpp= Gpp + bn[i]*II[i]*(II[i]-1)*Math.pow(pai,II[i]-2)*Math.pow(tn,JJ[i]);
+  for(let i=6;i<=43;i++){
+    Gpp += bn[i]*II[i]*(II[i]-1)*paiPow[i]/pai2*tnPow[i]
   }
-  for(i=2;i<=43;i++){      
-    Gt = Gt + bn[i]*Math.pow(pai,II[i])*JJ[i]*Math.pow(tn,JJ[i]-1);
-    Gpt= Gpt+ bn[i]*II[i]*Math.pow(pai,II[i]-1)*JJ[i]*Math.pow(tn,JJ[i]-1);
+  for(let i=2;i<=43;i++){      
+    Gt  +=  bn[i]*paiPow[i]*JJ[i]*tnPow[i]/tn
+    Gpt +=  bn[i]*II[i]*paiPow[i]/pai*JJ[i]*tnPow[i]/tn
   }      
-  for(i=3;i<=43;i++){      
-    Gtt= Gtt+ bn[i]*Math.pow(pai,II[i])*JJ[i]*(JJ[i]-1)*Math.pow(tn,JJ[i]-2);
+  for(let i=3;i<=43;i++){      
+    Gtt += bn[i]*paiPow[i]*JJ[i]*(JJ[i]-1)*tnPow[i]/tn2
   }
 
   /*add the second term of ideal gas part*/
-  for(i=1;i<=9;i++){      
-    G0 = G0 + an[i]*Math.pow(tau,J[i]);
-    Gt = Gt + an[i]*J[i]*Math.pow(tau,J[i]-1);
-    Gtt= Gtt+ an[i]*J[i]*(J[i]-1)*Math.pow(tau,J[i]-2);
+  for(let i=1;i<=9;i++){      
+    G0  += an[i]*tauPow[i]
+    Gt  += an[i]*J[i]*tauPow[i]/tau
+    Gtt += an[i]*J[i]*(J[i]-1)*tauPow[i]/tau2
   }
 
   /*finally add first term of ideal gas part*/
   if(pai<=0.0){
-    Gibbs = null;
-    return -1;
+    throw new RangeError("furnction Gibbs_2 range error pai<=0.0")
   }
-  else{
-    G0 = G0 + Math.log(pai);
-    Gp = Gp + 1.0/pai;
-    Gpp= Gpp- 1.0/(pai*pai);
-  }
-  
-  Gibbs.G0 =G0;
-  Gibbs.Gp =Gp;
-  Gibbs.Gpp=Gpp;
-  Gibbs.Gt =Gt;
-  Gibbs.Gtt=Gtt;
-  Gibbs.Gpt=Gpt;
+  G0 +=  Math.log(pai)
+  Gp +=  1.0/pai
+  Gpp -= 1.0/pai2
 
-  return 1;
+  const Gibbs = {  
+    G0 :G0,
+    Gp :Gp,
+    Gpp:Gpp,
+    Gt :Gt,
+    Gtt:Gtt,
+    Gpt:Gpt,
+  }
+  return Gibbs
 }

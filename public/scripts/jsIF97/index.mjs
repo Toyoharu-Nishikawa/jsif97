@@ -1,3 +1,4 @@
+import {ver} from "./version.mjs"
 import {propPT} from "./propPT.mjs"
 import {propPH} from "./propPH.mjs"
 import {propPS} from "./propPS.mjs"
@@ -8,100 +9,103 @@ import {transatP} from "./transatP.mjs"
 import {satproP} from "./satproP.mjs"
 import {satproT} from "./satproT.mjs"
 
-//version()g
-//pt2g(P, T)g 
-//pt2u(P, T){
-//pt2v(P, T){
-//pt2h(P, T){
-//pt2s(P, T){
-//pt2w(P, T)g 
-//pt2MM(P, T){ 
-//pt2cp(p, t)g
-//pt2cv(p, t)g
-//pt2k(P, T){
-//pt2mu(P, T)g
-//ph2g(P, h)g
-//ph2u(P, h)g
-//ph2v(P, h)g
-//ph2t(P, h)g
-//ph2s(P, h)g
-//ph2w(P, h)g
-//ph2x(P, h)g
-//ph2MM(P, h)g
-//ph2mu(P, h, n)g
-//ph2cp(P, h)g
-//ph2cv(P, h)g
-//ph2k(P, h)g
-//ps2g(P, s)g
-//ps2u(P, s)g
-//ps2v(P, s)g
-//ps2t(P, s)g
-//ps2h(P, s)g
-//ps2w(P, s)g
-//ps2x(P, s)g
-//ps2k(P, s)g
-//ps2MM(P, s)g
-//hs2g(h, s)g
-//hs2u(h, s)g
-//hs2p(h, s)g
-//hs2t(h, s)g
-//hs2v(h, s)g
-//hs2w(h, s)g
-//hs2x(h, s)g
-//SATp2t(p)g
-//SATt2p(t)g
-//SATlp2g(p)g
-//SATlp2u(p)g
-//SATlp2t(p)g
-//SATlp2v(p)g
-//SATlp2h(p)g
-//SATlp2s(p)g
-//SATlp2w(p)g
-//SATlp2cp(p)g
-//SATlp2cv(p)g
-//SATlp2k(p)g
-//SATgp2g(p)g
-//SATgp2u(p)g
-//SATgp2t(p)g
-//SATgp2v(p)g
-//SATgp2h(p)g
-//SATgp2s(p)g
-//SATgp2w(p)g
-//SATgp2cp(p)g
-//SATgp2cv(p)g
-//SATgp2k(p)g
-//SATlt2g(t)g
-//SATlt2u(t)g
-//SATlt2p(t)g
-//SATlt2v(t)g
-//SATlt2h(t)g
-//SATlt2s(t)g
-//SATlt2w(t)g
-//SATlt2cp(t)g
-//SATlt2cv(t)g
-//SATlt2k(t)g
-//SATgt2g(t)g
-//SATgt2u(t)g
-//SATgt2p(t)g
-//SATgt2v(t)g
-//SATgt2h(t)g
-//SATgt2s(t)g
-//SATgt2w(t)g
-//SATgt2cp(t)g
-//SATgt2cv(t)g
-//SATgt2k(t)g
+//version()
+//pt2g(P, T) 
+//pt2u(P, T)
+//pt2v(P, T)
+//pt2h(P, T)
+//pt2s(P, T)
+//pt2w(P, T) 
+//pt2MM(P, T) 
+//pt2cp(p, t)
+//pt2cv(p, t)
+//pt2k(P, T)
+//pt2mu(P, T)
+//ph2g(P, h)
+//ph2u(P, h)
+//ph2v(P, h)
+//ph2t(P, h)
+//ph2s(P, h)
+//ph2w(P, h)
+//ph2x(P, h)
+//ph2MM(P, h)
+//ph2mu(P, h, n)
+//ph2cp(P, h)
+//ph2cv(P, h)
+//ph2k(P, h)
+//ps2g(P, s)
+//ps2u(P, s)
+//ps2v(P, s)
+//ps2t(P, s)
+//ps2h(P, s)
+//ps2w(P, s)
+//ps2x(P, s)
+//ps2k(P, s)
+//ps2MM(P, s)
+//hs2g(h, s)
+//hs2u(h, s)
+//hs2p(h, s)
+//hs2t(h, s)
+//hs2v(h, s)
+//hs2w(h, s)
+//hs2x(h, s)
+//SATp2t(p)
+//SATt2p(t)
+//SATlp2g(p)
+//SATlp2u(p)
+//SATlp2t(p)
+//SATlp2v(p)
+//SATlp2h(p)
+//SATlp2s(p)
+//SATlp2w(p)
+//SATlp2cp(p)
+//SATlp2cv(p)
+//SATlp2k(p)
+//SATgp2g(p)
+//SATgp2u(p)
+//SATgp2t(p)
+//SATgp2v(p)
+//SATgp2h(p)
+//SATgp2s(p)
+//SATgp2w(p)
+//SATgp2cp(p)
+//SATgp2cv(p)
+//SATgp2k(p)
+//SATlt2g(t)
+//SATlt2u(t)
+//SATlt2p(t)
+//SATlt2v(t)
+//SATlt2h(t)
+//SATlt2s(t)
+//SATlt2w(t)
+//SATlt2cp(t)
+//SATlt2cv(t)
+//SATlt2k(t)
+//SATgt2g(t)
+//SATgt2u(t)
+//SATgt2p(t)
+//SATgt2v(t)
+//SATgt2h(t)
+//SATgt2s(t)
+//SATgt2w(t)
+//SATgt2cp(t)
+//SATgt2cv(t)
+//SATgt2k(t)
 
 "use strict"
 
 //version
-export function version() {
+export const version = ()=> {
   //version
-  var version = "ver 2.3 updated  by Toyoharu Nishikawa in 2018.1.6";
-
-  return version; 
+  return ver
 }
 
 // pt
+export const pt2all = (P, T) => {
+  const state = propPT(P, T)
+  return state
+}
+
 export function pt2g(P, T) { 
   // input
   // P:pressure [Pa], T:temperature [K]
@@ -182,22 +186,15 @@ export function pt2h(P, T){
   return h;
 }
 
-export function pt2s(P, T){
+export const pt2s = (P, T) => {
   // input
   // P:pressure [Pa], T:temperature [K]
   
   // output
   // s:specific entropy [kJ/kgK]
   
-  var s;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.T = T;
-  
-  if (propPT(SP) == -1) { SP = null; return -1; }
-  s = SP.s;
+  const state = pt2all(P, T)
+  const s = state.s;
   
   return s;
 }

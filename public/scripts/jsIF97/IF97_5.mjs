@@ -5,48 +5,37 @@
 
 // region 5 based on Eq.(32) of IAPWS-IF97
 "use strict"
-export function region_5(SP){
-  var P;
-  var T;
 
-  var pai;
-  var tau;
-  var R;  //gas constant in in kJ/kgK
-  var w2;  
+  const R   = 0.461526  //gas constant in in kJ/kgK
 
-  var G0 ;
-  var Gp ;
-  var Gpp;
-  var Gt ;
-  var Gtt;
-  var Gpt;
-  var Gibbs;
+  const J = [];
+  const an = [];
+  const II = [];
+  const JJ = [];
+  const bn = [];
+ 
+  J[ 1]=  0  ;  an[ 1]=  -0.13179983674201e+2  ;
+  J[ 2]=  1  ;  an[ 2]=   0.68540841634434e+1  ;
+  J[ 3]= -3  ;  an[ 3]=  -0.24805148933466e-1  ;
+  J[ 4]= -2  ;  an[ 4]=   0.36901534980333e+0  ;
+  J[ 5]= -1  ;  an[ 5]=  -0.31161318213925e+1  ;
+  J[ 6]=  2  ;  an[ 6]=  -0.32961626538917e+0  ;
   
-  P = SP.P;
-  T = SP.T;
+  II[ 1]=  1  ;  JJ[ 1]=  0  ;  bn[ 1]=  -0.12563183589592e-3  ;
+  II[ 2]=  1  ;  JJ[ 2]=  1  ;  bn[ 2]=   0.21774678714571e-2  ;
+  II[ 3]=  1  ;  JJ[ 3]=  3  ;  bn[ 3]=  -0.45942820899910e-2  ;
+  II[ 4]=  2  ;  JJ[ 4]=  9  ;  bn[ 4]=  -0.39724828359569e-5  ;
+  II[ 5]=  3  ;  JJ[ 5]=  3  ;  bn[ 5]=   0.12919228289784e-6  ;
+ 
+export function region_5(P, T){
   
   if(P<=0.0 || T<=0.0){
-    SP = null;
-    return -1;
+    throw new RangeError("function region5 P<=0 T<=0 in IF97_5.mjs")
   }
-  else{
-    pai = P;
-    tau = 1000 / T;
-  }
-  R   = 0.461526;
+  const pai = P;
+  const tau = 1000 / T;
   
-  Gibbs = {};
-  if(Gibbs_5(pai,tau, Gibbs)==-1){
-    SP = null;
-    return -1;
-  }
-
-  G0 = Gibbs.G0;
-  Gp = Gibbs.Gp;
-  Gpp= Gibbs.Gpp;
-  Gt = Gibbs.Gt;
-  Gtt= Gibbs.Gtt;
-  Gpt= Gibbs.Gpt;
+  const { G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs_5(pai, tau)
 
   SP.g  = G0*R*SP.T;
   SP.u  = (tau*Gt - pai*Gibbs.Gp) * R * SP.T;
@@ -62,83 +51,67 @@ export function region_5(SP){
 }
 
 
-export function Gibbs_5(pai, tau, Gibbs){
-  var i;
-  var J = [];
-  var an = [];
-  var II = [];
-  var JJ = [];
-  var bn = [];
+export const Gibbs_5 = (pai, tau) => {
   
+  let G0 = 0.0;
+  let Gp = 0.0;
+  let Gpp= 0.0;
+  let Gt = 0.0;
+  let Gtt= 0.0;
+  let Gpt= 0.0;
 
-  var G0 ;
-  var Gp ;
-  var Gpp;
-  var Gt ;
-  var Gtt;
-  var Gpt;
-  
-  J[ 1]=  0  ;  an[ 1]=  -0.13179983674201e+2  ;
-  J[ 2]=  1  ;  an[ 2]=   0.68540841634434e+1  ;
-  J[ 3]= -3  ;  an[ 3]=  -0.24805148933466e-1  ;
-  J[ 4]= -2  ;  an[ 4]=   0.36901534980333e+0  ;
-  J[ 5]= -1  ;  an[ 5]=  -0.31161318213925e+1  ;
-  J[ 6]=  2  ;  an[ 6]=  -0.32961626538917e+0  ;
-  
-  II[ 1]=  1  ;  JJ[ 1]=  0  ;  bn[ 1]=  -0.12563183589592e-3  ;
-  II[ 2]=  1  ;  JJ[ 2]=  1  ;  bn[ 2]=   0.21774678714571e-2  ;
-  II[ 3]=  1  ;  JJ[ 3]=  3  ;  bn[ 3]=  -0.45942820899910e-2  ;
-  II[ 4]=  2  ;  JJ[ 4]=  9  ;  bn[ 4]=  -0.39724828359569e-5  ;
-  II[ 5]=  3  ;  JJ[ 5]=  3  ;  bn[ 5]=   0.12919228289784e-6  ;
- 
-  
-  G0 = 0.0;
-  Gp = 0.0;
-  Gpp= 0.0;
-  Gt = 0.0;
-  Gtt= 0.0;
-  Gpt= 0.0;
+  const pai2 = pai*pai
+  const tau2 = tau*tau
+
+  const paiPow = []
+  const tauPow = []
+  const tau2Pow = []
+  for(let i=1;i<=5;i++){
+    paiPow[i] = Math.pow(pai,II[i])
+    tauPow[i] = Math.pow(tau,JJ[i])
+  }
+  for(let i=1;i<=6;i++){
+    tau2Pow[i] = Math.pow(tau,J[i])
+  }
 
   /*first calculate residual part*/
-  for(i=1;i<=5;i++){
-    G0 = G0 + bn[i]*Math.pow(pai,II[i])*Math.pow(tau,JJ[i]);
-    Gp = Gp + bn[i]*II[i]*Math.pow(pai,II[i]-1)*Math.pow(tau,JJ[i]);
+  for(let i=1;i<=5;i++){
+    G0 +=  bn[i]*paiPow[i]*tauPow[i]
+    Gp +=  bn[i]*II[i]*paiPow/pai*tauPow[i]
   }
-  for(i=4;i<=5;i++){
-    Gpp= Gpp + bn[i]*II[i]*(II[i]-1)*Math.pow(pai,II[i]-2)*Math.pow(tau,JJ[i]);
+  for(let i=4;i<=5;i++){
+    Gpp +=  bn[i]*II[i]*(II[i]-1)*paiPow[i]/pai2*tauPow[i]
   }
-  for(i=2;i<=5;i++){
-    Gt = Gt + bn[i]*Math.pow(pai,II[i])*JJ[i]*Math.pow(tau,JJ[i]-1);
-    Gpt= Gpt+ bn[i]*II[i]*Math.pow(pai,II[i]-1)*JJ[i]*Math.pow(tau,JJ[i]-1);
+  for(let i=2;i<=5;i++){
+    Gt += bn[i]*paiPow[i]*JJ[i]*tauPow[i]/tau;
+    Gpt+= bn[i]*II[i]*paiPow[i]/pai*JJ[i]*tauPow[i]/tau
   }
-  for(i=3;i<=5;i++){
-    Gtt= Gtt+ bn[i]*Math.pow(pai,II[i])*JJ[i]*(JJ[i]-1)*Math.pow(tau,JJ[i]-2);
+  for(let i=3;i<=5;i++){
+    Gtt += bn[i]*paiPow[i]*JJ[i]*(JJ[i]-1)*tauPow[i]/tau2
   }
 
   /*second calculate second term of ideal gas part */
-  for(i=1;i<=6;i++){
-    G0 = G0 + an[i]*Math.pow(tau,J[i]);
-    Gt = Gt + an[i]*J[i]*Math.pow(tau,J[i]-1);
-    Gtt= Gtt+ an[i]*J[i]*(J[i]-1)*Math.pow(tau,J[i]-2);
+  for(let i=1;i<=6;i++){
+    G0 = G0 + an[i]*tau2Pow[i]
+    Gt = Gt + an[i]*J[i]*tau2Pow[i]/tau
+    Gtt= Gtt+ an[i]*J[i]*(J[i]-1)*tau2Pow[i]/tau2
   }
 
   /*finally add first term of ideal gas part*/
   if(pai<=0.0){
-    Gibbs = null;
-    return -1;
+    throw new RangeError("function Gibbs_5 pai<=0 in IF97_5.mjs")
   }
-  else{
-    G0 = G0 + Math.log(pai);
-    Gp = Gp + 1.0/pai;
-    Gpp= Gpp- 1.0/(pai*pai);
-  }
+  G0  += Math.log(pai);
+  Gp  += 1.0/pai;
+  Gpp -= 1.0/(pai*pai);
   
-  Gibbs.G0 =G0;
-  Gibbs.Gp =Gp;
-  Gibbs.Gpp=Gpp;
-  Gibbs.Gt =Gt;
-  Gibbs.Gtt=Gtt;
-  Gibbs.Gpt=Gpt;
-
-  return 1;
+  const Gibbs = {
+    G0 : G0,
+    Gp :Gp,
+    Gpp:Gpp,
+    Gt :Gt,
+    Gtt:Gtt,
+    Gpt:Gpt,
+  }
+  return Gibbs 
 }

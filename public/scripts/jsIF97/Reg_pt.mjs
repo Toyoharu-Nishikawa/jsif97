@@ -12,116 +12,101 @@ import {Tb23P} from "./IF97_B23.mjs"
 //       5: region 5
 //       0: out of IF97
 
-export function RegPT(SP){
+const T1 = 623.15
+const P1 = PsatT(T1)
+
+
+export const RegPT = (P, T, NP) => {
   /* input P: MPa, H: kJ/kg */
   /* output M               */
-  var T;
-  var P;
-  var P1;
-  var Ttest;
-  var SP1;
-  
-  SP1 = {};
-  
-  T=SP.T;
-  P=SP.P;
   
   /* Test of maximum pressure */
   if(P > 100){
-    SP.M=0;
-    return 1;
+    const M = 0
+    return M 
   }
   /* Test below 10 MPa */  
-  if(SP.P <= 10){
+  if(P <= 10){
     if(T>2273.15){
-      SP.M=0;
-      return 1;
+      const M = 0
+      return M
     }
     if(T>1073.15){
-      SP.M=5;
-      return 1;
+      const M = 5
+      return M 
     }
-    SP1.P=SP.P;
-    if(TsatP(SP1)==-1){
-      SP = null;return -1;
-    }
-    Ttest=SP1.T;
-    if(SP.NP !=1){
+    const Ttest = TsatP(P)
+
+    if(NP !=1){
       if(T>=Ttest){
-        SP.M=2;
-        return 1;
+        const M = 2
+        return M 
       }
     }
     else{
       if(T>Ttest){
-        SP.M=2;
-        return 1;
+        const M = 2
+        return M 
       }
     }
     if(T>=273.15){
-      SP.M=1;
-      return 1;
+      const M = 1
+      return M 
     }
     else{
-      SP.M=0;
-      return 1;
+      const M = 0
+      return M 
     }
   }
   /*Test below saturation pressure at 350 degC*/
-  SP1.T=623.15;
-  if(PsatT(SP1)==-1){SP = null;return -1;}
-  P1=SP1.P;
   if(P<=P1){
     if(T>1073.15){
-      SP.M=0;
-      return 1;
+      const M=0
+      return M 
     }
-    SP1.P=P;
-    if(TsatP(SP1)==-1){SP = null;return -1;}
-    Ttest=SP1.T;
-    if(SP.NP !=1){
+    const Ttest = TsatP(P)
+    if(NP !=1){
       if(T>=Ttest){
-        SP.M=2;
-        return 1;  
+        const M = 2
+        return M  
       }
     }
     else{
       if(T>Ttest){
-        SP.M=2;
-        return 1;          
+        const M = 2
+        return M          
       }
     }
     if(T>=273.15){
-        SP.M=1;
-        return 1;            
+        const M = 1
+        return M           
     }
     else{
-        SP.M=0;
-        return 1;                
+        const M = 0
+        return M                
     }
   }
+
   /*Test above saturation pressure at 350 degC*/
   if(T>1073.15){
-    SP.M=0;
-    return 1;  
+    const M = 0
+    return M  
   }
-  SP1.P=P;  
-  if(Tb23P(SP1)==-1){SP = null;return -1;}
-  Ttest=SP1.T;
+  const Ttest = Tb23P(P)
   if(T>=Ttest){
-    SP.M=2;
-    return 1;      
+    const M = 2
+    return M      
   }
   if(T>623.15){
-    SP.M=3;
-    return 1;      
+    const M=3
+    return M      
   }  
   if(T>=273.15){
-    SP.M=1;
-    return 1;      
+    const M = 1
+    return M      
   }
   else{
-    SP.M=0;
-    return 1;
+    const M = 0
+    return M 
   }  
 }
