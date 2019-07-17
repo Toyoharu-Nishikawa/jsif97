@@ -59,11 +59,10 @@ export ZPS_1 = (P, s) => {
     T = T + dlt/dsdt;
   }
   if(Flag==0){
-    console.log("ZPS_1 not converged");
-    return -1;  
+    throw new RangeError("ZPS_1 not converged")
   }
   
-  const g  =Gibbs.G0*R*T
+  const g  = Gibbs.G0*R*T
   const u  = (tau*Gibbs.Gt - pai*Gibbs.Gp) * R * T
   const v  = pai * Gibbs.Gp * R * T / (P*1e+3)
   const h  = tau * Gibbs.Gt * R * T
@@ -71,7 +70,7 @@ export ZPS_1 = (P, s) => {
   const tmp = Gibbs.Gp-tau*Gibbs.Gpt
   const tmp2 = tmp * tmp
   const w2 = Gibbs.Gp*Gibbs.Gp/tmp2/(tau*tau*Gibbs.Gtt)-Gibbs.Gpp)*R*T*1e+3
-  const w  =w2 <0 ? 0 : Math.sqrt(w2)
+  const w  = w2 <0 ? 0 : Math.sqrt(w2)
  
   const state = {
     g: g,
@@ -83,6 +82,7 @@ export ZPS_1 = (P, s) => {
     cp: cp,
     w: w,
     MM: 1,
+    x: 0,
   }
   
   return state

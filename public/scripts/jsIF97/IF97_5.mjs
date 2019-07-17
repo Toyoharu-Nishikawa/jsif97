@@ -56,8 +56,8 @@ export function region_5(P, T){
     T: T,
     h: h,
     s: s,
-    cp: cp
-    w: wk
+    cp: cp,
+    w: w,
   }
 
   return 

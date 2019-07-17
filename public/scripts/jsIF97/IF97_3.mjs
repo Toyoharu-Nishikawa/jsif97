@@ -81,8 +81,7 @@ export function region_3(v, T){
         2.0*dlt*Fd + dlt*dlt*Fdd
         - tmp2/(tau*tau*Ftt)
        ) * R * T * 1E+3;
-  if (w2 < 0.0) w2=0.0;
-  const w  = w2<0 ? 0 : Math.sqrt(w2)
+  const w  = w2 < 0 ? 0 : Math.sqrt(w2)
 
   const state = {
     u: u,

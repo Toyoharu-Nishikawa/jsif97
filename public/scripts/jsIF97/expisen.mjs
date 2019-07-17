@@ -32,227 +32,160 @@ import {Vsatl_3, Vsatg_3, VPT_3} from "./Aux_3.mjs"
 "use strict"
 
 /*isentropic exponent, Cp, and Cv in region 1, 2, 3, and 5 */
-export function  expisen1(SP){
-  var R;
-  var Tn;
-  var Pn;
-  var tau;
-  var pai;
-  var v;
-  var dvdp;
-  var dpdv;
-  var dpdvs;
-  var Cp;
-  var Cv;
-  var kappa;
-  var Gibbs;
+export const  expisen1 = (P, T) => {
+  if(P<=0.0 || T<=0.0){
+    throw new RangeError("function expisen1 P<=0 T<=0 in expisen.mjs")
+  }
+ 
+  const Tn=1386.0
+  const Pn=16.53  
+  const R=0.461526
   
-  Tn=1386.0;
-  Pn=16.53;  
-  R=0.461526;
-  
-  if(SP.P<=0.0 || SP.T<=0.0){SP = null;return -1;}
-  
-  pai=SP.P/Pn;
-  tau=Tn/SP.T;
+  const pai = P/Pn
+  const tau =Tn/T
 
-  Gibbs = {};
-  Gibbs_1(pai,tau,Gibbs);
+  const {G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs_1(pai, tau)
 
-  v    = R*SP.T*Gibbs.Gp*1.0e-3/Pn;
-  dvdp = R*SP.T*Gibbs.Gpp*1.0e-3/(Pn*Pn);
-  dpdv = 1.0/dvdp;
-  Cp   = -tau*tau*Gibbs.Gtt*R;
-  Cv   = (-tau*tau*Gibbs.Gtt+Math.pow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
-  dpdvs= Cp/Cv*dpdv;
-  kappa=-dpdvs*v/SP.P;
+  const v    = R * T * Gp * 1.0e-3 / Pn
+  const dvdp = R * T * Gpp *1.0e-3 / (Pn*Pn)
+  const dpdv = 1.0/dvdp
+  const cp   = -tau * tau * Gtt * R
+  const tmp = Gp-tau*Gpt
+  const tmp2 = tmp * tmp
+  const cv   = (-tau * tau * Gtt + tmp2 / Gpp) * R
+  const dpdvs = cp/cv * dpdv
+  const kappa = -dpdvs * v / P
   
-  SP.cp=Cp;
-  SP.cv=Cv;
-  SP.kappa=kappa;
+  const expis = {
+    cp :cp,
+    cv: cv,
+    kappa: kappa
+  }
   
-  return 1;
+  return expis 
 }
 
 
 
-export function expisen2(SP){
-  var R;
-  var Tn;
-  var tau;
-  var v;
-  var p;
-  var dvdp;
-  var dpdv;
-  var dpdvs;
-  var Cp;
-  var Cv;
-  var kappa;
-  var Gibbs;
-  
-  Tn=540.0;
-  R=0.461526;
-  
-  if(SP.P<=0.0 || SP.T<=0.0){SP = null;return -1;}
-  p=SP.P;
-  tau=Tn/SP.T;
+export const expisen2 = (P, T) => {
+  if(P<=0.0 || T<=0.0){
+    throw new RangeError("function expisen2 P<=0 T<=0 in expisen.mjs")
+  }
 
-  Gibbs = {};
-  Gibbs_2(p,tau,Gibbs);
-  v    = R*SP.T*Gibbs.Gp*1.0e-3;
-  dvdp = R*SP.T*Gibbs.Gpp*1.0e-3;
-  dpdv = 1.0/dvdp;
-  Cp   = -tau*tau*Gibbs.Gtt*R;
-  Cv   = (-tau*tau*Gibbs.Gtt+Math.pow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
-  dpdvs= Cp/Cv*dpdv;
-  kappa=-dpdvs*v/SP.P;
+  const Tn=540.0
+  const R=0.461526
+
+  const pai = P
+  const tau=Tn/T
+
+  const {G0,Gp,Gpp,Gt,Gtt,Gpt}= Gibbs_2(pai, tau)
+
+  const v    = R * T * Gp * 1.0e-3
+  const dvdp = R * T * Gpp * 1.0e-3
+  const dpdv = 1.0/dvdp
+  const cp   = -tau * tau * Gtt * R
+  const tmp = Gp-tau*Gpt
+  const tmp2 = tmp * tmp
+  const cv   = (-tau * tau * Gtt+ tmp2 / Gpp) * R
+  const dpdvs = cp / cv * dpdv;
+  const kappa = -dpdvs * v / P
+ 
+  const expis = { 
+    cp: cp,
+    cv: cv,
+    kappa: kappa,
+  }
   
-  SP.cp=Cp;
-  SP.cv=Cv;
-  SP.kappa=kappa;
-  
-  return 1;
+  return expis 
 }
 
 /* isentropic exponent, Cp, and Cv in region 3, p and T as main variables*/
-export function expisen3(SP){
-  var SP1;
-  
-  SP1 = {};
-  
-  SP1.P=SP.P;
-  SP1.T=SP.T;
-  VPT_3(SP1);
-  if(expisen3h(SP1)==-1){SP = null;return -1;}
-  
-  SP.cp    = SP1.cp;
-  SP.cv    = SP1.cv;
-  SP.kappa = SP1.kappa;
-  
-  return 1;
+export const expisen3 = (P, T) => {
+  const v = VPT_3(P, T);
+  const expis = expisen3h(v, T)
+ 
+  return expis 
 }
 
 /* isentropic exponent, Cp, and Cv of saturated liquid in region 3*/
-export function expsatL3(SP){
-  var SP1;
-  
-  SP1 = {};
+export const expsatL3 = (T) => {
+  const v = Vsatl_3(T)
+  const expis = expisen3h(v, T)
 
-  SP1.T=SP.T;
-  if(Vsatl_3(SP1)==-1){SP = null;return -1;}
-  if(expisen3h(SP1)==-1){SP = null;return -1;}
-  
-  SP.cp    = SP1.cp;
-  SP.cv    = SP1.cv;
-  SP.kappa = SP1.kappa;
-  
-  return 1;
+  return expis 
 }
 
 /* isentropic exponent, Cp, and Cv of saturated liquid in region 3*/
-export function expsatG3(SP){
-  var SP1;
-  
-  SP1 = null;
-  
-  SP1.T=SP.T;
-  if(Vsatg_3(SP1)==-1){SP = null;return -1;}
-  if(expisen3h(SP1)==-1){SP = null;return -1;}
-  
-  SP.cp    = SP1.cp;
-  SP.cv    = SP1.cv;
-  SP.kappa = SP1.kappa;
-  
-  return 1;
+export const expsatG3(T){
+  const v = Vsatg_3(T)
+  const expis = expisen3h(v, T)
+
+  return expis 
 }
 
 /* isentropic exponent, Cp, and Cv in region 3, v and T as main variables*/
-export function expisen3h(SP){
-  var rho;
-  var Tn;
-  var tau;
-  var rhon;
-  var dlt;
-  var R;
-  var p;
-  var t;
-  var v;
-  var dpdd;
-  var dpdv;
-  var dpdvs;
-  var Cp;
-  var Cv;
-  var kappa;
-  var SP1;
-  var Helm;
+export const expisen3h = (v, T) => {
+  if(v<=0.0 || T<=0.0){
+    throw new RangeError("function expisen3h v<=0 T<=0 in expisen.mjs")
+  }
+  const Tn  = 647.096
+  const rhon= 322.0
+  const R   = 0.461526
   
-  SP1 = {};
-  Helm = {};
-  
-  Tn  = 647.096;
-  rhon= 322.0;
-  R   = 0.461526;
-  
-  if(SP.v<=0.0 || SP.T<=0.0){SP = null;return -1;}
-  rho = 1.0/SP.v;
-  dlt = rho/rhon;
-  tau = Tn/SP.T;
+  const rho = 1.0 / v
+  const dlt = rho / rhon
+  const tau = Tn / T
 
-  if(Helm_3(dlt,tau,Helm)==-1){SP = null;return -1;}
-  p    = dlt*Helm.Fd*R*SP.T*rho*1.0e-3;
-  t    = SP.T;
-  v    = SP.v;
-  dpdd = R*t*rhon*(2.0*dlt*Helm.Fd+dlt*dlt*Helm.Fdd)*1.0e-3;
-  dpdv = -dpdd/(rhon*v*v);
-  Cp   = (-tau*tau*Helm.Ftt+Math.pow(dlt*Helm.Fd-dlt*tau*Helm.Fdt,2)/(2.0*dlt*Helm.Fd+dlt*dlt*Helm.Fdd))*R;
-  Cv   = (-tau*tau*Helm.Ftt)*R;
-  dpdvs= Cp/Cv*dpdv;
-  kappa= -dpdvs*v/p;
+  const {F0, Fd , Fdd, Ft, Ftt, Fdt} = Helm_3(dlt, tau)
+
+  const P    = dlt * Fd * R * T * rho * 1.0e-3
+  const dpdd = R * T * rhon * (2.0 * dlt * Fd + dlt * dlt * Fdd) * 1.0e-3
+  const dpdv = -dpdd / (rhon * v * v);
+  const tmp = dlt * Fd - dlt * tau * Fdt
+  const tmp2 = tmp * tmp
+  const cp   = (-tau * tau * Ftt + tmp2/(2.0 * dlt * Fd + dlt * dlt * Fdd)) * R
+  const cv   = (-tau * tau * Ftt) * R
+  const dpdvs= cp / cv * dpdv;
+  const kappa= -dpdvs *v / P;
+
+  const expis = { 
+    cp: cp,
+    cv: cv,
+    kappa: kappa,
+  }
   
-  SP.cp    = Cp;
-  SP.cv    = Cv;
-  SP.kappa = kappa;
-  
-  return 1;
+  return expis 
 }
 
-export function expisen5(SP){
-  var R;
-  var Tn;
-  var tau;
-  var p;
-  var v;
-  var dvdp;
-  var dpdv;
-  var dpdvs;
-  var Cp;
-  var Cv;
-  var kappa;
-  var Gibbs;
+export const expisen5 = (P, T) => {
+
+  if(P<=0.0||T<=0.0){
+    throw new RangeError("function expisen5 P<=0 T<=0 in expisen.mjs")
+  }
+ 
+  const Tn = 1000.0
+  const R = 0.461526
+  const pai = P
+  const tau = Tn / T
+
+  const { G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs_5(pai, tau)
   
-  Tn=1000.0;
-  R=0.461526;
+  const v = R * T * Gp * 1.0e-3
+  const dvdp = R * T * Gpp * 1.0e-3
+  const dpdv = 1.0 / dvdp
+  const cp = -tau * tau * Gtt * R
+  const tmp = Gp-tau * Gpt
+  const tmp2 = tmp * tmp
+  const cv = (-tau * tau * Gtt + tmp2 / Gpp) * R
+  const dpdvs= cp /cv * dpdv
+  const kappa = -dpdvs * v / P
+
+  const expis = { 
+    cp: cp,
+    cv: cv,
+    kappa: kappa,
+  }
   
-  
-  if(SP.P<=0.0||SP.T<=0.0){SP = null;return -1;}
-  tau=Tn/SP.T;
-  p  = SP.P;
-  
-  Gibbs = {};
-  if(Gibbs_5(p,tau,Gibbs)==-1){SP = null;return -1;}
-  
-  v    = R*SP.T*Gibbs.Gp*1.0e-3;
-  dvdp = R*SP.T*Gibbs.Gpp*1.0e-3;
-  dpdv = 1.0/dvdp;
-  Cp   = -tau*tau*Gibbs.Gtt*R;
-  Cv   = (-tau*tau*Gibbs.Gtt+Math.pow(Gibbs.Gp-tau*Gibbs.Gpt,2)/Gibbs.Gpp)*R;
-  dpdvs= Cp/Cv*dpdv;
-  kappa=-dpdvs*v/SP.P;
-  
-  SP.cp=Cp;
-  SP.cv=Cv;
-  SP.kappa=kappa;
-  
-  return 1;
+  return expis 
 }
     
