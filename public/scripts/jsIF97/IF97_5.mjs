@@ -37,17 +37,30 @@ export function region_5(P, T){
   
   const { G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs_5(pai, tau)
 
-  SP.g  = G0*R*SP.T;
-  SP.u  = (tau*Gt - pai*Gibbs.Gp) * R * SP.T;
-  SP.v  = pai * Gp * R * T / (P*1E+3);
-  SP.h  = tau * Gt * R * T;
-  SP.s  = (tau* Gt - G0) * R;
-  SP.cp = -tau*tau * Gtt * R;
-  w2 = Gp*Gp/(Math.pow(Gp-tau*Gpt,2)/(tau*tau*Gtt)-Gpp)*R*T*1e+3;
-  if (w2 < 0.0){w2=0.0;}
-  SP.w  = Math.sqrt(w2);
+  const g  = G0*R*SP.T;
+  const u  = (tau*Gt - pai*Gibbs.Gp) * R * SP.T;
+  const v  = pai * Gp * R * T / (P*1E+3);
+  const h  = tau * Gt * R * T;
+  const s  = (tau* Gt - G0) * R;
+  const cp = -tau*tau * Gtt * R;
+  const tmp = Gp-tau*Gpt
+  const tmp2 = tmp*tmp
+  const w2 = Gp*Gp/tmp2/(tau*tau*Gtt)-Gpp)*R*T*1e+3;
+  const w  =w2 <0 ? 0 : Math.sqrt(w2)
 
-  return 1;
+  const state = {
+    g: g,
+    u: u,
+    v: v,
+    P: P,
+    T: T,
+    h: h,
+    s: s,
+    cp: cp
+    w: wk
+  }
+
+  return 
 }
 
 

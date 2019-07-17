@@ -81,12 +81,16 @@ export const region_2 = (P, T) => {
   const h = tau * Gt * R * T
   const s = (tau * Gt - G0) * R
   const cp = -tau * tau * Gtt * R
-  const w2 = Gp * Gp / ((Gp - tau * Gpt)*(Gp - tau * Gpt)/(tau * tau * Gtt)-Gpp)* R * T * 1.0e3
+  const tmp = Gp - tau * Gpt
+  const tmp2 = tmp * tmp
+  const w2 = Gp * Gp / tmp2 /(tau * tau * Gtt)-Gpp)* R * T * 1.0e3
   const w = w2 < 0 ? 0 : Math.sqrt(w2)
   const state = {
     g: g,
     u: u,
     v: v,
+    P: P,
+    T: T,
     h: h,
     s: s,
     cp: cp,
@@ -97,6 +101,10 @@ export const region_2 = (P, T) => {
 }
 
 export const Gibbs_2 = (pai,tau) => {
+  if(pai<=0.0){
+    throw new RangeError("furnction Gibbs_2 range error pai<=0.0")
+  }
+
   const tn = tau - 0.5;
   const pai2 = pai*pai
   const tn2 = tn*tn
@@ -145,9 +153,6 @@ export const Gibbs_2 = (pai,tau) => {
   }
 
   /*finally add first term of ideal gas part*/
-  if(pai<=0.0){
-    throw new RangeError("furnction Gibbs_2 range error pai<=0.0")
-  }
   G0 +=  Math.log(pai)
   Gp +=  1.0/pai
   Gpp -= 1.0/pai2

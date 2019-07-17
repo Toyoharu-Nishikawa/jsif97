@@ -44,26 +44,12 @@
 
 
 export const region_1 = (P, T) => {
-  var P;
-  var T;
-  var pai;
-  var tau;
-  var R; 
-  var w2;
-  var G0;
-  var Gp;
-  var Gpp;
-  var Gt;
-  var Gtt;
-  var Gpt;
-  var Gibbs;
-
   if(P<=0.0 || T<=0.0){
     throw new RangeError("function region_1 P<=0 T<=0 in IF97_1.mjs")
   }
   const pai = P/16.53;
-  const  tau = 1386.0/T;
-  const {G0, Gp, Gpp, Gt, Gtt, Gpt } = Gibbs_5(pai, tau)
+  const tau = 1386.0/T;
+  const {G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs_1(pai, tau)
   
   const g = G0 * R * T
   const u = (tau * Gt - pai * Gp) * R * T
@@ -77,6 +63,8 @@ export const region_1 = (P, T) => {
     g: g,
     u: u,
     v: v,
+    P: P,
+    T: T,
     h: h,
     s: s,
     cp: cp,
@@ -99,8 +87,8 @@ export const Gibbs_1 = (pai, tau) => {
 
   const pnPow = []
   const tnPow = []
-  const pn = pn * pn
-  const tn = tn * tn
+  const pn2 = pn * pn
+  const tn2 = tn * tn
 
   for(let i=1;i<=34;i++){
     pnPow[i] = Math.pow(pn, II[i])

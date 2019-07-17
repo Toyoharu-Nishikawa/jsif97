@@ -25,10 +25,9 @@ export const propPT = (P, T) => {
       return state
     }
     case 3 :{
-      SP.MM = 3;
-      if(VPT_3(SP)==-1){SP = null;return -1;}
-      if(region_3(SP)==-1){SP = null;return -1;}
-      break
+      const v = VPT_3(P, T)
+      const state = region_3(v, T)
+      return state
     }
     case 5 :{
       SP.MM = 5;
