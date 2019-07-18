@@ -43,7 +43,7 @@ export ZPS_1 = (P, s) => {
   let T = Tps1(P, s)
   
   const pai=P/16.53;
-  
+  ;
   let Flag=0
   let Gibbs
   for(let n=1;n<=10;n++){
@@ -82,7 +82,6 @@ export ZPS_1 = (P, s) => {
     cp: cp,
     w: w,
     MM: 1,
-    x: 0,
   }
   
   return state

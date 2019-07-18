@@ -24,7 +24,7 @@ import {ZPH_2,ZPS_2} from './Aux_2.mjs'
 
 // Auxiliary subroutines for propHS
 // The subroutines are applicable in the regions 2a and 2b.
-function deri_2HS(SP){
+const deri_2HS = (P, T) => {
 //     input:  P:  pressure in MPa
 //             T:  temperature in K
 //     output: derivatives of enthalpy and entropy
@@ -32,146 +32,109 @@ function deri_2HS(SP){
 //             dhdp: (dh/dp)@t in kJ/kgMPa
 //             dsdt: (ds/dt)@p in kJ/kgK^2
 //             dsdp: (ds/dp)@t in kJ/kgMPaK
-  var pai;
-  var tau;
-  var R;
-  var Gibbs;
-  var dhdt;
-  var dhdp;
-  var dsdt;
-  var dsdp;
-  
-  R=0.461526;
-  
-  if(SP.P<=0.0 || SP.T<=0.0){SP = null;return -1;}
 
-  pai=SP.P;
-  tau=540.0/SP.T;
+  if(P<=0.0 || T<=0.0){
+    throw new RangeError("function reginon_2, P<=0,T<=0 in IF97_2.mjs")
+  }
+ 
+  const R=0.461526;
+
+  const pai = P
+  const tau = 540.0/T
   
-  Gibbs = {};
-  if(Gibbs_2(pai,tau,Gibbs)==-1){SP = null;return -1;}
+  const {G0,Gp,Gpp,Gt,Gtt,Gpt}= Gibbs_2(pai, tau)
+
+ 
+  const dhdt = -R * tau * tau * Gtt
+  const dhdp = R * 540.0 * Gpt
+  const dsdt = -R * tau * taui * Gtt / T
+  const dsdp = R * (tau * Gpt - Gp)
   
-  dhdt=-R*tau*tau*Gibbs.Gtt;
-  dhdp= R*540.0*Gibbs.Gpt;
-  dsdt=-R*tau*tau*Gibbs.Gtt/SP.T;
-  dsdp= R*(tau*Gibbs.Gpt-Gibbs.Gp);
+  const deri = { 
+    dhdt: dhdt,
+    dhdp: dhdp,
+    dsdt: dsdt,
+    dsdp: dsdp,
+  }
   
-  SP.dhdt=dhdt;
-  SP.dhdp=dhdp;
-  SP.dsdt=dsdt;
-  SP.dsdp=dsdp;
-  
-  return 1;
+  return deri 
 }
 
-function ZsatS(SP){
+const ZsatS = (s) => {
 //     input:  S: entropy in kJ/kgK
 //     output: properties on the saturation line
 //             p: pressure in MPa
 //             t: temperature in K
 //             h: enthalpy in kJ/kg
-  var n;
-  var Flag;
-  var t1;
-  var t2;
-  var dt;
-  var s1;
-  var s2;
-  var del;
-  var S;
-  var SP1;
-  
-  t1=273.16; //start from triple povar
-  dt=0.01;
-  
-  SP1 = {};
-  
-  S=SP.s;
-  SP1.T=t1;
-  if(PsatT(SP1)==-1){SP = null;return -1;}
-  if(region_2(SP1)==-1){SP = null;return -1;};
-  s1=SP1.s;
-  Flag=0;
-  for(n=1;n<=20;n++){
-    t2=t1+dt;
-    SP1.T=t2;
-    if(PsatT(SP1)==-1){SP = null;return -1;}
-    if(region_2(SP1)==-1){SP = null;return -1;}
-    s2=SP1.s;
-    del=S-s2;
+
+  let dt=0.01
+  let T1=273.16 //start from triple povar
+  let P1 = PsatT(T1)
+  let state = region_2(P1, T1)
+  let s1= state1.s
+  let Flag=0
+  let T2
+  let s2
+  for(let n=1;n<=20;n++){
+    T2 = T1 + dt
+    P1 = PsatT(t2)
+    state = region2_(P1, T2)
+    s2 = state.s
+    const del = s - s2
     if(Math.abs(del)<=1.0E-9){
       Flag=1;
       break;
     }
-    dt=del*dt/(s2-s1);
-    t1=t2;
-    s1=s2;
+    dt = del * dt / (s2 - s1)
+    T1 = T2
+    s1 = s2
   }
   if(Flag==0){
-    console.log("ZsatS not converged");
-    return -1;
+    throw new RangeError("function ZsatS, Flag in Aux_2HS.mjs")
   }
-  SP.T=t2;
-  SP.P=SP1.P;
-  SP.h=SP1.h;
-  return 1;
+
+  return state 
 }
 
-function ZmaxS(SP){
+const ZmaxS = (s) => {
 //     input:  S: entropy in kJ/kgK
 //     output: properties on the isotherm 800 degC or isobar 100 MPa
 //             p: pressure in MPa
 //             t: temperature in K
 //             h: enthalpy in kJ/kg  
-  var S;
-  var p;
-  var t;
-  var aa;
-  var bb;
-  var cc;
-  var dd;
-  var ee;
-  var ff;
-  var gg;
   
-  var s100;
+  const s100 = 6.04048367171238; //entropy at 100 MPa, 800 degC
   
-  S=SP.s;
-  
-  s100= 6.04048367171238; //entropy at 100 MPa, 800 degC
-  
-  aa =   0.028346255;
-  bb =  -0.78039904 ;
-  cc =   4.942691911;
-  dd =  -3.00901258 ;
-  ee =  24.36133988 ;
-  ff =  -8.629021804;
-  gg = 235.9643342  ;
+  const aa =   0.028346255
+  const bb =  -0.78039904 
+  const cc =   4.942691911
+  const dd =  -3.00901258 
+  const ee =  24.36133988 
+  const ff =  -8.629021804
+  const gg = 235.9643342  
 
-  if(S>=s100){
-    p=Math.exp(((S*aa+bb)*S+cc)*S+dd); // approximation of isotherm 800 degC
-    t=1073.15;
-  }
-  else{
-    p=100.0;
-    t=(S*ee+ff)*S+gg;             // approximation of isobar 100 MPa
-  }
-  SP.P=p;
-  SP.T=t;
-  if(region_2(SP)==-1){SP = null;return -1;}
+  const {P, T} = s >= s100 ? Object({
+    P : Math.exp(((s * aa + bb) * s + cc) * s + dd); // approximation of isotherm 800 degC
+    T : 1073.15;
+  }) :
+  Object({
+    P : 100.0;
+    T : (s * ee + ff) * s + gg;             // approximation of isobar 100 MPa
+  })
+  const state = region_2(P, T)
   
-  return 1;
+  return state 
 }
 
-export function ZHS_2(SP){
-//     input:  H: enthalpy in kJ/kg
-//             S: entropy in kJ/kgK
-//     output  p: pressure in MPa
-//             t: temperature in K
+export const ZHS_2 = (h, s) => {
+//     input:  h: enthalpy in kJ/kg
+//             s: entropy in kJ/kgK
+//     output  P: pressure in MPa
+//             T: temperature in K
 //             g: Gibbs free energy in kJ/kg
 //             u: varernal energy in kJ/kg
-//             v: spe//ifi// volume in m^3/kg
-//             Cp: spe//ifi// heat in kJ/kgK
+//             v: specific volume in m^3/kg
+//             cp: specific heat in kJ/kgK
 //             w: speed of sound in m/s
 //             x: dryness in fra//tion
 //             nx: 1: dry region
@@ -182,203 +145,130 @@ export function ZHS_2(SP){
 //                  3: invalid, H is too high.
 //                  4: invalid, H is too low.
 
-  var nx;
-  var Nin;
-  var n;
-  var Flag;
   
-  var S;
-  var H;
+  const smax  = 9.1555; // s" at triple povar
+  const ttrip = 273.16; // triple povar temperature
+  const smin  = 5.85;   // S, lower limit of region 2b
+  const pmin  = 0.001;  // pressure, lower limit
   
-  var smax;
-  var hmax;
-  var pmax;
-  var tsat;
-  var ttrip;
-  var hmin;
-  var smin;
-  var pmin;
+  if(s > smax){
+    return {Nin: 1} 
+  }
+  if(s < smin){
+    return {Nin: 2} 
+  }
+  const stateMax = ZmaxS(s)
+  const pmax=stateMax.P
+  const tmax=stateMax.T
+  const hmax=stateMax.h
   
-  var g;
-  var u;
-  var v;
-  var Cp;
-  var w;
+  if(h > hmax*1.05){
+    return {Nin: 3}
+  }
   
-  var dhdt;
-  var dhdp;
-  var dsdt;
-  var dsdp;
-  var delh;
-  var dels;
-  var Dsum;
-  var delp;
-  var delt;
+  const Tmin = TsatP(pmin)
+  const state1 = region_1(pmin, Tmin)
+  const state2 = region_2(pmin, Tmin)
   
-  var tmax;
-  var tmin;
-  var pmaxl;
-  var psat;
-  var psatl;
-  var hsat;
-  var rdeps;
+  let x = (s - state1.s) / (state2.s - state1.s);
+  const hmin = state2.h * x + state1.h * (1.0 - x)
 
-  var d1;
-  var d2;
-  var dm;
-  
-  var x;
-  var t;
-  var p;
-  
-  var SP1;
-  var SP2;
-  var SP3;
-  
-  SP1 = {};
-  SP2 = {};
-  SP3 = {};
-  
-  S=SP.s;
-  H=SP.h;
-  
-  smax  = 9.1555; // s" at triple povar
-  ttrip = 273.16; // triple povar temperature
-  smin  = 5.85;   // S, lower limit of region 2b
-  pmin  = 0.001;  // pressure, lower limit
-  
-  Nin=0;
-  if(S>smax){
-    Nin=1;
-    SP.Nin=Nin;
-    return 1;
+  if(h < hmin){
+    return {Nin: 4}
   }
-  if(S<smin){
-    Nin=2;
-    SP.Nin=Nin;
-    return 1;
-  }
-  SP1.s=S;
-  if(ZmaxS(SP1)==-1){SP = null;return -1;}
-  pmax=SP1.P;
-  tmax=SP1.T;
-  hmax=SP1.h;
-  
-  if(H>hmax*1.05){
-    Nin=3;
-    SP.Nin=Nin;
-    return 1;
-  }
-  
-  SP1.P=pmin;
-  SP2.P=pmin;
-  if(TsatP(SP1)==-1){SP = null;return -1;}
-  tmin =SP1.T;
-  SP2.T=tmin;
-  if(region_1(SP1)==-1){SP = null;return -1;}
-  if(region_2(SP2)==-1){SP = null;return -1;}
-  
-  x=(S-SP1.s)/(SP2.s-SP1.s);
-  hmin=SP2.h*x+SP1.h*(1.0-x);
-  if(H<hmin){
-    Nin=4;
-    SP.Nin=Nin;
-    return 1;
-  }
-  SP3.s=S;
-  if(ZsatS(SP3)==-1){SP = null;return -1;}
-  psat=SP3.P;
-  tsat=SP3.T;
-  hsat=SP3.h;
 
-  Flag=0;
-  if(H>=hsat){
+  const stateSat = ZsatS(s)
+  const psat = stateSat.P
+  const tsat = stateSat.T
+  const hsat = stateSat.h
+
+  if(h >= hsat){
     //dry region
-    nx=1;
-    x=1.0;
     //first guess
-    rdeps=(H-hsat)/(hmax-hsat);
-    t=rdeps*(tmax-tsat)+tsat;
-    pmaxl=Math.log(pmax);
-    psatl=Math.log(psat);
-    p=rdeps*(pmaxl-psatl)+psatl;
-    p=Math.exp(p);
-    for(n=1;n<=20;n++){
-      SP3.P=p;
-      SP3.T=t;
-      if(region_2(SP3)==-1){SP = null;return -1;}
-      delh=SP3.h-H;
-      dels=SP3.s-S;
-      if((Math.abs(delh/H)<=1.0E-8)&&(Math.abs(dels/S)<=1.0E-8)){
-        Flag=1;
-        g=SP3.g;
-        u=SP3.u;
-        v=SP3.v;
-        Cp=SP3.cp;
-        w=SP3.w;
-        x=0.0;        
-        break;
+    const rdeps = (h - hsat) / (hmax - hsat)
+    let T = rdeps * (tmax - tsat) + tsat
+    const pmaxl = Math.log(pmax)
+    const psatl = Math.log(psat)
+    let P = Math.exp(rdeps * (pmaxl - psatl) + psatl)
+    let flag = 0
+
+    for(let n=1;n<=20;n++){
+      const state3 = region_2(P, T)
+      const delh = state3.h - h
+      const dels = state3.s - s
+      flag = Math.abs(delh/h) <= 1.0E-8 
+         &&  Math.abs(dels/s) <= 1.0E-8
+      if(flag){
+        state3.x = 1
+        state3.nx = 1 
+        state3.Nin = 0 
+        return state3
       }
-      SP3.P=p;
-      SP3.T=t;
-      deri_2HS(SP3);
-      dhdp=SP3.dhdp;
-      dsdt=SP3.dsdt;
-      dhdt=SP3.dhdt;
-      dsdp=SP3.dsdp;
+      const {dhdp, dsdt, dhdt, dsdp} = deri_2HS(P, T)
       
-      Dsum=dhdp*dsdt-dhdt*dsdp;
-      delp=(delh*dsdt-dhdt*dels)/Dsum;
-      delt=(dhdp*dels-delh*dsdp)/Dsum;
-      p   =p-delp;
-      t   =t-delt;
+      const Dsum =dhdp * dsdt - dhdt * dsdp
+      const delp = (delh * dsdt - dhdt * dels) / Dsum
+      const delt = (dhdp * dels - delh * dsdp) / Dsum
+      P -= delp
+      T -= delt
     }
-    if(Flag==0){
-      console.log("ZHS_2 not converged, dry region");
-      return -1;
+    if(flag==0){
+      throw new RangeError("function ZHS_2, Flag in Aux_2HS.mjs")
     }
   }
   else{
     //wet region
-    nx=0;          
-    d1=tsat;
-    d2=ttrip;     
-    for(n=1;n<=30;n++){
-      dm=(d1+d2)*0.5;
-      SP1.T=dm;
-      SP2.T=dm;
-      PsatT(SP1);
-      PsatT(SP2);
-      p=SP1.P;
-      region_1(SP1);
-      region_2(SP2);
-      x=(S-SP1.s)/(SP2.s-SP1.s);
-      SP2.h=x*SP2.h+(1.0-x)*SP1.h;
-      if(SP2.h>=H){
-        d1=dm;
+    let d1 = tsat
+    let d2 = ttrip     
+    let dm
+    let x
+
+    for(let n=1;n<=30;n++){
+      dm = (d1 + d2) * 0.5
+      const Psat = PsatT(dm) 
+      const state1 = region_1(Psat, dm)
+      const state2 = region_2(Psat, dm)
+      x = (s-state1.s) / (state2.s - state1.s)
+      const htmp = state2.h * x + state1.h * (1.0-x)
+      if(htmp >= h ){
+        d1=dm
       }
       else{
-        d2=dm;
+        d2=dm
       }
     }
-    t=dm;
-    g=x*SP2.g+(1.0-x)*SP1.g;    
-    u=x*SP2.u+(1.0-x)*SP1.u;    
-    v=x*SP2.v+(1.0-x)*SP1.v;    
-    Cp=0.0;
-    w=0.0;    
+
+    const T = dm
+    const nx = 0          
+    const Nin = 0
+    const g = state2.g * x + state1.g * (1.0-x)   
+    const u = state2.u * x + state1.u * (1.0-x)   
+    const v = state2.v * x + state1.v * (1.0-x)  
+    const h = state2.h * x + state1.h * (1.0-x)  
+    const cp = -1 
+
+    const del = 1e-6
+    const Ptmp = P + del
+    const stateTmp = propPS(Ptmp, s)
+
+    const kappa = -Math.log(Ptmp / P) / Math.log(stateTmp.v / v);
+    const w = Math.sqrt(kappa * v * P * 1.0e+6)
+
+
+    const state = {
+      g: g,
+      u: u,
+      v: v,
+      P: P,
+      T: T,
+      h: h,
+      cp: cp,
+      w: w,
+      x: x
+      nx: nx,
+      Nin: Nin,
+    }
+
+    return state
   }
-  
-  SP.P=p;
-  SP.T=t;
-  SP.g=g;
-  SP.u=u;
-  SP.v=v;
-  SP.cp=Cp;
-  SP.w=w;
-  SP.x=x;
-  SP.Nin=Nin;
-  SP.nx=nx;
-  
-  return 1;
 }
