@@ -10,6 +10,8 @@ import {satproP} from "./satproP.mjs"
 import {satproT} from "./satproT.mjs"
 
 //version()
+
+//pt2all(P, T) 
 //pt2g(P, T) 
 //pt2u(P, T)
 //pt2v(P, T)
@@ -21,6 +23,8 @@ import {satproT} from "./satproT.mjs"
 //pt2cv(p, t)
 //pt2k(P, T)
 //pt2mu(P, T)
+
+//ph2all(P, h)
 //ph2g(P, h)
 //ph2u(P, h)
 //ph2v(P, h)
@@ -33,6 +37,8 @@ import {satproT} from "./satproT.mjs"
 //ph2cp(P, h)
 //ph2cv(P, h)
 //ph2k(P, h)
+
+//ps2all(P, s)
 //ps2g(P, s)
 //ps2u(P, s)
 //ps2v(P, s)
@@ -42,6 +48,8 @@ import {satproT} from "./satproT.mjs"
 //ps2x(P, s)
 //ps2k(P, s)
 //ps2MM(P, s)
+
+//hs2all(h, s)
 //hs2g(h, s)
 //hs2u(h, s)
 //hs2p(h, s)
@@ -49,8 +57,10 @@ import {satproT} from "./satproT.mjs"
 //hs2v(h, s)
 //hs2w(h, s)
 //hs2x(h, s)
+
 //SATp2t(p)
 //SATt2p(t)
+
 //SATlp2g(p)
 //SATlp2u(p)
 //SATlp2t(p)
@@ -61,6 +71,7 @@ import {satproT} from "./satproT.mjs"
 //SATlp2cp(p)
 //SATlp2cv(p)
 //SATlp2k(p)
+
 //SATgp2g(p)
 //SATgp2u(p)
 //SATgp2t(p)
@@ -71,6 +82,7 @@ import {satproT} from "./satproT.mjs"
 //SATgp2cp(p)
 //SATgp2cv(p)
 //SATgp2k(p)
+
 //SATlt2g(t)
 //SATlt2u(t)
 //SATlt2p(t)
@@ -81,6 +93,7 @@ import {satproT} from "./satproT.mjs"
 //SATlt2cp(t)
 //SATlt2cv(t)
 //SATlt2k(t)
+
 //SATgt2g(t)
 //SATgt2u(t)
 //SATgt2p(t)
@@ -106,22 +119,15 @@ export const pt2all = (P, T) => {
   return state
 }
 
-export function pt2g(P, T) { 
+export const pt2g = (P, T) => { 
   // input
   // P:pressure [Pa], T:temperature [K]
   
   // output
   // g:Gibbs free enagy [kJ/kg]
   
-  var g;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.T = T;
-  
-  if (propPT(SP) == -1) { SP = null; return -1; }
-  g = SP.g;
+  const state = pt2all(P, T) 
+  const g = state.g
   
   return g;
 }
@@ -318,12 +324,21 @@ export function pt2mu(P, T) {
 }
   
  //ph
+export const ph2all = (P, h) => {
+  // input
+  // P:pressure [Pa], h:specific enthalpy [kJ/kg]
+ 
+  const state = propPH(P, h)
+
+  return state
+}
+
 export function ph2g(P, h) {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
-  // g:specific volume [m^3/kg]
+  // g:gibbs specific energy [kJ/kg]
   
   var g;
   var SP;

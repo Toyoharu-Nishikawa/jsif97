@@ -57,8 +57,10 @@ export const region_1 = (P, T) => {
   const h = tau * Gt * R * T
   const s = (tau * Gt - G0) * R
   const cp = -tau * tau * Gtt * R
-  const w2 = Gp * Gp / ((Gp - tau * Gpt)*(Gp - tau * Gpt)/(tau * tau * Gtt)-Gpp)* R * T * 1.0e3
-  const w = w2<0 ? 0 : Math.sqrt(w2)
+  const tmp = (Gp - tau * Gpt)
+  const tmp2 = tmp * tmp
+  const w2 = Gp * Gp / (tmp2 / (tau * tau * Gtt) - Gpp)* R * T * 1.0e3
+  const w = w2 < 0 ? 0 : Math.sqrt(w2)
   const state = {
     g: g,
     u: u,

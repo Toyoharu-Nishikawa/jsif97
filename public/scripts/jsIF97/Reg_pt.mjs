@@ -65,7 +65,7 @@ export const RegPT = (P, T, NP) => {
       return M 
     }
     const Ttest = TsatP(P)
-    if(NP !=1){
+    if(NP != 1){
       if(T>=Ttest){
         const M = 2
         return M  
@@ -78,22 +78,22 @@ export const RegPT = (P, T, NP) => {
       }
     }
     if(T>=273.15){
-        const M = 1
-        return M           
+      const M = 1
+      return M           
     }
     else{
-        const M = 0
-        return M                
+      const M = 0
+      return M                
     }
   }
 
   /*Test above saturation pressure at 350 degC*/
-  if(T>1073.15){
+  if(T > 1073.15){
     const M = 0
     return M  
   }
   const Ttest = Tb23P(P)
-  if(T>=Ttest){
+  if(T >= Ttest){
     const M = 2
     return M      
   }

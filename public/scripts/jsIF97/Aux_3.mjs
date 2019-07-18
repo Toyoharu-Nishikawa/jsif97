@@ -86,7 +86,7 @@ export const sping_3 = (T) => {
   
   for(let n=1;n<=30;n++){
     dm = (d1 + d2) * 0.5
-    const dPdV_3(dm, T)
+    const dPdV = dPdV_3(dm, T)
     if (dPdV <= 0.0){
       d1 = dm
     }
@@ -193,10 +193,10 @@ export const Vsatl_3 = (P, T) => {
   
   let d1 = Vspinl
   let d2 = Vmin
+  let dm
 
   for(let n=1;n<=40;n++){
     dm = (d1 + d2) * 0.5
-    SP1.v=dm;
     const P1 = PVT_3(dm, T)
     if(P1 <=Psat){
       d1 = dm
@@ -223,7 +223,7 @@ export const Vsatg_3 = (P, T) => {
  
   for(let n=1;n<=40;n++){
     dm = (d1 + d2) * 0.5
-    const P1 = PVT_3(v, T)
+    const P1 = PVT_3(dm, T)
     if(P1 <=Psat){
       d1 = dm
     }

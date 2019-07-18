@@ -116,7 +116,7 @@ export const expsatL3 = (T) => {
 }
 
 /* isentropic exponent, Cp, and Cv of saturated liquid in region 3*/
-export const expsatG3(T){
+export const expsatG3 = (T) => {
   const v = Vsatg_3(T)
   const expis = expisen3h(v, T)
 

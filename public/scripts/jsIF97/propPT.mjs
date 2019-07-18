@@ -13,7 +13,7 @@ import {RegPT} from "./Reg_pt.mjs"
 "use strict"
 
 export const propPT = (P, T) => {
-  const NP=2
+  const NP = 2
   const M = RegPT(P, T, NP)
   switch(M){
     case 1:{
@@ -30,14 +30,12 @@ export const propPT = (P, T) => {
       return state
     }
     case 5 :{
-      SP.MM = 5;
-      if(region_5(SP)==-1){SP = null;return -1;}
-      break
+      const MM = 5
+      const state = region_5(P, T)
+      return state
     }
     default: {
-      console.log("Out of IF97 applicable range.");
       throw new RangeEror("function propPT in propPT.mjs")
-      return -1;
     }
   }
 }

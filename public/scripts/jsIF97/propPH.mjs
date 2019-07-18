@@ -13,6 +13,7 @@ import {ZPH_2} from "./Aux_2.mjs"
 import {Vsatl_3, Vsatg_3,ZPH_30, ZPH_31 ,ZPH_32} from "./Aux_3.mjs"
 import {ZPH_5} from "./Aux_5.mjs"
 import {RegPH} from "./Reg_ph.mjs"
+import {propPS} from "./propPS.mjs"
 
 "use strict"
 
@@ -63,12 +64,8 @@ export const propPH = (P, h) => {
       const s = state2.s * x + state1.s * (1.0  -x) 
       const cp = -1 
 
-      const del = 1e-6
-      const Ptmp = P + del
-      const stateTmp = propPS(Ptmp, s)
-
-      const kappa = -Math.log(Ptmp / P) / Math.log(stateTmp.v / v);
-      const w = Math.sqrt(kappa * v * P * 1.0e+6)
+      const stateTmp = propPS(P, s)
+      const w = stateTmp.w 
 
       const state = {
         g: g,
@@ -100,12 +97,8 @@ export const propPH = (P, h) => {
       const s = state2.s * x + state1.s * (1.0 - x)    
       const cp = -1
 
-      const del = 1e-6
-      const Ptmp = P + del
-      const stateTmp = propPS(Ptmp, s)
-
-      const kappa = -Math.log(Ptmp / P) / Math.log(stateTmp.v / v);
-      const w = Math.sqrt(kappa * v * P * 1.0e+6)
+      const stateTmp = propPS(P, s)
+      const w = stateTmp.w 
 
       const state = {
         g: g,

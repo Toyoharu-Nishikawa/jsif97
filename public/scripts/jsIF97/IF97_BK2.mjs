@@ -334,15 +334,15 @@ const Tph2C = (P, h) => {
 
   let T = 0.0
 
-  for(i=1;i<=23;i++){
-    T += cn[i]*Math.pow(pai,II[i])*Math.pow(etau, JJ[i])
+  for(let i=1;i<=23;i++){
+    T += cn[i]*Math.pow(pai,IC[i])*Math.pow(etau, JC[i])
   }
   
   return T 
 }
 
 
-const Tps2A(P, s){
+const Tps2A = (P, s) =>{
   const sigma = s / SAn
   const stau = sigma - 2
 
@@ -371,7 +371,7 @@ const Tps2C = (P, s) => {
   const sigma = s / SCn
   const stau = 2 -sigma
 
-  let T = 0.0;
+  let T = 0.0
 
   for(let i=1;i<=30;i++){
     T += Cn[i]*Math.pow(P, IIC[i])*Math.pow(stau, JJC[i])

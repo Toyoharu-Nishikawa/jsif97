@@ -21,15 +21,15 @@ export const ZPH_1 = (P, h) => {
 
   let T = Tph1(P, h)
   let Flag=0
-
+  let state
   for(let n=1;n<=10;n++){
-    const state = region_1(P, T)
+    state = region_1(P, T)
     const dlt = h - state.h;
     if (Math.abs(dlt) <= eps){
       Flag=1
       break
     } 
-    T += dlt/state.cp;
+    T += dlt / state.cp;
   }
   if(Flag===0){
     throw new RangeError("ZPH_1 not converged")
@@ -37,39 +37,41 @@ export const ZPH_1 = (P, h) => {
   return state 
 }
 
-export ZPS_1 = (P, s) => {
+export const ZPS_1 = (P, s) => {
   const eps=1.0e-9
 
   let T = Tps1(P, s)
   
-  const pai=P/16.53;
-  ;
+  const pai=P/16.53
+  
   let Flag=0
-  let Gibbs
+  let Gibbs1
   for(let n=1;n<=10;n++){
     const tau = 1386.0 / T
-    Gibbs = Gibbs_1(pai,tau)
-    s1= (tau*Gibbs.Gt - Gibbs.G0) * R
+    Gibbs1 = Gibbs_1(pai,tau)
+    const {G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs1
+    s1= (tau * Gt - G0) * R
     dlt = s - s1;
     if (Math.abs(dlt) <= eps){
       Flag=1
       break
     } 
-    const dsdt = -R*tau*tau*Gibbs.Gtt/T;
-    T = T + dlt/dsdt;
+    const dsdt = -R * tau * tau * Gtt / T
+    T = T + dlt / dsdt
   }
   if(Flag==0){
     throw new RangeError("ZPS_1 not converged")
   }
   
-  const g  = Gibbs.G0*R*T
-  const u  = (tau*Gibbs.Gt - pai*Gibbs.Gp) * R * T
-  const v  = pai * Gibbs.Gp * R * T / (P*1e+3)
-  const h  = tau * Gibbs.Gt * R * T
-  const cp = -tau*tau * Gibbs.Gtt * R
-  const tmp = Gibbs.Gp-tau*Gibbs.Gpt
+  const {G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs1
+  const g  = G0 * R * T
+  const u  = (tau * Gt - pai * Gp) * R * T
+  const v  = pai * Gp * R * T / (P*1e+3)
+  const h  = tau * Gt * R * T
+  const cp = -tau * tau * Gtt * R
+  const tmp = Gp - tau * Gpt
   const tmp2 = tmp * tmp
-  const w2 = Gibbs.Gp*Gibbs.Gp/tmp2/(tau*tau*Gibbs.Gtt)-Gibbs.Gpp)*R*T*1e+3
+  const w2 = Gp * Gp / (tmp2 / (tau * tau * Gtt) - Gpp) * R * T * 1e+3
   const w  = w2 <0 ? 0 : Math.sqrt(w2)
  
   const state = {
@@ -78,7 +80,7 @@ export ZPS_1 = (P, s) => {
     v: v,
     P: P,
     T: T,
-    h: h
+    h: h,
     cp: cp,
     w: w,
     MM: 1,

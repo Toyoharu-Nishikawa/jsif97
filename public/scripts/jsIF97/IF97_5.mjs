@@ -37,16 +37,16 @@ export function region_5(P, T){
   
   const { G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs_5(pai, tau)
 
-  const g  = G0*R*SP.T;
-  const u  = (tau*Gt - pai*Gibbs.Gp) * R * SP.T;
-  const v  = pai * Gp * R * T / (P*1E+3);
+  const g  = G0 * R * T;
+  const u  = (tau * Gt - pai * Gp) * R * T
+  const v  = pai * Gp * R * T / (P * 1e+3)
   const h  = tau * Gt * R * T;
-  const s  = (tau* Gt - G0) * R;
-  const cp = -tau*tau * Gtt * R;
-  const tmp = Gp-tau*Gpt
-  const tmp2 = tmp*tmp
-  const w2 = Gp*Gp/tmp2/(tau*tau*Gtt)-Gpp)*R*T*1e+3;
-  const w  =w2 <0 ? 0 : Math.sqrt(w2)
+  const s  = (tau * Gt - G0) * R;
+  const cp = -tau * tau * Gtt * R;
+  const tmp = Gp - tau * Gpt
+  const tmp2 = tmp * tmp
+  const w2 = Gp * Gp / (tmp2 /(tau * tau * Gtt) - Gpp) * R * T * 1e+3
+  const w  = w2 <0 ? 0 : Math.sqrt(w2)
 
   const state = {
     g: g,
@@ -60,18 +60,18 @@ export function region_5(P, T){
     w: w,
   }
 
-  return 
+  return state 
 }
 
 
 export const Gibbs_5 = (pai, tau) => {
   
-  let G0 = 0.0;
-  let Gp = 0.0;
-  let Gpp= 0.0;
-  let Gt = 0.0;
-  let Gtt= 0.0;
-  let Gpt= 0.0;
+  let G0 = 0.0
+  let Gp = 0.0
+  let Gpp= 0.0
+  let Gt = 0.0
+  let Gtt= 0.0
+  let Gpt= 0.0
 
   const pai2 = pai*pai
   const tau2 = tau*tau
@@ -90,7 +90,7 @@ export const Gibbs_5 = (pai, tau) => {
   /*first calculate residual part*/
   for(let i=1;i<=5;i++){
     G0 +=  bn[i]*paiPow[i]*tauPow[i]
-    Gp +=  bn[i]*II[i]*paiPow/pai*tauPow[i]
+    Gp +=  bn[i]*II[i]*paiPow[i]/pai*tauPow[i]
   }
   for(let i=4;i<=5;i++){
     Gpp +=  bn[i]*II[i]*(II[i]-1)*paiPow[i]/pai2*tauPow[i]
@@ -105,18 +105,18 @@ export const Gibbs_5 = (pai, tau) => {
 
   /*second calculate second term of ideal gas part */
   for(let i=1;i<=6;i++){
-    G0 = G0 + an[i]*tau2Pow[i]
-    Gt = Gt + an[i]*J[i]*tau2Pow[i]/tau
-    Gtt= Gtt+ an[i]*J[i]*(J[i]-1)*tau2Pow[i]/tau2
+    G0  +=  an[i]*tau2Pow[i]
+    Gt  +=  an[i]*J[i]*tau2Pow[i]/tau
+    Gtt +=  an[i]*J[i]*(J[i]-1)*tau2Pow[i]/tau2
   }
 
   /*finally add first term of ideal gas part*/
   if(pai<=0.0){
     throw new RangeError("function Gibbs_5 pai<=0 in IF97_5.mjs")
   }
-  G0  += Math.log(pai);
-  Gp  += 1.0/pai;
-  Gpp -= 1.0/(pai*pai);
+  G0  += Math.log(pai)
+  Gp  += 1.0/pai
+  Gpp -= 1.0/(pai*pai)
   
   const Gibbs = {
     G0 : G0,

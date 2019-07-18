@@ -22,209 +22,181 @@ import {Tb23P} from "./IF97_B23.mjs"
 import {Vsatg_3,Vsatl_3} from "./Aux_3.mjs"
 
 
-
 "use strict"
 
-export function RegPS(SP){
+export const RegPS = (P, s) =>{
   /* input P: MPa, S: kJ/kgK */
   /* output M                */
-  var S;
-  var P;
-  var P1;
-  var Stest;
-  var SP1;
-  
-  SP1 = {};
-  
-  S=SP.s;
-  P=SP.P;
+ 
   
   /* Test of maximum pressure */
-  if(SP.P > 100){
-    SP.M=0;
-    return 1;
+  if(P > 100){
+    const M = 0
+    return M 
   }
   /* Test below 10 MPa */  
-  if(SP.P <= 10){
-    SP1.T=2273.15;
-    SP1.P=SP.P;
-    if(region_5(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S > Stest){
-      SP.M=0;
-      return 1;
+  if(P <= 10){
+    const Ttmp1 = 2273.15
+    const Stest1 =stateTmp1.s
+    if(s > Stest1){
+      const M = 0
+      return M 
     }
-    SP1.T=1073.15;
-    SP1.P=SP.P;
-    if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S > Stest){
-      SP.M=5;
-      return 1;
+
+    const Ttmp2 = 1073.15
+    const stateTmp2 = region_2(P, Ttmp2)
+    const Stest2 = stateTmp2.s;
+    if(s > Stest2){
+      const M = 5
+      return M 
     }
-    SP1.P=SP.P;
-    TsatP(SP1);
-    if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S >= Stest){
-      SP.M=2;
-      return 1;
+
+    const Ttmp3 = TsatP(P)
+    const stateTmp3 = region_2(P, Ttmp3)
+    const Stest3 = stateTmp3.s
+    if(s >= Stest3){
+      const M = 2
+      return M 
     }
-    if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S >= Stest){
-      SP.M=12;
-      return 1;
+
+    const stateTmp4 = region_1(P, Ttmp3)
+    const Stest4 = stateTmp4.s
+    if(s >= Stest4){
+      const M = 12
+      return M 
     }    
-    SP1.T=273.15;
-    SP1.P=SP.P;
-    if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S >= Stest){
-      SP.M=1;
-      return 1;
+    const Ttmp5 = 273.15
+    const stateTmp5 = region_1(P, Ttmp5)
+    const Stest5 = stateTmp5.s
+    if(s >= Stest5){
+      const M = 1
+      return M 
     }
     else{
-      SP.M=0;
-      return 1;
+      const M = 0
+      return M 
     }  
   }    
   /*Test below saturation pressure at 350 degC */
-  SP1.T = 623.15;
-  SP1.P = SP.P;
-  if(PsatT(SP1)==-1){SP = null;return -1;}
-  P1=SP1.P;
-  if(P<=P1){
-    SP1.T = 1073.15;
-    SP1.P = SP.P;
-    if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;        
-    if(S > Stest){
-      SP.M=0;
-      return 1;
+  const Ttmp6 = 623.15
+  const Ptmp6 = PsatT(Ttmp6)
+  if(P <= Ptmp6){
+    const Ttmp7 = 1073.15
+    const stateTmp7 = region_2(Ttmp7)
+    const Stest7 = stateTmp7.s        
+    if(s > Stest7){
+      const M = 0
+      return M 
     }
-    SP1.P = SP.P;
-    if(TsatP(SP1)==-1){SP = null;return -1;}
-    SP1.P = SP.P;
-    if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;        
-    if(S>=Stest){
-      SP.M=2;
-      return 1;
+    const Ttmp8 = TsatP(P)
+    const stateTmp8 = region_2(P, Ttmp8)
+    const Stest8 = stateTmp8.s;        
+    if(s >= Stest8){
+      const M = 2
+      return M
     }
-    if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;        
-    if(S>Stest){
-      SP.M=12;
-      return 1;
+    const stateTmp9 = region_1(P, Ttmp8)
+    const Stest9 = stateTmp9.s       
+    if(s > Stest9){
+      const M = 12
+      return M 
     }
-    SP1.T = 273.15;
-    SP1.P = SP.P;
-    if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;        
-    if(S >= Stest){
-      SP.M=1;
-      return 1;
+    const Ttmp10 = 273.15
+    const stateTmp10 = region_1(P, Ttmp10)
+    const Stest10 = stateTmp10.s
+    if(s >= Stest10){
+      const M = 1
+      return M 
     }
     else{
-      SP.M=0;
-      return 1;
+      const M = 0
+      return M 
     }
   }
   
   /*Test below critical pressure*/
-  SP1.T = 647.096;
-  if(PsatT(SP1)==-1){SP = null;return -1;}
-  P1=SP1.P;
-  if(P<=P1){
-    SP1.T = 1073.15;
-    SP1.P = SP.P;
-    if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>Stest){
-      SP.M=0;
-      return 1;
+  const Ttmp11 = 647.096
+  const Ptmp11 = PsatT(Ttmp11)
+  if(P <= Ptmp11){
+    const Ttmp12 = 1073.15
+    const stateTmp12 = region_2(P, Ttmp12)
+    const Stest12 = stateTmp12.s
+    if(s > Stest12){
+      const M = 0
+      return M 
     }
-    SP1.P = SP.P;
-    if(Tb23P(SP1)==-1){SP = null;return -1;}
-    if(region_2(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
-      SP.M=2;
-      return 1;
+    const Ttmp13 = Tb23P(P)
+    const stateTmp13 = region_2(P, Ttmp13)
+    const Stest13 = stateTmp13.s
+    if(s >= Stest13){
+      const M = 2
+      return M 
     }
-    SP1.P = SP.P;
-    if(TsatP(SP1)==-1){SP = null;return -1;}
-    if(Vsatg_3(SP1)==-1){SP = null;return -1;}
-    if(region_3(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
-      SP.M=32;
-      return 1;
+    const Ttmp14 = TsatP(P)
+    const vg = Vsatg_3(Ttmp14)
+    const stateTmp14 = region_3(vg, Ttmp14)
+    const Stest14 = stateTmp14.s
+    if(s >= Stest14){
+      const M = 32
+      return M 
     }
-    if(Vsatl_3(SP1)==-1){SP = null;return -1;}
-    if(region_3(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
-      SP.M=33;
-      return 1;
+    const vl = Vsatl_3(Ttmp14)
+    const stateTmp15 = region_3(vl, Ttmp14)
+    const Stest15 = stateTmp15.s
+    if(s >= Stest15){
+      const M = 33
+      return M 
     }
-    SP1.P = SP.P;
-    SP1.T = 623.15;
-    if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
-      SP.M=31;
-      return 1;
+    const Ttmp16 = 623.15
+    const stateTmp16 = region_1(P, Ttmp16)
+    const Stest16 = stateTmp16.s
+    if(s >= Stest16){
+      const M = 31
+      return M 
     }
-    SP1.P = SP.P;
-    SP1.T = 273.15;
-    if(region_1(SP1)==-1){SP = null;return -1;}
-    Stest=SP1.s;
-    if(S>=Stest){
-      SP.M=1;
-      return 1;
+    const Ttmp17 = 273.15
+    const stateTmp17 = region_1(P, Ttmp17)
+    const Stest17 = stateTmp17.s;
+    if(s >= Stest17){
+      const M = 1
+      return M 
     }
     else{
-      SP.M=0;
-      return 1;  
+      const M = 0
+      return M  
     }
   }
   /* Test above critical pressure   */
-  SP1.T = 1073.15;
-  SP1.P = SP.P;
-  if(region_2(SP1)==-1){SP = null;return -1;}
-  Stest=SP1.s;
-  if(S>Stest){
-      SP.M=0;
-      return 1;      
+  const Ttmp18 = 1073.15
+  const stateTmp18 = region_2(P, Ttmp18)
+  const Stest18 =stateTmp18.s
+  if(s > Stest18){
+    const M = 0
+    return M      
   }
-  SP1.P = SP.P;
-  if(Tb23P(SP1)==-1){SP = null;return -1;}
-  if(region_2(SP1)==-1){SP = null;return -1;}
-  Stest=SP1.s;
-  if(S>=Stest){
-      SP.M=2;
-      return 1;      
+  const Ttmp19 = Tb23P(P)
+  const stateTmp19 = region_2(P, Ttmp19)
+  const Stest19 = stateTmp19.s
+  if(s >= Stest19){
+    const M = 2
+    return M      
   }
-  SP1.T = 623.15;
-  SP1.P = SP.P;
-  if(region_1(SP1)==-1){SP = null;return -1;}
-  Stest=SP1.s;
-  if(S>Stest){
-      SP.M=30;
-      return 1;      
+  const Ttmp20 = 623.15
+  const stateTmp20 = region_1(P, Ttmp20)
+  const Stest20 = stateTmp20.s
+  if(s > Stest20){
+    const M = 30
+    return M     
   }
-  SP1.T = 273.15;
-  SP1.P = SP.P;
-  if(region_1(SP1)==-1){SP = null;return -1;}
-  Stest=SP1.s;
-  if(S>Stest){
-      SP.M=1;
-      return 1;      
+  const Ttmp21 = 273.15
+  const stateTmp21 = region_1(P, Ttmp21)
+  const Stest21 = stateTmp21.s
+  if(s > Stest21){
+    const M = 1
+    return M     
   }
   else{
-      SP.M=0;
-      return 1;      
+      const M = 0
+      return M      
   }
 }

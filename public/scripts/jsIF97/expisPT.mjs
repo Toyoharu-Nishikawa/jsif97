@@ -7,8 +7,8 @@
 import {RegPT} from "./Reg_pt.mjs"
 import {expisen1, expisen2, expisen3, expisen5} from "./expisen.mjs"
  
-export expisPT = (P, T) => {
-  if(P<=0){
+export const expisPT = (P, T) => {
+  if(P <= 0){
     throw new RangeError("function expisPT P<=0 in expisPT.mjs")
   }
   const NP=2

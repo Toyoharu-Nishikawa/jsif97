@@ -15,40 +15,60 @@ import {viscos, conduc} from "./transp.mjs"
 
 "use strict"
 
-export function transatT(T, SPl, SPg){
+export transatT = (T) => {
   
   if(T<273.15){
-    console.log("Temperature is lower than the minimum temperature.\n");
-    return -1;    
+    throw new RangeError("function transatT Temperature is lower than the minimum temperature in transatT.mjs");
   }
   if(T>647.096){
-    console.log("Temperature is higher than the maximum temperature.\n");
-    return -1;    
+    throw new RangeError("function transatT Temperature is lower than the maximum temperature in transatT.mjs");
   }
   
-  SPl.T=T;
-  SPg.T=T;
-  if(PsatT(SPl)==-1){SPl = null;SPg = null;return -1;}
-  if(PsatT(SPg)==-1){SPl = null;SPg = null;return -1;}
-  if(SPl.T<=623.15){
-    if(region_1(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(region_2(SPg)==-1){SPl = null;SPg = null;return -1;}
+  let statel
+  let stateg
+  const P = PsatT(T)
+  if(T<=623.15){
+    statel = region_1(P, T)
+    stateg = region_2(P, T)
   }
   else{
-    if(Vsatl_3(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(Vsatg_3(SPg)==-1){SPl = null;SPg = null;return -1;}
-    if(region_3(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(region_3(SPg)==-1){SPl = null;SPg = null;return -1;}    
+    const vl = Vsatl_3(T)
+    const vg = Vsatg_3(T)
+    statel = region_3(vl, T)
+    stateg = region_3(vg, T)
   } 
-  if(viscos(SPl)==-1){SPl = null;SPg = null;return -1;}
-  if(conduc(SPl)==-1){SPl = null;SPg = null;return -1;}
-  SPl.nu=SPl.mu*SPl.v;
-  SPl.Pr=SPl.cp*SPl.mu/SPl.lambda*1.0e+3;
+  const vl = statel.v
+  const vg = statel.g
 
-  if(viscos(SPg)==-1){SPl = null;SPg = null;return -1;}
-  if(conduc(SPg)==-1){SPl = null;SPg = null;return -1;}
-  SPg.nu=SPg.mu*SPg.v;
-  SPg.Pr=SPg.cp*SPg.mu/SPg.lambda*1.0e+3;
-  
-  return 1;
+  const cpl = statel.cp
+  const cpg = stateg.cp
+
+  const mul = viscos(vl, Ttmp2)
+  const mug = viscos(vg, Ttmp2)
+
+  const lambdal = conduc(vl, Ttmp2)
+  const lambdag = conduc(vg, Ttmp2)
+
+  const nul = mul * vl
+  const nug = mug * vg
+
+  const Prl = cpl * mul /lambdal *1.0e+3
+  const Prg = cpg * mug /lambdag *1.0e+3
+
+  const trans = {
+    l: {
+      mu: mul,
+      lambda: lambdal,
+      nu: nul, 
+      Pr: Prl,
+    },
+    g: {
+      mu: mug,
+      lambda: lambdag,
+      nu: nug, 
+      Pr: Prg,
+    }
+  }
+  return trans 
+
 }

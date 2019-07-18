@@ -55,7 +55,7 @@
   II[39]=  10  ;  JJ[39]=   1  ;  an[39]=  -0.16557679795037E-3  ;
   II[40]=  11  ;  JJ[40]=  26  ;  an[40]=  -0.44923899061815E-4  ;
  
-export function region_3(v, T){
+export const region_3 = (v, T) => {
   if(v<=0.0 || T<=0.0){
     throw new RangeError("function region_3 v<=0 T<=0 in IF97_3.mjs")
   }
@@ -69,9 +69,9 @@ export function region_3(v, T){
   const u  = tau * Ft * R * T
   const g  = (dlt*Fd + F0) * R * T
   const P  = dlt * Fd * R * T * D * 1e-3
-  const h  = (tau*Ft + dlt*Fd) * R * T
-  const s  = (tau*Ft - F0) * R
-  const tmp = dlt*Fd-dlt*tau*Fdt
+  const h  = (tau * Ft + dlt * Fd) * R * T
+  const s  = (tau * Ft - F0) * R
+  const tmp = dlt * Fd - dlt * tau * Fdt
   const tmp2 = tmp*tmp
   const cp = (
             -tau * tau * Ftt

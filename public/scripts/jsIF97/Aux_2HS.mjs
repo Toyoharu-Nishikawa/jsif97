@@ -114,12 +114,12 @@ const ZmaxS = (s) => {
   const gg = 235.9643342  
 
   const {P, T} = s >= s100 ? Object({
-    P : Math.exp(((s * aa + bb) * s + cc) * s + dd); // approximation of isotherm 800 degC
-    T : 1073.15;
+    P : Math.exp(((s * aa + bb) * s + cc) * s + dd), // approximation of isotherm 800 degC
+    T : 1073.15,
   }) :
   Object({
-    P : 100.0;
-    T : (s * ee + ff) * s + gg;             // approximation of isobar 100 MPa
+    P : 100.0,
+    T : (s * ee + ff) * s + gg ,            // approximation of isobar 100 MPa
   })
   const state = region_2(P, T)
   
@@ -202,6 +202,7 @@ export const ZHS_2 = (h, s) => {
         state3.x = 1
         state3.nx = 1 
         state3.Nin = 0 
+        state3.MM = 2
         return state3
       }
       const {dhdp, dsdt, dhdt, dsdp} = deri_2HS(P, T)
@@ -264,9 +265,10 @@ export const ZHS_2 = (h, s) => {
       h: h,
       cp: cp,
       w: w,
-      x: x
+      x: x,
       nx: nx,
       Nin: Nin,
+      MM: 4,
     }
 
     return state

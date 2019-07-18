@@ -70,9 +70,12 @@ export const propPS = (P, s) => {
 
       const del = 1e-6
       const Ptmp = P + del
-      const stateTmp = propPS(Ptmp, s)
-
-      const kappa = -Math.log(Ptmp / P) / Math.log(stateTmp.v / v)
+      const Ttmp = TsatP(Ptmp)
+      const state1Tmp = region_1(Ptmp, Ttmp)
+      const state2Tmp = region_2(Ptmp, Ttmp)
+      const xTmp = (s - state1Tmp.s) / (state2Tmp.s - state1Tmp.s)
+      const vTmp = state2Tmp.v * xTmp + state1Tmp.v * (1.0 - xTmp)
+      const kappa = -Math.log(Ptmp / P) / Math.log(vTmp / v)
       const w = Math.sqrt(kappa * v * P * 1.0e+6)
 
       const state = {
@@ -109,9 +112,12 @@ export const propPS = (P, s) => {
 
       const del = 1e-6
       const Ptmp = P + del
-      const stateTmp = propPS(Ptmp, s)
-
-      const kappa = -Math.log(Ptmp / P) / Math.log(stateTmp.v / v)
+      const Ttmp = TsatP(Ptmp)
+      const state1Tmp = region_1(Ptmp, Ttmp)
+      const state2Tmp = region_2(Ptmp, Ttmp)
+      const xTmp = (s - state1Tmp.s) / (state2Tmp.s - state1Tmp.s)
+      const vTmp = state2Tmp.v * xTmp + state1Tmp.v * (1.0 - xTmp)
+      const kappa = -Math.log(Ptmp / P) / Math.log(vTmp / v)
       const w = Math.sqrt(kappa * v * P * 1.0e+6)
 
       const state = {
