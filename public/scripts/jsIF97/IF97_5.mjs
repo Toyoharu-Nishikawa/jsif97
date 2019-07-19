@@ -45,6 +45,7 @@ export function region_5(P, T){
   const cp = -tau * tau * Gtt * R;
   const tmp = Gp - tau * Gpt
   const tmp2 = tmp * tmp
+  const kappa = Gp / (pai * (tmp2 /(tau * tau * Gtt) - Gpp)) 
   const w2 = Gp * Gp / (tmp2 /(tau * tau * Gtt) - Gpp) * R * T * 1e+3
   const w  = w2 <0 ? 0 : Math.sqrt(w2)
 
@@ -58,6 +59,7 @@ export function region_5(P, T){
     s: s,
     cp: cp,
     w: w,
+    k: kappa,
     MM: 5,
   }
 

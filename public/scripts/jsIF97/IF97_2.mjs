@@ -83,6 +83,7 @@ export const region_2 = (P, T) => {
   const cp = -tau * tau * Gtt * R
   const tmp = Gp - tau * Gpt
   const tmp2 = tmp * tmp
+  const kappa = Gp / (pai * (tmp2 /(tau * tau * Gtt) - Gpp)) 
   const w2 = Gp * Gp / (tmp2 /(tau * tau * Gtt)-Gpp)* R * T * 1.0e3
   const w = w2 < 0 ? 0 : Math.sqrt(w2)
   const state = {
@@ -95,6 +96,7 @@ export const region_2 = (P, T) => {
     s: s,
     cp: cp,
     w: w,
+    k: kappa,
     MM:2,
   }
   return state

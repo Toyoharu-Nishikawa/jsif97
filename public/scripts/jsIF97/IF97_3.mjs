@@ -77,6 +77,7 @@ export const region_3 = (v, T) => {
             -tau * tau * Ftt
             +tmp2/(2.0*dlt*Fd+dlt*dlt*Fdd)
           )* R
+  const kappa = 2 + dlt - tmp2 / (tau * tau * Ftt * dlt * Fd)
   const w2 = (
         2.0*dlt*Fd + dlt*dlt*Fdd
         - tmp2/(tau*tau*Ftt)
@@ -93,6 +94,7 @@ export const region_3 = (v, T) => {
     s: s,
     cp: cp,
     w: w,
+    k: kappa,
     MM: 3,
   }
 

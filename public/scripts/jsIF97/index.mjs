@@ -58,52 +58,11 @@ import {satproT} from "./satproT.mjs"
 //hs2w(h, s)
 //hs2x(h, s)
 
-//SATp2t(p)
-//SATt2p(t)
+//SATp2t(P)
+//SATt2p(T)
 
-//SATlp2g(p)
-//SATlp2u(p)
-//SATlp2t(p)
-//SATlp2v(p)
-//SATlp2h(p)
-//SATlp2s(p)
-//SATlp2w(p)
-//SATlp2cp(p)
-//SATlp2cv(p)
-//SATlp2k(p)
-
-//SATgp2g(p)
-//SATgp2u(p)
-//SATgp2t(p)
-//SATgp2v(p)
-//SATgp2h(p)
-//SATgp2s(p)
-//SATgp2w(p)
-//SATgp2cp(p)
-//SATgp2cv(p)
-//SATgp2k(p)
-
-//SATlt2g(t)
-//SATlt2u(t)
-//SATlt2p(t)
-//SATlt2v(t)
-//SATlt2h(t)
-//SATlt2s(t)
-//SATlt2w(t)
-//SATlt2cp(t)
-//SATlt2cv(t)
-//SATlt2k(t)
-
-//SATgt2g(t)
-//SATgt2u(t)
-//SATgt2p(t)
-//SATgt2v(t)
-//SATgt2h(t)
-//SATgt2s(t)
-//SATgt2w(t)
-//SATgt2cp(t)
-//SATgt2cv(t)
-//SATgt2k(t)
+//SATp2all(P)
+//SATt2all(T)
 
 "use strict"
 
@@ -129,7 +88,7 @@ export const pt2g = (P, T) => {
   const state = pt2all(P, T) 
   const g = state.g
   
-  return g;
+  return g
 }
 
 export const pt2u = (P, T) => {
@@ -142,47 +101,33 @@ export const pt2u = (P, T) => {
   const state = pt2all(P, T) 
   const u = state.u
   
-  return u;
+  return u
 }
 
-export function pt2v(P, T){
+export const pt2v = (P, T) => {
   // input
   // P:pressure [Pa], T:temperature [K]
   
   // output
   // v:specific volume [m^3/kg]
+
+  const state = pt2all(P, T) 
+  const v = state.v
   
-  var v;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.T = T;
-  
-  if (propPT(SP) == -1) { SP = null; return -1; }
-  v = SP.v;
-  
-  return v;
+  return v
 }
 
-export function pt2h(P, T){
+export const pt2h = (P, T) => {
   // input
   // P:pressure [Pa], T:temperature [K]
   
   // output
   // h:specific enthalpy [kJ/kg]
   
-  var h;
-  var SP;
+  const state = pt2all(P, T) 
+  const h = state.h
   
-  SP = {};
-  SP.P = P;
-  SP.T = T;
-  
-  if (propPT(SP) == -1) { SP = null; return -1; }
-  h = SP.h;
-  
-  return h;
+  return h
 }
 
 export const pt2s = (P, T) => {
@@ -193,130 +138,140 @@ export const pt2s = (P, T) => {
   // s:specific entropy [kJ/kgK]
   
   const state = pt2all(P, T)
-  const s = state.s;
+  const s = state.s
   
-  return s;
+  return s
 }
   
-export function pt2w(P, T) { 
+export const pt2w = (P, T) => { 
   // input
   // P:pressure [Pa], T:temperature [K]
   
   // output
   // w: speed of sound in m/s
   
-  var w;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.T = T;
-  
-  if (propPT(SP) == -1) { SP = null; return -1; }
-  w = SP.w;
-  
-  return w;
+  const state = pt2all(P, T)
+  const w = state.w
+
+  return w
 }
   
-export function pt2MM(P, T){ 
+export const pt2MM = (P, T) => { 
   // input
   // P:pressure [Pa], T:temperature [K]
   
   // output
   // MM: Region
   
-  var MM;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.T = T;
-  
-  if (propPT(SP) == -1) { SP = null; return -1; }
-  MM = SP.MM;
-  
-  return SP.M;
+  const state = pt2all(P, T)
+  const MM = state.MM
+
+  return MM
 }
   
-export function pt2cp(p, t) {
+export const pt2cp = (P, T) => {
   // input
   // p:puressure [MPa] , t:temperature [K]
   
   // output
   // cp: isobaric spcific heat in kJ/kgK
   
-  var cp;
-  var SP;
-  
-  SP = {};
-  SP.P = p;
-  SP.T = t;
-  
-  if (expisPT(SP) == -1) { SP = null; return -1; }
-  cp = SP.cp;
-  return cp;
+  const state = pt2all(P, T)
+  const cp = state.cp
+
+  return cp 
+}
+
+export const pt2expis = (P, T) => {
+
+  const expis = expisPT(P, T)
+
+  return expis
 }
   
-export function pt2cv(p, t) {
+export const pt2cv = (P, T) => {
   // input
   // p:puressure [MPa] , t:temperature [K]
   
   // output
   // cv: isobaric spcific heat in kJ/kgK
   
-  var cv;
-  var SP;
+  const expis = expisPT(P, T)
+  const cv = expis.cv
   
-  SP = {};
-  SP.P = p;
-  SP.T = t;
-  
-  if (expisPT(SP) == -1) { SP = null; return -1; }
-  cv = SP.cv;
-  return cv;
+  return cv
 }
   
-export function pt2k(P, T){
+export const pt2k = (P, T) => {
   // input
   // P:pressure [Pa], T:temperature [K]
   
   // output
   // kappa: isentropic exponent [-]
+
+  const state = pt2all(P, T)
+  const k = state.k
   
-  var kappa;
-  var SP;
-  
-  SP ={}; 
-  SP.P = P;
-  SP.T = T;
-  
-  if (expisPT(SP) == -1) { SP = null; return -1; }
-  kappa = SP.kappa;
-  
-  return kappa;
+  return k 
 }
-  
-export function pt2mu(P, T) {
+
+export const pt2trans = (P, T) => {
+
+  const trans = transPT(P, T)
+
+  return trans 
+}
+
+export const  pt2mu = (P, T) => {
   // input
   // p:puressure [MPa] , t:temperature [K]
   
   // output ( sturation line is included in gas regeion)
   // mu:viscosity [Pa-s]
+  const trans = pt2trans(P, T)
+  const mu = trans.mu
   
-  var mu;
-  
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.T = T;
-  
-  if (transPT(SP) == -1) { SP = null; return -1; }
-  mu = SP.mu;
-  return mu;
+  return mu  
 }
+
+export const  pt2lambda = (P, T) => {
+  // input
+  // p:puressure [MPa] , t:temperature [K]
   
- //ph
+  // output ( sturation line is included in gas regeion)
+  // lambda:thermal conductivity [W /(m-K)]
+  const trans = pt2trans(P, T)
+  const lambda = trans.lambda
+  
+  return lambda  
+}
+
+export const  pt2nu = (P, T) => {
+  // input
+  // p:puressure [MPa] , t:temperature [K]
+  
+  // output ( sturation line is included in gas regeion)
+  // nu:Nusselt number  [-]
+  const trans = pt2trans(P, T)
+  const nu = trans.nu
+  
+  return nu  
+}
+
+export const  pt2Pr = (P, T) => {
+  // input
+  // p:puressure [MPa] , t:temperature [K]
+  
+  // output ( sturation line is included in gas regeion)
+  // Pr:Prandtl number [-]
+  const trans = pt2trans(P, T)
+  const Pr = trans.Pr
+  
+  return Pr  
+}
+
+
+//ph
 export const ph2all = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
@@ -326,319 +281,224 @@ export const ph2all = (P, h) => {
   return state
 }
 
-export function ph2g(P, h) {
+export const ph2g = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // g:gibbs specific energy [kJ/kg]
   
-  var g;
-  var SP;
+  const state = propPH(P, h)
+  const g = state.g
   
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  g = SP.g;
-  
-  return g;
+  return g
 }
   
-export function ph2u(P, h) {
+export const ph2u = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // u:internal energy [m^3/kg]
+
+  const state = propPH(P, h)
+  const u = state.u
   
-  var u;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  u = SP.u;
-  
-  return u;
+  return u
 }
   
-export function ph2v(P, h) {
+export const ph2v = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // v:specific volume [m^3/kg]
   
-  var v;
-  var SP;
+  const state = propPH(P, h)
+  const v = state.v
   
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  v = SP.v;
-  
-  return v;
+  return v
 }
   
-export function ph2t(P, h) {
+export const ph2t = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // t:temperature [K]
   
-  var T;
-  var SP;
+  const state = propPH(P, h)
+  const T = state.T
   
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  T = SP.T;
-  
-  return T;
+  return T
 }
   
-export function ph2s(P, h) {
+export const ph2s = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // s:specific entropy [kJ/kgK]
   
-  var s;
-  var SP;
+  const state = propPH(P, h)
+  const s = state.s
   
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  s = SP.s;
-  
-  return s;
+  return s
 }
   
-export function ph2w(P, h) {
+export const ph2w = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // w:speed of sound [m/s]
   
-  var w;
-  var kappa;
-  var del;
-  var SP;
-  var SP1;
-  
-  del = 1.0e-6;
-  
-  SP = {};
-  SP1 = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  if (SP.MM != 4) {
-  w = SP.w;
-}
-  else {
-  SP1.P = P + del;
-  SP1.s = SP.s;
-  if (propPS(SP1) == -1) { SP = null; return -1; }
-  kappa = -Math.log(SP1.P / P) / Math.log(SP1.v / SP.v);
-  w = Math.sqrt(kappa*SP.v*SP.P*1.0e+6);
+  const state = propPH(P, h)
+  const w = state.w
+
+  return w
 }
   
-  return w;
-}
-  
-export function ph2x(P, h) {
+export const ph2x = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // x:dryness [-]
   
-  var x;
-  var SP;
+  const state = propPH(P, h)
+  const x = state.x
   
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  x = SP.x;
-  
-  return x;
+  return x
 }
   
-export function ph2MM(P, h) {
+export const ph2MM = (P, h) => {
   // input
   // P:pressure [Pa], h:specific enthalpy [kJ/kg]
   
   // output
   // MM:region [-]
   
-  var MM;
-  var SP;
+  const state = propPH(P, h)
+  const MM = state.MM
   
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  MM = SP.MM;
-  
-  return MM;
+  return MM
 }
   
-export function ph2mu(P, h, n) {
+export const ph2mu = (P, h, n) => {
   // input
   // p:puressure [MPa] , h:specific enthalpy [kJ/kg]
   // n:0:harmonic mean, 1:weighted mean, 2:gas viscosity, 3:liquid viscosity,else: harmonic mean
   
   // output
   // mu:viscosity [Pa-s]
-  
-  var mu;
-  var MM;
-  var x;
-  
-  var SP;
-  var SP1;
-  
-  SP = {};
-  SP1 = {};
-  SP.P = P; 
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  MM = SP.MM;
-  if (MM != 4) {
-    if (transPT(SP) == -1) { SP = null; return -1; }
-    mu = SP.mu;
+ 
+  const state = ph2all(P, h)
+  const T = state.T
+  const MM = state.MM
+  if(MM != 4) {
+    const trans = pt2trans(P, T)
+    const mu = trans.mu
+    return mu
   }
   else {
-    x = SP.x;
-    if (transatP(P, SP, SP1) == -1) { SP = null; return -1; }
-    if (n == 0) {
-      mu = 1 / (x / SP1.mu + (1.0 - x) / SP.mu);
-    }
-    else if (n == 1) {
-      mu = SP1.mu*x + SP.mu*(1.0 - x);
-    } 
-    else if (n == 2) {
-      mu = SP1.mu;
-    }
-    else if (n == 3) {
-      mu = SP.mu;
-    }
-    else {
-      mu = 1 / (x / SP1.mu + (1.0 - x) / SP.mu);
+    const x = state.x
+    const {l, g} = transatP(P)
+    switch(n){
+      case 0 : {
+        const mu = 1 / (x / g.mu + (1.0 - x) / l.mu)
+        return mu
+      }
+      case 1 : {
+        const mu = g.mu * x + l.mu * (1.0 - x)
+      } 
+      case 2 : {
+        const mu = g.mu
+        return mu
+      }
+      case 3 : {
+        const mu = l.mu
+        return mu
+      }
+      default : {
+        const  mu = 1 / (x / g.mu + (1.0 - x) / l.mu)
+        return mu
+      }
     }
   }
-  return mu;
 }
   
-export function ph2cp(P, h) {
+export const ph2cp = (P, h) => {
   // input
   // p:puressure [MPa] , h:specific enthalpy [kJ/kg]
   
   // output
   // cp:heat capacity [kJ/(kg-K)]
   
-  var cp;
-  var MM;
-  
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  MM = SP.MM;
-  if (MM != 4) {
-    if (expisPT(SP) == -1) { SP = null; return -1; }
-    cp = SP.cp;
+  const state = ph2all(P, h) 
+  const T = state.T
+  const MM = state.MM
+  if(MM != 4) {
+    //const expis = pt2expis(P, T)
+    //if (expisPT(SP) == -1) { SP = null; return -1; }
+    const cp = state.cp
   }
   else {
-    return -1;
+    const cp = -1
+    return cp 
   }
-  return cp;
 }
   
-export function ph2cv(P, h) {
+export const ph2cv = (P, h) => {
   // input
   // p:puressure [MPa] , h:specific enthalpy [kJ/kg]
   
   // output
   // cv:heat capacity [kJ/(kg-K)]
   
-  var cv;
-  var MM;
-  
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  MM = SP.MM;
+  const state = ph2all(P, h)  
+  const T = state.T
+  const MM = state.MM
   if (MM != 4) {
-    if (expisPT(SP) == -1) { SP = null; return -1; }
-    cv = SP.cv;
+    const expis = pt2expis(P, T)
+    const cv = expis.cv
+    return cv
   }
   else {
-    return -1;
+    const cv = -1
+    return cv 
   }
-  return cv;
 }
   
-export function ph2k(P, h) {
+export const ph2k = (P, h) => {
   // input
   // p:puressure [MPa] , h:specific enthalpy [kJ/kg]
   
   // output
   // kappa: isentropic exponent [-]
   
-  var kappa;
-  var del;
-  var MM;
   
-  var SP;
-  var SP1;
-  
-  del = 1.0e-6;
-  
-  SP = {};
-  SP1 = {};
-  SP.P = P;
-  SP.h = h;
-  
-  if (propPH(SP) == -1) { SP = null; return -1; }
-  MM = SP.MM;
-  if (MM != 4) {
-    expisPT(SP);
-    kappa = SP.kappa;
-  }
-  else {
-    SP1.P = P + del;
-    SP1.s = SP.s;
-    if (propPS(SP1) == -1) { SP = null; return -1; }
-      kappa = -Math.log(SP1.P / P) / Math.log(SP1.v / SP.v);
-  }
-  return kappa;
+  const state = ph2all(P, h) 
+  const k = state.k
+
+  return k
+//  const del = 1.0e-6
+//  const state = ph2all(P, h) 
+//  const MM = state.MM 
+//  const T = state.T 
+//  if (MM != 4) {
+//    const expis = expisPT(P, T)
+//    const kappa = expis.kappa;
+//    return kappa
+//  }
+//  else {
+//    const P1 = P + del
+//    const state1 = ps2all(P1, s)
+//    const v = state.v
+//    const v1 = state1.v
+//    const  kappa = -Math.log(P1 / P) / Math.log(v1 / v)
+//    return kappa
+//  }
 }
   
 //ps
@@ -646,214 +506,123 @@ export const ps2all = (P, s) => {
   const state = propPS(P, s)
   return state
 }
-export function ps2g(P, s) {
+
+export const ps2g = (P, s) => {
   // input
   // P:pressure [Pa], s:specific entropy [kJ/kgK]
   
   // output
   // g:Gibbs free enagy [kJ/kg]
   
-  var g;
-  var SP;
+  const state = ps2all(P, s)  
+  const g = state.g
   
-  SP = {};
-  SP.P = P;
-  SP.s = s;
-  
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  g = SP.g;
-  
-  return g;
+  return g
 }
   
-export function ps2u(P, s) {
+export const ps2u = (P, s) => {
   // input
   // P:pressure [Pa], s:specific entropy [kJ/kgK]
   
   // output
   // u:internal enagy [kJ/kg]
   
-  var u;
-  var SP;
+  const state = ps2all(P, s)  
+  const u = state.u
   
-  SP.P = P;
-  SP.s = s;
-  
-  SP = {};
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  u = SP.u;
-  
-  return u;
+  return u
 }
   
-export function ps2v(P, s) {
+export const ps2v = (P, s) => {
   // input
   // P:pressure [Pa], s:specific entropy [kJ/kgK]
   
   // output
   // v:specific volume [m^3/kg]
   
-  var v;
-  var SP;
+  const state = ps2all(P, s)  
+  const v = state.v
   
-  SP = {};
-  SP.P = P;
-  SP.s = s;
-  
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  v = SP.v;
-  
-  return v;
+  return v
 }
   
-export function ps2t(P, s) {
+export const ps2t = (P, s) => {
   // input
   // P:pressure [Pa], s:specific entropy [kJ/kgK]
   
   // output
   // t:temperature [K]
   
-  var t;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.s = s;
-  
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  t = SP.T;
-  
-  return t;
+  const state = ps2all(P, s)  
+  const T = state.T
+
+  return T 
 }
   
-export function ps2h(P, s) {
+export const ps2h = (P, s) => {
   // input
   // P:pressure [Pa], s:specific entropy [kJ/kgK]
   
   // output
   // h:specific enthalpy [kJ/kg]
-  
-  var h;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.s = s;
-  
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  h = SP.h;
+
+  const state = ps2all(P, s)  
+  const h = state.h
   
   return h;
 }
   
-export function ps2w(P, s) {
+export const ps2w = (P, s) => {
   // input
   // P:pressure [MPa], s:specific entropy [kJ/kgK]
   
   // output
   // w:speed of sound [m/s]
+
+  const state = ps2all(P, s)  
+  const w = state.w
   
-  var w;
-  var kappa;
-  var del;
-  var SP;
-  var SP1;
-  
-  del = 1.0e-6;
-  
-  SP = {}; 
-  SP1 = {};
-  
-  SP.P = P;
-  SP.s = s;
-  
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  if (SP.MM != 4) {
-    w = SP.w;
-  }
-  else {
-    SP1.P = P + del;
-    SP1.s = SP.s;
-    if (propPS(SP1) == -1) { SP = null; return -1; }
-    kappa = -Math.log(SP1.P / P) / Math.log(SP1.v / SP.v);
-    w = Math.sqrt(kappa*SP.v*SP.P*1.0e+6);
-  }
-  
-  return w;
+  return w
 }
   
-export function ps2x(P, s) {
+export const ps2x = (P, s) => {
   // input
   // P:pressure [MPa], s:specific entropy [kJ/kgK]
   
   // output
   // x:dryness [-]
+
+  const state = ps2all(P, s)  
+  const x = state.x
   
-  var x;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.s = s;
-  
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  x = SP.x;
-  
-  return x;
+  return x
 }
   
-export function ps2k(P, s) {
+export const ps2k = (P, s) => {
   // input
   // P:pressure [MPa], s:specific entropy [kJ/kgK]
   
   // output
   // kappa: isentropic exponent [-]
   
-  var kappa;
-  var del;
-  var SP;
-  var SP1;
-  
-  del = 1.0e-6;
-  
-  SP = {};
-  SP1 = {};
-  
-  SP.P = P;
-  SP.s = s;
-  
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  if (SP.MM != 4) {
-    expisPT(SP);
-    kappa = SP.kappa;
-  }
-  else {
-    SP1.P = P + del;
-    SP1.s = SP.s;
-    if (propPS(SP1) == -1) { SP = null; return -1; }
-    kappa = -Math.log(SP1.P / P) / Math.log(SP1.v / SP.v);
-  }
-  return kappa;
+  const state = ps2all(P, s)  
+  const k = state.k
+
+  return k
+
 }
   
-export function ps2MM(P, s) {
+export const ps2MM = (P, s) => {
   // input
   // P:pressure [MPa], s:specific entropy [kJ/kgK]
   
   // output
   // MM:Region [-]
   
-  var MM;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.s = s;
-  
-  if (propPS(SP) == -1) { SP = null; return -1; }
-  MM = SP.MM;
-  
-  return MM;
+  const state = ps2all(P, s)  
+  const MM = state.MM
+
+  return MM
 }
   
 //hs
@@ -862,964 +631,182 @@ export const hs2all = (h, s) => {
   return state
 }
 
-export function hs2g(h, s) {
+export const hs2g = (h, s) => {
   // input
   // h:specific enthalpy [kJ/kg] , s:specific entropy [kJ/kgK]
   
   // output
   // g:gibbs free energy [kJ/kg]
   
-  var g;
-  var SP;
-  
-  SP = {};
-  SP.h = h;
-  SP.s = s;
-  
-  if (propHS(SP) == -1) { SP = null; return -1; }
-  g = SP.g;
-  
-  return g;
+  const state = hs2all(h, s)
+  const g = state.g
+
+  return g
 }
   
-export function hs2u(h, s) {
+export const hs2u = (h, s) => {
   // input
   // h:specific enthalpy [kJ/kg] , s:specific entropy [kJ/kgK]
   
   // output
   // u:internal energy [kJ/kg]
   
-  var u;
-  var SP;
+  const state = hs2all(h, s)
+  const u = state.u
   
-  SP = {};
-  SP.h = h;
-  SP.s = s;
-  
-  if (propHS(SP) == -1) { SP = null; return -1; }
-  u = SP.u;
-  
-  return u;
+  return u
 }
   
-export function hs2p(h, s) {
+export const hs2p = (h, s) => {
   // input
   // h:specific enthalpy [kJ/kg] , s:specific entropy [kJ/kgK]
   
   // output
   // P:pressure [MPa]
   
-  var p;
-  var SP;
+  const state = hs2all(h, s)
+  const p = state.p
   
-  SP = {};
-  SP.h = h;
-  SP.s = s;
-  
-  if (propHS(SP) == -1) { SP = null; return -1; }
-  p = SP.P;
-  
-  return p;
+  return p
 }
   
-export function hs2t(h, s) {
+export const hs2t = (h, s) => {
   // input
   // h:specific enthalpy [kJ/kg] , s:specific entropy [kJ/kgK]
   
   // output
   // t:temperature [K]
+
+  const state = hs2all(h, s)
+  const T = state.T
   
-  var t;
-  var SP;
-  
-  SP = {};
-  SP.h = h;
-  SP.s = s;
-  
-  if (propHS(SP) == -1) { SP = null; return -1; }
-  t = SP.T;
-  
-  return t;
+  return T 
 }
   
-export function hs2v(h, s) {
+export const hs2v = (h, s) => {
   // input
   // h:specific enthalpy [kJ/kg] , s:specific entropy [kJ/kgK]
   
   // output
   // v:specific volume [m^3/kg]
   
-  var v;
-  var SP;
+  const state = hs2all(h, s)
+  const v = state.v
   
-  SP = {};
-  SP.h = h;
-  SP.s = s;
-  
-  if (propHS(SP) == -1) { SP = null; return -1; }
-  v = SP.v;
-  
-  return v;
+  return v
 }
   
-export function hs2w(h, s) {
+export const hs2w = (h, s) => {
   // input
   // h:specific enthalpy [kJ/kg] , s:specific entropy [kJ/kgK]
   
   // output
   // w:speed of sound [m/s]
   
-  var w;
-  var SP;
+  const state = hs2all(h, s)
+  const w = state.w
   
-  SP = {};
-  SP.h = h;
-  SP.s = s;
-  
-  if (propHS(SP) == -1) { SP = null; return -1; }
-  w = SP.w;
-  
-  return w;
+  return w
 }
   
-export function hs2x(h, s) {
+export const hs2x = (h, s) => {
   // input
   // h:specific enthalpy [kJ/kg] , s:specific entropy [kJ/kgK]
   
   // output
   // w:speed of sound [m/s]
+
+  const state = hs2all(h, s)
+  const x = state.x
   
-  var x;
-  var SP;
-  
-  SP = {};
-  SP.h = h;
-  SP.s = s;
-  
-  if (propHS(SP) == -1) { SP = null; return -1; }
-  x = SP.x;
-  
-  return x;
+  return x
 }
   
 //SAT
-export function SATp2t(p) {
+export const SATp2t = (P) => {
   // input
   // p:pressure [MPa]
   
   // output
   // t:temperature [K]
   
-  var t;
-  var SPl;
-  var SPg;
+  const {l, g} = satproP(P)
+  const T = l.T
   
-  SPl = {};
-  SPg = {};
-  
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  t = SPl.T;
-  
-  return t;
+  return T 
 }
   
-export function SATt2p(t) {
+export const SATt2p = (T) => {
   // input
   // t:temperature [K]
   
   // output
   // p:pressure [MPa]
   
-  var p;
-  var SPl;
-  var SPg;
   
-  SPl = {};
-  SPg = {};
+  const {l, g} = satproT(T)
+  P = l.P
   
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  p = SPl.P;
-  
-  return p;
+  return P 
 }
   
-  //SATlp
-export function SATlp2g(p) {
+//SATlp
+export const SATp2all = (P) => {
   // input
   // p:pressure [MPa]
-  
+ 
   // output
-  // g:gibbs free energy [kJ/kg]
-  
-  var g;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  g = SPl.g;
-  
-  return g;
+  //  l: { liquid
+  //    g:Gibbs free energy,
+  //    u:internal energy,
+  //    T:temperature,
+  //    h:specific enthalpy,
+  //    s:specific entropy,
+  //    v:specific volume, 
+  //    cp:specific heat ratio, 
+  //   },
+  //  g: { gas 
+  //    g:Gibbs free energy,
+  //    u:internal energy,
+  //    T:temperature,
+  //    h:specific enthalpy,
+  //    s:specific entropy,
+  //    v:specific volume, 
+  //    cp:specific heat ratio, 
+  //   }
+
+  const state= satproP(P)
+  return state
 }
+ 
   
-export function SATlp2u(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // u:internal energy [kJ/kg]
-  
-  var u;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  u = SPl.u;
-  
-  return u;
-}
-  
-export function SATlp2t(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // t:temperature [K]
-  
-  var t;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  t = SPl.T;
-  
-  return t;
-}
-  
-export function SATlp2v(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // v:specific volume [m^3/kg]
-  
-  var v;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  v = SPl.v;
-  
-  return v;
-}
-  
-export function SATlp2h(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // h:specific enthalpy [kJ/kg]
-  
-  var h;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  h = SPl.h;
-  
-  return h;
-}
-  
-export function SATlp2s(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // s:specific entropy [kJ/kg]
-  
-  var s;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  s = SPl.s;
-  
-  return s;
-}
-  
-export function SATlp2w(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // w:speed of sound [m/s]
-  
-  var w;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  w = SPl.w;
-  
-  return w;
-}
-  
-export function SATlp2cp(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // cp:specific heat ratio [kJ/(kg-K)]
-  
-  var cp;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  cp = SPl.cp;
-  
-  return cp;
-}
-  
-export function SATlp2cv(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // cv:specific heat ratio [kJ/(kg-K)]
-  
-  var cv;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  expisen1(SPl);
-  
-  cv = SPl.cv;
-  
-  return cv;
-}
-  
-export function SATlp2k(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // kappa: isentropic exponent [-]
-  
-  var kappa;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  expisen1(SPl);
-  
-  kappa = SPl.kappa;
-  
-  return kappa;
-}
-  
-  //SATgp
-export function SATgp2g(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // g:gibbs free energy [kJ/kg]
-  
-  var g;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  g = SPg.g;
-  
-  return g;
-}
-  
-export function SATgp2u(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // u:internal energy [kJ/kg]
-  
-  var u;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  u = SPg.u;
-  
-  return u;
-}
-  
-export function SATgp2t(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // t:temperature [K]
-  
-  var t;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  t = SPg.T;
-  
-  return t;
-}
-  
-export function SATgp2v(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // v:specific volume [m^3/kg]
-  
-  var v;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  v = SPg.v;
-  
-  return v;
-}
-  
-export function SATgp2h(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // h:specific enthalpy [kJ/kg]
-  
-  var h;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  h = SPg.h;
-  
-  return h;
-}
-  
-export function SATgp2s(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // s:specific entropy [kJ/kg]
-  
-  var s;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  s = SPg.s;
-  
-  return s;
-}
-  
-export function SATgp2w(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // w:speed of sound [m/s]
-  
-  var w;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  w = SPg.w;
-  
-  return w;
-}
-  
-export function SATgp2cp(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // cp:specific heat ratio [kJ/(kg-K)]
-  
-  var cp;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  cp = SPg.cp;
-  
-  return cp;
-}
-  
-export function SATgp2cv(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // cv:specific heat ratio [kJ/(kg-K)]
-  
-  var cv;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  expisen1(SPg);
-  
-  cv = SPg.cv;
-  
-  return cv;
-}
-  
-export function SATgp2k(p) {
-  // input
-  // p:pressure [MPa]
-  
-  // output
-  // kappa: isentropic exponent [-]
-  
-  var kappa;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(p, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  expisen1(SPg);
-  
-  kappa = SPg.kappa;
-  
-  return kappa;
-}
   
 //SATlt
-export function SATlt2g(t) {
+export const SATt2all = (T) => {
   // input
-  // t:temperature [K]
-  
+  // T:temperature [K]
+ 
   // output
-  // g:gibbs free energy [kJ/kg]
-  
-  var g;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  g = SPl.g;
-  
-  return g;
+  //  l: { liquid
+  //    g:Gibbs free energy,
+  //    u:internal energy,
+  //    T:temperature,
+  //    h:specific enthalpy,
+  //    s:specific entropy,
+  //    v:specific volume, 
+  //    cp:specific heat ratio, 
+  //   },
+  //  g: { gas 
+  //    g:Gibbs free energy,
+  //    u:internal energy,
+  //    T:temperature,
+  //    h:specific enthalpy,
+  //    s:specific entropy,
+  //    v:specific volume, 
+  //    cp:specific heat ratio, 
+  //   }
+
+  const state= satproT(T)
+  return state
 }
-  
-export function SATlt2u(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // u:internal energy [kJ/kg]
-  
-  var u;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  u = SPl.u;
-  
-  return u;
-}
-  
-export function SATlt2p(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // p:pressure [MPa]
-  
-  var p;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  p = SPl.P;
-  
-  return p;
-}
-  
-export function SATlt2v(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // v:specific volume [m^3/kg]
-  
-  var v;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  v = SPl.v;
-  
-  return v;
-}
-  
-export function SATlt2h(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // h:specific enthalpy [kJ/kg]
-  
-  var h;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  h = SPl.h;
-  
-  return h;
-}
-  
-export function SATlt2s(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // s:specific entropy [kJ/kg]
-  
-  var s;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  s = SPl.s;
-  
-  return s;
-}
-  
-export function SATlt2w(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // w:speed of sound [m/s]
-  
-  var w;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  w = SPl.w;
-  
-  return w;
-}
-  
-export function SATlt2cp(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // cp:specific heat ratio [kJ/(kg-K)]
-  
-  var cp;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  cp = SPl.cp;
-  
-  return cp;
-}
-  
-export function SATlt2cv(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // cv:specific heat ratio [kJ/(kg-K)]
-  
-  var cv;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  expisen1(SPl);
-  
-  cv = SPl.cv;
-  
-  return cv;
-}
-  
-export function SATlt2k(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // kappa: isentropic exponent [-]
-  
-  var kappa;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  expisen1(SPl);
-  
-  kappa = SPl.kappa;
-  
-  return kappa;
-}
-  
-  //SATgt
-export function SATgt2g(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // g:gibbs free energy [kJ/kg]
-  
-  var g;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  g = SPg.g;
-  
-  return g;
-}
-  
-export function SATgt2u(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // u:internal energy [kJ/kg]
-  
-  var u;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  u = SPg.u;
-  
-  return u;
-}
-  
-export function SATgt2p(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // p:pressure [MPa]
-  
-  var p;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  p = SPg.P;
-  
-  return p;
-}
-  
-export function SATgt2v(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // v:specific volume [m^3/kg]
-  
-  var v;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  v = SPg.v;
-  
-  return v;
-}
-  
-export function SATgt2h(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // h:specific enthalpy [kJ/kg]
-  
-  var h;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  h = SPg.h;
-  
-  return h;
-}
-  
-export function SATgt2s(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // s:specific entropy [kJ/kg]
-  
-  var s;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  s = SPg.s;
-  
-  return s;
-}
-  
-export function SATgt2w(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // w:speed of sound [m/s]
-  
-  var w;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  w = SPg.w;
-  
-  return w;
-}
-  
-export function SATgt2cp(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // cp:specific heat ratio [kJ/(kg-K)]
-  
-  var cp;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproT(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  cp = SPg.cp;
-  
-  return cp;
-}
-  
-export function SATgt2cv(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // cv:specific heat ratio [kJ/(kg-K)]
-  
-  var cv;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  expisen1(SPg);
-  
-  cv = SPg.cv;
-  
-  return cv;
-}
-  
-export function SATgt2k(t) {
-  // input
-  // t:temperature [K]
-  
-  // output
-  // kappa: isentropic exponent [-]
-  
-  var kappa;
-  var SPl;
-  var SPg;
-  
-  SPl = {};
-  SPg = {};
-  if (satproP(t, SPl, SPg) == -1) { SPl = {}; SPg = {}; return -1; }
-  expisen1(SPg);
-  
-  kappa = SPg.kappa;
-  
-  return kappa;
-}
+

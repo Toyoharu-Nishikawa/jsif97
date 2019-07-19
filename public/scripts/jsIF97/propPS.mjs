@@ -88,6 +88,7 @@ export const propPS = (P, s) => {
         s: s,
         cp: cp,
         w: w,
+        k: kappa,
         x: x,
         MM: 4,
       }
@@ -132,6 +133,7 @@ export const propPS = (P, s) => {
         s: s,
         cp: cp,
         w: w,
+        k: kappa,
         x: x,
         MM: 4,
       }

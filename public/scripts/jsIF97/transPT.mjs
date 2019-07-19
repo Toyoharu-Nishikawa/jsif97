@@ -40,6 +40,7 @@ export const transPT = (P, T) => {
     }
   }
   const v = state.v
+  const cp = state.cp
   const mu = viscos(v, T)
   const lambda = conduc(v, T)
 
