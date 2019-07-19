@@ -75,7 +75,7 @@ export const propPS = (P, s) => {
       const state2Tmp = region_2(Ptmp, Ttmp)
       const xTmp = (s - state1Tmp.s) / (state2Tmp.s - state1Tmp.s)
       const vTmp = state2Tmp.v * xTmp + state1Tmp.v * (1.0 - xTmp)
-      const kappa = -Math.log(Ptmp / P) / Math.log(vTmp / v)
+      const kappa = - Math.log(Ptmp / P) / Math.log(vTmp / v)
       const w = Math.sqrt(kappa * v * P * 1.0e+6)
 
       const state = {
@@ -113,8 +113,10 @@ export const propPS = (P, s) => {
       const del = 1e-6
       const Ptmp = P + del
       const Ttmp = TsatP(Ptmp)
-      const state1Tmp = region_1(Ptmp, Ttmp)
-      const state2Tmp = region_2(Ptmp, Ttmp)
+      const v1Tmp = Vsatl_3(Ttmp)
+      const v2Tmp = Vsatg_3(Ttmp)
+      const state1Tmp = region_3(v1Tmp, Ttmp)
+      const state2Tmp = region_3(v2Tmp, Ttmp)
       const xTmp = (s - state1Tmp.s) / (state2Tmp.s - state1Tmp.s)
       const vTmp = state2Tmp.v * xTmp + state1Tmp.v * (1.0 - xTmp)
       const kappa = -Math.log(Ptmp / P) / Math.log(vTmp / v)
@@ -137,7 +139,7 @@ export const propPS = (P, s) => {
       return state
     }
     default : {
-      throw new RageError("function propPS M in propPS.mjs")
+      throw new RangeError("function propPS M in propPS.mjs")
     }
   }
 }

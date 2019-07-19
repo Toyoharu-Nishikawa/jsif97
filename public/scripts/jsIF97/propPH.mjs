@@ -99,7 +99,6 @@ export const propPH = (P, h) => {
 
       const stateTmp = propPS(P, s)
       const w = stateTmp.w 
-
       const state = {
         g: g,
         u: u,

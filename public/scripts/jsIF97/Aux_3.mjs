@@ -185,11 +185,11 @@ export const VPT_32 = (P, T) => {
   return v 
 }
 
-export const Vsatl_3 = (P, T) => {
+export const Vsatl_3 = (T) => {
   const Psat = PsatT(T)
   
   const Vspinl = spinl_3(T)
-  const Vmin=1.3e-3;
+  const Vmin=1.3e-3
   
   let d1 = Vspinl
   let d2 = Vmin
@@ -210,7 +210,7 @@ export const Vsatl_3 = (P, T) => {
   return Vl
 }
 
-export const Vsatg_3 = (P, T) => {
+export const Vsatg_3 = (T) => {
 
   const Psat = PsatT(T)
     
@@ -288,7 +288,7 @@ export const ZPH_32 = (P, h) => {
   let dm
   let v
   
-  for(n=1;n<=40;n++){
+  for(let n=1;n<=40;n++){
     dm = (d1 + d2) * 0.5
     v = VPT_3(P, dm)
     const state = region_3(v, dm)
@@ -336,7 +336,7 @@ export const ZPS_31 = (P, s) => {
   
   for(let n=1;n<=40;n++){
     dm = (d1 + d2) * 0.5
-    v = VPT_3(SP1)
+    v = VPT_3(P, dm)
     const state = region_3(v, dm)
     const s1 = state.s
     if(s1 >= s){
@@ -351,16 +351,16 @@ export const ZPS_31 = (P, s) => {
   return state
 }
 
-export function ZPS_32(SP){
+export const ZPS_32 = (P, s) => {
   let d1 = Tb23P(P)
   let d2 = TsatP(P)
   let dm
   let v
   
   for(let n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    v = VPT_3(SP1)
-    const state = region_3(SP1)
+    dm = (d1 + d2) * 0.5
+    v = VPT_3(P, dm)
+    const state = region_3(v, dm)
     const s1 = state.s
     if(s1 >= s){
       d1 = dm
@@ -369,7 +369,7 @@ export function ZPS_32(SP){
       d2 = dm
     }
   }
-  const state = region_3(SP1)
+  const state = region_3(v, dm)
   
   return state 
 }

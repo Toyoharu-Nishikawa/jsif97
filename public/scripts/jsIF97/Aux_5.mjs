@@ -47,9 +47,10 @@ export const  ZPS_5 = (P, s) => {
 
   let Flag = 0
   let Gibbs5  
+  let tau
   for(let n=1;n<=10;n++){
-     const tau = 1000.0 / T
-     Gibbs5 = Gibbs_5(pai,tau,Gibbs)
+     tau = 1000.0 / T
+     Gibbs5 = Gibbs_5(pai,tau)
      const { G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs5
      const s1= (tau * Gt - G0) * R
      const dlt = s - s1
@@ -87,6 +88,7 @@ export const  ZPS_5 = (P, s) => {
     s: s,
     cp: cp,
     w: w,
+    MM: 5,
   }
 
   return state

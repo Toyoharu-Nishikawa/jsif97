@@ -132,22 +132,15 @@ export const pt2g = (P, T) => {
   return g;
 }
 
-export function pt2u(P, T){
+export const pt2u = (P, T) => {
   // input
   // P:pressure [Pa], T:temperature [K]
   
   // output
   // u:internal energy [kJ/kg]
   
-  var u;
-  var SP;
-  
-  SP = {};
-  SP.P = P;
-  SP.T = T;
-  
-  if (propPT(SP) == -1) { SP = null; return -1; }
-  u = SP.u;
+  const state = pt2all(P, T) 
+  const u = state.u
   
   return u;
 }
@@ -649,6 +642,10 @@ export function ph2k(P, h) {
 }
   
 //ps
+export const ps2all = (P, s) => {
+  const state = propPS(P, s)
+  return state
+}
 export function ps2g(P, s) {
   // input
   // P:pressure [Pa], s:specific entropy [kJ/kgK]
@@ -859,7 +856,12 @@ export function ps2MM(P, s) {
   return MM;
 }
   
-  //hs
+//hs
+export const hs2all = (h, s) => {
+  const state = propHS(h, s)
+  return state
+}
+
 export function hs2g(h, s) {
   // input
   // h:specific enthalpy [kJ/kg] , s:specific entropy [kJ/kgK]

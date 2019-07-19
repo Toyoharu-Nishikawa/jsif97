@@ -37,6 +37,7 @@ export const RegPS = (P, s) =>{
   /* Test below 10 MPa */  
   if(P <= 10){
     const Ttmp1 = 2273.15
+    const stateTmp1 = region_5(P, Ttmp1)
     const Stest1 =stateTmp1.s
     if(s > Stest1){
       const M = 0

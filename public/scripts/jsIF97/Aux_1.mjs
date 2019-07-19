@@ -46,12 +46,13 @@ export const ZPS_1 = (P, s) => {
   
   let Flag=0
   let Gibbs1
+  let tau
   for(let n=1;n<=10;n++){
-    const tau = 1386.0 / T
+    tau = 1386.0 / T
     Gibbs1 = Gibbs_1(pai,tau)
     const {G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs1
-    s1= (tau * Gt - G0) * R
-    dlt = s - s1;
+    const s1= (tau * Gt - G0) * R
+    const dlt = s - s1
     if (Math.abs(dlt) <= eps){
       Flag=1
       break

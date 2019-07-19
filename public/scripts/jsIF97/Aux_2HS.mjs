@@ -20,6 +20,7 @@ import {region_2,Gibbs_2} from "./IF97_2.mjs"
 import {Tph2,Tps2} from "./IF97_BK2.mjs" 
 import {PsatT,TsatP} from './IF97_Sat.mjs'
 import {ZPH_2,ZPS_2} from './Aux_2.mjs'
+import {propPS} from './propPS.mjs'
 
 
 // Auxiliary subroutines for propHS
@@ -47,7 +48,7 @@ const deri_2HS = (P, T) => {
  
   const dhdt = -R * tau * tau * Gtt
   const dhdp = R * 540.0 * Gpt
-  const dsdt = -R * tau * taui * Gtt / T
+  const dsdt = -R * tau * tau * Gtt / T
   const dsdp = R * (tau * Gpt - Gp)
   
   const deri = { 
@@ -68,22 +69,22 @@ const ZsatS = (s) => {
 //             h: enthalpy in kJ/kg
 
   let dt=0.01
-  let T1=273.16 //start from triple povar
+  let T1 = 273.16 //start from triple povar
   let P1 = PsatT(T1)
   let state = region_2(P1, T1)
-  let s1= state1.s
-  let Flag=0
+  let s1 = state.s
+  let Flag = 0
   let T2
   let s2
   for(let n=1;n<=20;n++){
     T2 = T1 + dt
-    P1 = PsatT(t2)
-    state = region2_(P1, T2)
+    P1 = PsatT(T2)
+    state = region_2(P1, T2)
     s2 = state.s
     const del = s - s2
     if(Math.abs(del)<=1.0E-9){
-      Flag=1;
-      break;
+      Flag=1
+      break
     }
     dt = del * dt / (s2 - s1)
     T1 = T2
@@ -223,14 +224,17 @@ export const ZHS_2 = (h, s) => {
     let d2 = ttrip     
     let dm
     let x
+    let P
+    let state1
+    let state2
 
     for(let n=1;n<=30;n++){
       dm = (d1 + d2) * 0.5
-      const Psat = PsatT(dm) 
-      const state1 = region_1(Psat, dm)
-      const state2 = region_2(Psat, dm)
+      P = PsatT(dm) 
+      state1 = region_1(P, dm)
+      state2 = region_2(P, dm)
       x = (s-state1.s) / (state2.s - state1.s)
-      const htmp = state2.h * x + state1.h * (1.0-x)
+      const htmp = state2.h * x + state1.h * (1.0 - x)
       if(htmp >= h ){
         d1=dm
       }
@@ -245,7 +249,6 @@ export const ZHS_2 = (h, s) => {
     const g = state2.g * x + state1.g * (1.0-x)   
     const u = state2.u * x + state1.u * (1.0-x)   
     const v = state2.v * x + state1.v * (1.0-x)  
-    const h = state2.h * x + state1.h * (1.0-x)  
     const cp = -1 
 
     const del = 1e-6
@@ -263,6 +266,7 @@ export const ZHS_2 = (h, s) => {
       P: P,
       T: T,
       h: h,
+      s: s,
       cp: cp,
       w: w,
       x: x,

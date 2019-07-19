@@ -71,7 +71,7 @@ export const region_1 = (P, T) => {
     s: s,
     cp: cp,
     w: w,
-    MM: 1
+    MM: 1,
   }
   return state
 }

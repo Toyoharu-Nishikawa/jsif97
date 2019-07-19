@@ -47,8 +47,9 @@ export const ZPS_2 = (P, s) => {
   const pai = P
   let Flag = 0
   let Gibbs2
-  for(n=1;n<=10;n++){
-    const tau = 540.0 / T
+  let tau
+  for(let n=1;n<=10;n++){
+    tau = 540.0 / T
     Gibbs2  = Gibbs_2(pai, tau)
     const {G0,Gp,Gpp,Gt,Gtt,Gpt}= Gibbs2
     const s1= (tau * Gt - G0) * R;

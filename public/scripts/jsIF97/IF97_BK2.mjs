@@ -285,17 +285,17 @@ export const Tph2 = (P, h) => {
 
 export const Tps2 = (P, s) => {
   if(P <= 4.0){
-    const s = Tps2A(P, s)
-    return s
+    const T = Tps2A(P, s)
+    return T 
   }
   else{
     if(s >= 5.85){
-      const s = Tps2B(P, s)
-      return s
+      const T = Tps2B(P, s)
+      return T 
     }
     else{    
-      const s = Tps2C(P, s)
-      return s
+      const T = Tps2C(P, s)
+      return T 
     }
   }  
 }
