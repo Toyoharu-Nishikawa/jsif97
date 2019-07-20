@@ -13,83 +13,84 @@
 import {Tph2,Tps2} from "./IF97_BK2.mjs" 
 import {region_2,Gibbs_2} from "./IF97_2.mjs" 
 
-export function ZPH_2(SP){
-  var n;
-  var Flag;
-  var H;
-  var eps;
-  var dlt;
-  
-  eps=1.0e-6;
-  H=SP.h;
-  
-  if(Tph2(SP)==-1){SP = null;return -1;} // 1st guess using IF97 backward function
+export const ZPH_2 = (P, h) => {
+  const eps = 1.0e-6
+  let T = Tph2(P, h)
 
-  Flag=0;
-  for(n=1;n<=10;n++){
-    if(region_2(SP)==-1){SP = null;return -1;}
-    dlt = H - SP.h;
+  let Flag = 0
+  let state
+  for(let n=1;n<=10;n++){
+    state = region_2(P, T)
+    const dlt = h - state.h
     if (Math.abs(dlt) <= eps){
-      Flag=1;
-      break;
+      Flag = 1
+      break
     } 
-    SP.T = SP.T + dlt/SP.cp;
+    T += dlt / state.cp
   }
   if(Flag==0){
-    console.log("ZPH_2 not converged");
+    throw new RangeError("function ZPH_2 not converged in Aux_2.mjs");
     return -1;
   }  
-  return 1;
+  return state 
 }
 
-export function ZPS_2(SP){
-  var n;
-  var Flag;
-  var R;
-  var S;
-  var s1;
-  var eps;
-  var dlt;
-  var pai;
-  var tau;
-  var dsdt;
-  var w2;
-  var Gibbs;
-  Gibbs = {}; 
-  eps=1.0e-9;
-  R=0.461526;
-  S=SP.s;
+export const ZPS_2 = (P, s) => {
+  const eps = 1.0e-9
+  const R = 0.461526
+  let T = Tps2(P, s)
+
+  if(P<=0.0 || T<=0.0){
+    throw new RangeError("function ZPS_2 P<=0 T<=0 in Aux_2.mjs")
+  }
   
-  if(Tps2(SP)==-1){SP = null;return -1;} // 1st guess using IF97 backward function
-  if(SP.P<=0.0 || SP.T<=0.0){SP = null;return -1;}
-  
-  pai=SP.P;
-  Flag=0;
-  for(n=1;n<=10;n++){
-    tau = 540.0 / SP.T;
-    Gibbs_2(pai,tau,Gibbs);
-    s1= (tau*Gibbs.Gt - Gibbs.G0) * R;
-    dlt = S - s1;
+  const pai = P
+  let Flag = 0
+  let Gibbs2
+  let tau
+  for(let n=1;n<=10;n++){
+    tau = 540.0 / T
+    Gibbs2  = Gibbs_2(pai, tau)
+    const {G0,Gp,Gpp,Gt,Gtt,Gpt}= Gibbs2
+    const s1= (tau * Gt - G0) * R;
+    const dlt = s - s1
     if (Math.abs(dlt) <= eps){
-      Flag=1;
-      break;
+      Flag=1
+      break
     } 
-    dsdt=-R*tau*tau*Gibbs.Gtt/SP.T;
-    SP.T = SP.T + dlt/dsdt;
+    const dsdt = -R * tau * tau * Gtt /T
+    T += dlt / dsdt
    }      
   if(Flag==0){
-    console.log("ZPS_2 not converged");
-    return -1;
+    throw new RangeError("function ZPS_2 ZPS_2 not converged in Aux_2.mjs");
   }
-  SP.g  =Gibbs.G0*R*SP.T;
-  SP.u  = (tau*Gibbs.Gt - pai*Gibbs.Gp) * R * SP.T;
-  SP.v  = pai * Gibbs.Gp * R * SP.T / (SP.P*1e+3);
-  SP.h  = tau * Gibbs.Gt * R * SP.T;
-  SP.cp = -tau*tau * Gibbs.Gtt * R;
-  w2 = Gibbs.Gp*Gibbs.Gp/(Math.pow(Gibbs.Gp-tau*Gibbs.Gpt,2)/(tau*tau*Gibbs.Gtt)-Gibbs.Gpp)*R*SP.T*1e+3;
-  if (w2 < 0.0){w2=0.0;}
-  SP.w  = Math.sqrt(w2);
-  
-  return 1;
+
+  const {G0,Gp,Gpp,Gt,Gtt,Gpt}= Gibbs2
+
+  const g  = G0 * R * T
+  const u  = (tau * Gt - pai * Gp) * R * T
+  const v  = pai * Gp * R * T / (P * 1e+3)
+  const h  = tau * Gt * R * T
+  const cp = -tau * tau * Gtt * R
+  const tmp = Gp - tau * Gpt
+  const tmp2 = tmp * tmp
+  const w2 = Gp * Gp /(tmp2 / (tau * tau * Gtt) - Gpp) * R * T * 1e+3;
+
+  const w = w2 < 0 ? 0 : Math.sqrt(w2)
+
+  const state = {
+    g: g,
+    u: u,
+    v: v,
+    P: P,
+    T: T,
+    h: h,
+    s: s,
+    cp: cp,
+    w: w,
+    MM:2,
+  }
+  return state
+ 
 }
     

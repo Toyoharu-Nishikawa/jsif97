@@ -12,34 +12,32 @@ import {RegPT} from "./Reg_pt.mjs"
 
 "use strict"
 
-export function propPT(SP){
-  SP.NP=2;
-  if(RegPT(SP)==-1){
-    SP = null;return -1;
+export const propPT = (P, T) => {
+  const NP = 2
+  const M = RegPT(P, T, NP)
+  switch(M){
+    case 1:{
+      const state = region_1(P, T)
+      return state
+    }
+    case 2 :{
+      const state = region_2(P, T)
+      return state
+    }
+    case 3 :{
+      const v = VPT_3(P, T)
+      const state = region_3(v, T)
+      return state
+    }
+    case 5 :{
+      const MM = 5
+      const state = region_5(P, T)
+      return state
+    }
+    default: {
+      throw new RangeEror("function propPT in propPT.mjs")
+    }
   }
-  if(SP.M==1){
-    SP.MM = 1;
-    if(region_1(SP)==-1){SP = null;return -1;}
-  }
-  else if(SP.M==2){
-    SP.MM = 2;
-    if(region_2(SP)==-1){SP = null;return -1;}
-  }
-  else if(SP.M==3){
-    SP.MM = 3;
-    if(VPT_3(SP)==-1){SP = null;return -1;}
-    if(region_3(SP)==-1){SP = null;return -1;}
-  }
-  else if(SP.M==5){
-    SP.MM = 5;
-    if(region_5(SP)==-1){SP = null;return -1;}
-  }
-  else{
-    console.log("Out of IF97 applicable range.");
-    return -1;
-  }
-  
-  return 1;
 }
 
     

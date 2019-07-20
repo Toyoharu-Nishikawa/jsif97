@@ -13,49 +13,67 @@ import {viscos, conduc} from "./transp.mjs"
 
 "use strict"
 
-export function transatP(P, SPl, SPg){
-  var SP1;
+export const transatP = (P) => {
   
-  SP1 = {};
-  
-  if(P<=0.0){
-    console.log("Pressure is lower than zero.\n");
-    return -1;
+  if(P <= 0.0){
+    throw new RangeError("function transatP P<=0 in transatP.mjs");
   }
-  SP1.T=273.15;
-  if(PsatT(SP1)==-1){SPl = null;SPg = null;return -1;}
-  if(P<SP1.P){
-    console.log("Pressure is lower than the minimum pressure.\n");
-    return -1;    
+  const Ttmp1 = 273.15
+  const Ptmp1 = PsatT(Ttmp1)
+  if(P < Ptmp1){
+    throw new RangeError("function transatP P<=min in transatP.mjs");
   }
-  if(P>22.064){
-    console.log("Pressure is higher than the maximum pressure.\n");
-    return -1;    
+  if(P > 22.064){
+    throw new RangeError("function transatP P>22.064 in transatP.mjs");
   }
   
-  SPl.P=P;
-  SPg.P=P;
-  if(TsatP(SPl)==-1){SPl = null;SPg = null;return -1;}
-  if(TsatP(SPg)==-1){SPl = null;SPg = null;return -1;}
-  if(SPl.T<=623.15){
-    if(region_1(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(region_2(SPg)==-1){SPl = null;SPg = null;return -1;}
+  const Ttmp2 = TsatP(P)
+
+  let statel
+  let stateg
+
+  if(Ttmp2 <= 623.15){
+    statel = region_1(P, Ttmp2)
+    stateg = region_2(P, Ttmp2)
   }
   else{
-    if(Vsatl_3(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(Vsatg_3(SPg)==-1){SPl = null;SPg = null;return -1;}
-    if(region_3(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(region_3(SPg)==-1){SPl = null;SPg = null;return -1;}    
+    const vl = Vsatl_3(Ttmp2)
+    const vg = Vsatg_3(Ttmp2)
+    statetl = region_3(vl, Ttmp2)
+    statetg = region_3(vg, Ttmp2)
   } 
-  if(viscos(SPl)==-1){SPl = null;SPg = null;return -1;}
-  if(conduc(SPl)==-1){SPl = null;SPg = null;return -1;}
-  SPl.nu=SPl.mu*SPl.v;
-  SPl.Pr=SPl.cp*SPl.mu/SPl.lambda*1.0e+3;
+  const vl = statel.v
+  const vg = statel.g
 
-  if(viscos(SPg)==-1){SPl = null;SPg = null;return -1;}
-  if(conduc(SPg)==-1){SPl = null;SPg = null;return -1;}
-  SPg.nu=SPg.mu*SPg.v;
-  SPg.Pr=SPg.cp*SPg.mu/SPg.lambda*1.0e+3;
+  const cpl = statel.cp
+  const cpg = stateg.cp
+
+  const mul = viscos(vl, Ttmp2)
+  const mug = viscos(vg, Ttmp2)
+
+  const lambdal = conduc(vl, Ttmp2)
+  const lambdag = conduc(vg, Ttmp2)
+
+  const nul = mul * vl
+  const nug = mug * vg
+
+  const Prl = cpl * mul /lambdal *1.0e+3
+  const Prg = cpg * mug /lambdag *1.0e+3
+
+  const trans = {
+    l: {
+      mu: mul,
+      lambda: lambdal,
+      nu: nul, 
+      Pr: Prl,
+    },
+    g: {
+      mu: mug,
+      lambda: lambdag,
+      nu: nug, 
+      Pr: Prg,
+    }
+  }
   
-  return 1;
+  return trans 
 }

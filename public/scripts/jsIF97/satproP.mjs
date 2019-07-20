@@ -11,52 +11,49 @@ import {TsatP, PsatT} from "./IF97_Sat.mjs"
 
 "use strict"
 
-export function satproP(P, SPl, SPg){
+export const satproP = (P) => {
   /* input P: MPa  */
-  var Pmin;
-  var T;
-  var SP1;
+  /* output {l: state, g: state} */
   
-  SP1 = {};
-  
-  SP1.T=273.15; 
-  if(PsatT(SP1)==-1){SPl = null;SPg = null;return -1;}
-  Pmin=SP1.P;
-  if(P<=0){
-    console.log("Pressure is lower than zero");
-    return -1;
+  const Tmin = 273.15; 
+  const Pmin = PsatT(Tmin)
+
+  if(P <= 0){
+    throw new RangeError("Pressure is lower than zero")
   }
-  if(P<Pmin){
-    console.log("Pressure is lower than the minimum pressure");
-    return -1;
+  if(P < Pmin){
+    throw new RangeError("Pressure is lower than the minimum pressure");
   }
-  if(P>22.064){
-    console.log("Pressure is higher than the maximam pressure(critical povar)");
-    return -1;
+  if(P > 22.064){
+    throw new RangeError("Pressure is higher than the maximam pressure(critical povar)");
   }
-  SP1.P=P;
-  if(TsatP(SP1)==-1){SPl = null;SPg = null;return -1;}   
-  T=SP1.T;       
-  if(T<=623.15){    
-    SPl.P=P;
-    SPl.T=T;
-    SPg.P=P;
-    SPg.T=T;      
-    if(region_1(SPl)==-1){SPl = null;SPg = null;return -1;} 
-    if(region_2(SPg)==-1){SPl = null;SPg = null;return -1;} 
+  const T = TsatP(P)
+
+  if(T <= 623.15){    
+    const state1 = region_1(P, T)
+    const state2 = region_2(P, T)
+
+    const lg = {
+      l : state1,
+      g : state2,
+    }
+
+    return lg
   }
   else{
-    if(Vsatl_3(SP1)==-1){SPl = null;SPg = null;return -1;}
-    SPl.v=SP1.Vl;
-    SPl.T=T;
-    if(Vsatg_3(SP1)==-1){SPl = null;SPg = null;return -1;}
-    SPg.v=SP1.Vg;
-    SPg.T=T;
-    if(region_3(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(region_3(SPg)==-1){SPl = null;SPg = null;return -1;}
+    const v1 = Vsatl_3(T)
+    const v2 = Vsatg_3(T)
+
+    const state1 = region_3(v1, T)
+    const state2 = region_3(v2, T)
+
+    const lg = {
+      l : state1,
+      g : state2,
+    }
+
+    return lg
   }
-  
-  return 1;
 }
 
     

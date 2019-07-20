@@ -8,40 +8,38 @@ import {ZHS_2} from "./Aux_2HS.mjs"
 
 "use strict"
 
-export function  propHS(SP){
-  
-  if(SP.h<=0){
-    console.log("enthalpy is lower than zero.");
-    return -1;
+export const  propHS = (h, s) => {
+  if(h <= 0){
+    throw new RangeError("function propHS enthalpy is lower than zero in propHS.mjs");
   }
-  if(ZHS_2(SP)==-1){SP = null;return -1;}
-  
-  //check validity
-  if(SP.Nin==1){
-    console.log("S is too high.");
-    return -1;
-  }
-  if(SP.Nin==2){
-    console.log("S is too low.");
-    return -1;
-  }
-  if(SP.Nin==3){
-    console.log("H is too high.");
-    return -1;
-  }
-  if(SP.Nin==4){
-    console.log("H is too low.");
-    return -1;
-  }
+  const state = ZHS_2(h, s)
 
+  const Nin = state.Nin 
   //check validity
-  if(SP.nx==0){
-    //console.log("Wet region");
+  switch(Nin){
+    case 1 : {
+      throw new RangeError("function propPH S is too hightin propPH.mjs.");
+    }
+    case 2 : {
+      throw new RangeError("function propPH S is too low in propPH.mjs.");
+    }
+    case 3 :{
+      throw new RangeError("function propPH H is too hgiht in propPH.mjs.");
+    }
+    case 4 : {
+      throw new RangeError("function propPH H is too low in propPH.mjs.");
+    }
+    default: {
+      //check validity
+      //if(SP.nx==0){
+        //console.log("Wet region");
+      //}
+      //else{
+        //console.log("Dry region");    
+      //}
+      return state
+    }
   }
-  else{
-    //console.log("Dry region");    
-  }
-  return 1;
 }
 
     

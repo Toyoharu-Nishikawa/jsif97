@@ -14,31 +14,45 @@ import {viscos, conduc} from "./transp.mjs"
 
 "use strict"
 
-export function transPT(SP){
-  SP.NP=2;
-  if(RegPT(SP)==-1){SP =null;return -1;}
-  if(SP.M==1){
-    if(region_1(SP)==-1){SP =null;return -1;}
+export const transPT = (P, T) => {
+  const NP = 2
+  const M = RegPT(P, T, NP)
+  let state
+  switch(M){
+    case 1 :{
+      state = region_1(P, T)
+      break
+    }
+    case 2 : {
+      state = region_2(P, T)
+      break
+    }
+    case 3 : {
+      const v = VPT_3(P, T)
+      state = region_3(v, T)
+      break
+    }
+    case 5 : {
+      throw new RangeError("function transPT Region_5 is not applicable. in transPT.mjs")
+    }
+    default : {
+      throw new RangeError("function transPT M  in transPT.mjs")
+    }
   }
-  else if(SP.M==2){
-    if(region_2(SP)==-1){SP =null;return -1;}
-  }
-  else if(SP.M==3){
-    if(VPT_3(SP)==-1){SP =null;return -1;}
-    if(region_3(SP)==-1){SP =null;return -1;}
-  }
-  else if(SP.M==5){
-    console.log("Region_5 is not applicable.\n");
-    return -1;
-  }
-  else{
-    console.log("Out of IF97 applicable range.\n");
-    return -1;
-  }
-  if(viscos(SP)==-1){SP =null;return -1;}
-  if(conduc(SP)==-1){SP =null;return -1;}
-  SP.nu=SP.mu*SP.v;
-  SP.Pr=SP.cp*SP.mu/SP.lambda*1.0e+3;
+  const v = state.v
+  const cp = state.cp
+  const mu = viscos(v, T)
+  const lambda = conduc(v, T)
+
+  const nu = mu * v
+  const Pr = cp * mu / lambda * 1.0e+3
   
-  return 1;
+  const trans = {
+    mu: mu,
+    lambda: lambda,
+    nu: nu,
+    Pr: Pr,
+  } 
+
+  return trans
 }

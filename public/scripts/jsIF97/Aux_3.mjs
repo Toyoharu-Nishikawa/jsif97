@@ -53,502 +53,324 @@ import {Pb23T,Tb23P} from './IF97_B23.mjs'
 
 "use strict"
 
-export function spinl_3(SP){
-  var n;
-  var Vmin;
-  var Vcrt;
-  var d1;
-  var d2;
-  var dm;
-  var SP1;
+export const spinl_3 = (T) => {
+  const Vmin = 1.3e-3
+  const Vcrt = 1.0/322.0 
   
-  SP1 = {};
-  
-  Vmin = 1.3e-3;
-  Vcrt = 1.0/322.0; 
-  
-  d1 = Vcrt;
-  d2 = Vmin;
-  
-  SP1.T=SP.T;
-  
-  for(n=1;n<=30;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.v=dm;
-    if(dPdV_3(SP1)==-1){SP = null;return -1;}
-    if (SP1.dPdV >= 0.0){
-      d1 = dm;
+  let d1 = Vcrt
+  let d2 = Vmin
+  let dm 
+
+  for(let n=1;n<=30;n++){
+    dm = (d1 + d2) * 0.5
+    const dPdV = dPdV_3(dm, T)
+    if (dPdV >= 0.0){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.Vspinl = dm;
-  return 1;
+  const Vspinl = dm
+  return Vspinl 
 }
 
-export function sping_3(SP){
-  var n;
-  var Vmax;
-  var Vcrt;
-  var d1;
-  var d2;
-  var dm;
-  var SP1;
+export const sping_3 = (T) => {
+ 
+  const Vmax = 8.9e-3
+  const Vcrt = 1.0/322.0
   
-  SP1 = {};
+  let d1 = Vmax
+  let d2 = Vcrt
+  let dm 
   
-  Vmax = 8.9e-3;
-  Vcrt = 1.0/322.0; 
-  
-  d1 = Vmax;
-  d2 = Vcrt;
-  
-  SP1.T=SP.T;
-  
-  for(n=1;n<=30;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.v=dm;
-    if(dPdV_3(SP1)==-1){SP = null;return -1;}
-    if (SP1.dPdV <= 0.0){
-      d1 = dm;
+  for(let n=1;n<=30;n++){
+    dm = (d1 + d2) * 0.5
+    const dPdV = dPdV_3(dm, T)
+    if (dPdV <= 0.0){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.Vsping = dm;
+  const Vsping = dm;
   
-  return 1;
+  return Vsping
 }
 
-export function VPT_3(SP){
-  var Tcrt;
-  var SP1;
-
-  SP1 = {}; 
-  Tcrt  = 647.096;
-  SP1.T=SP.T;
+export const VPT_3 = (P, T) => {
+  const Tcrt  = 647.096
   
-  if (SP.T >= Tcrt){
-    if(VPT_30(SP)==-1){SP = null;return -1;}
+  if (T >= Tcrt){
+    const v = VPT_30(P, T)
+    return v
   }
   else{
-    PsatT(SP1);
-    if (SP.P <= SP1.P){
-      if(VPT_32(SP)==-1){SP = null;return -1;}
+    const P1 = PsatT(T)
+    if(P <= P1){
+      const v = VPT_32(P, T)
+      return v
     }
     else{
-      if(VPT_31(SP)==-1){SP = null;return -1;}
+      const v = VPT_31(P, T)
+      return v
     }
   }
-
-  return 1;
 }
 
-export function VPT_30(SP){
-  var n;
-  var Vmin;
-  var Vmax;
-  var d1;
-  var d2;
-  var dm;
-  var SP1;
+export const VPT_30 = (P, T) => {
+  const Vmin = 1.3e-3
+  const Vmax = 8.9e-3 
   
-  SP1 = {};
+  let d1 = Vmax;
+  let d2 = Vmin;
+  let dm 
   
-  Vmin = 1.3e-3;
-  Vmax = 8.9e-3; 
-  
-  d1 = Vmax;
-  d2 = Vmin;
-  
-  SP1.T=SP.T;
-  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.v=dm;
-    if(PVT_3(SP1)==-1){SP = null;return -1;}
-    if (SP1.P <= SP.P){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    const P1 = PVT_3(dm, T)
+    if (P1 <= P){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.v = dm;
-  return 1;
+  const v = dm
+  return v
 }
 
-export function VPT_31(SP){
-  var n;
-  var Vmin;
-  var Vspinl;
-  var d1;
-  var d2;
-  var dm;
-  var SP1;
+export const VPT_31 = (P, T) => {
+  const Vmin = 1.3e-3
+  const Vspinl = spinl_3(T)
   
-  SP1 = {};
+  let d1 = Vspinl
+  let d2 = Vmin
+  let dm
   
-  if(spinl_3(SP)==-1){SP = null;return -1;}  
-  
-  Vmin = 1.3e-3;
-  Vspinl =SP.Vspinl;
-  
-  d1 = Vspinl;
-  d2 = Vmin;
-  
-  SP1.T=SP.T;
-  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.v=dm;
-    if(PVT_3(SP1)==-1){SP = null;return -1;}
-    if (SP1.P <= SP.P){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    const P1 = PVT_3(dm, T)
+    if (P1 <= P){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.v = dm;
-  return 1;
+  const v = dm
+  return v 
 }
 
-export function VPT_32(SP){
-  var n;
-  var Vmax;
-  var Vsping;
-  var d1;
-  var d2;
-  var dm;
-  var SP1;
+export const VPT_32 = (P, T) => {
+  const Vmax = 8.9e-3
+  const Vsping =sping_3(T)  
+
+  let d1 = Vmax;
+  let d2 = Vsping;
+  let dm 
   
-  SP1 = {};
-  
-  if(sping_3(SP)==-1){SP = null;return -1;}  
-  
-  Vmax = 8.9e-3;
-  Vsping =SP.Vsping;
-  
-  d1 = Vmax;
-  d2 = Vsping;
-  
-  SP1.T=SP.T;
-  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.v=dm;
-    if(PVT_3(SP1)==-1){SP = null;return -1;}
-    if (SP1.P <= SP.P){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    const P1 = PVT_3(dm, T)
+    if (P1 <= P){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.v = dm;
-  return 1;
+  const v = dm
+  return v 
 }
 
-export function Vsatl_3(SP){
-  var n;
-  var Vspinl;
-  var Vmin;
-  var d1;
-  var d2;
-  var dm;
-  var Psat;
-  var SP1;
-
-  SP1 = {};
-
-  SP1.T=SP.T;
-  if(PsatT(SP1)==-1){SP = null;return -1;}  
-  Psat=SP1.P;
-
-  if(spinl_3(SP)==-1){SP = null;return -1;}
+export const Vsatl_3 = (T) => {
+  const Psat = PsatT(T)
   
-  Vspinl=SP.Vspinl;
-  Vmin=1.3e-3;
+  const Vspinl = spinl_3(T)
+  const Vmin=1.3e-3
   
-  d1 = Vspinl;
-  d2 = Vmin;
+  let d1 = Vspinl
+  let d2 = Vmin
+  let dm
 
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.v=dm;
-    if(PVT_3(SP1)==-1){SP = null;return -1;}
-    if(SP1.P <=Psat){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    const P1 = PVT_3(dm, T)
+    if(P1 <=Psat){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.Vl = dm;
+  const Vl = dm;
   
-  return 1;
+  return Vl
 }
 
-export function Vsatg_3(SP){
-  var n;
-  var Vsping;
-  var Vmax;
-  var d1;
-  var d2;
-  var dm;
-  var Psat;
-  var SP1;
+export const Vsatg_3 = (T) => {
 
-  SP1 = {};
-
-  SP1.T=SP.T;
-  if(PsatT(SP1)==-1){SP = null;return -1;}  
-  Psat=SP1.P;
-
-  if(sping_3(SP)==-1){SP = null;return -1;}
+  const Psat = PsatT(T)
     
-  Vmax=8.9e-3;
-  Vsping=SP.Vsping;
+  const Vmax = 8.9e-3
+  const Vsping = sping_3(T)
   
-  d1 = Vmax;
-  d2 = Vsping;
+  let d1 = Vmax
+  let d2 = Vsping
+  let dm
  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.v=dm;
-    if(PVT_3(SP1)==-1){SP = null;return -1;}
-    if(SP1.P <=Psat){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    const P1 = PVT_3(dm, T)
+    if(P1 <=Psat){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.Vg = dm;
+  const Vg = dm
   
-  return 1;
+  return Vg 
 }
 
-export function ZPH_30(SP){
-  var n;
-  var d1;
-  var d2;
-  var dm;
-  var H;
-  var SP1;
+export const ZPH_30 = (P, h) => {
+  let d1 =  Tb23P(P)
+  let d2 = 623.15
+  let dm
+  let v
   
-  SP1 = {};
-  
-  H=SP.h;
-  SP1.P=SP.P;
-  if(Tb23P(SP1)==-1){SP = null;return -1;}
-
-  d1=SP1.T;
-  d2=623.15;
-  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.T=dm;
-    if(VPT_3(SP1)==-1){SP = null;return -1;}
-    if(region_3(SP1)==-1){SP = null;return -1;}
-    if(SP1.h >=H){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    v = VPT_3(P, dm)
+    const state = regions_3(v, dm)
+    const h1 = state.h
+    if(h1 >=h){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.T = dm;
-  SP.v = SP1.v;
-  if(region_3(SP)==-1){SP = null;return -1;}
+  const state = regions_3(v, dm)
   
-  return 1;
+  return state 
 }
 
-export function ZPH_31(SP){
-  var n;
-  var d1;
-  var d2;
-  var dm;
-  var H;
-  var SP1;
+export const ZPH_31 = (P, h) => {
+  let d1 =  TsatP(P)
+  let d2=623.15
+  let dm
+  let v
   
-  SP1 = {};
-  
-  H=SP.h;
-  SP1.P=SP.P;
-  if(TsatP(SP1)==-1){SP = null;return -1;}
-
-  d1=SP1.T;
-  d2=623.15;
-  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.T=dm;
-    if(VPT_3(SP1)==-1){SP = null;return -1;}
-    if(region_3(SP1)==-1){SP = null;return -1;}
-    if(SP1.h >=H){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    v = VPT_3(P, dm)
+    const state = region_3(v, dm)
+    const h1 = state.h
+    if(h1 >=h){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.T = dm;
-  SP.v = SP1.v;
-  if(region_3(SP)==-1){SP = null;return -1;}
+  const state = region_3(v, dm)
   
-  return 1;
+  return state 
 }
 
-export function ZPH_32(SP){
-  var n;
-  var d1;
-  var d2;
-  var dm;
-  var H;
-  var SP1;
+export const ZPH_32 = (P, h) => {
+  let d1 = Tb23P(P)
+  let d2 = TsatP(P)
+  let dm
+  let v
   
-  SP1 = {};
-  
-  H=SP.h;
-  SP1.P=SP.P;
-
-  if(Tb23P(SP1)==-1){SP = null;return -1;}
-  d1=SP1.T;
-
-  if(TsatP(SP1)==-1){SP = null;return -1;}
-  d2=SP1.T;
-  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.T=dm;
-    VPT_3(SP1);
-    if(region_3(SP1)==-1){SP = null;return -1;}
-    if(SP1.h >=H){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    v = VPT_3(P, dm)
+    const state = region_3(v, dm)
+    const h1 = state.h
+    if(h1 >= h){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.T = dm;
-  SP.v = SP1.v;
-  if(region_3(SP)==-1){SP = null;return -1;}
+  const state = region_3(v, dm)
   
-  return 1;
+  return state 
 }
 
-export function ZPS_30(SP){
-  var n;
-  var d1;
-  var d2;
-  var dm;
-  var S;
-  var SP1;
+export const ZPS_30 = (P, s) => {
+  let d1 = Tb23P(P)
+  let d2 = 623.15
+  let dm
+  let v 
   
-  SP1 = {};
-  
-  S=SP.s;
-  SP1.P=SP.P;
-  if(Tb23P(SP1)==-1){SP = null;return -1;}
-
-  d1=SP1.T;
-  d2=623.15;
-  
-  for(n=1;n<=40;n++){
+  for(let n=1;n<=40;n++){
     dm = (d1 + d2) * 0.5;
-    SP1.T=dm;
-    if(VPT_3(SP1)==-1){SP = null;return -1;}
-    if(region_3(SP1)==-1){SP = null;return -1;}
-    if(SP1.s >=S){
-      d1 = dm;
+    v = VPT_3(P, dm)
+    const state = region_3(v, dm)
+    const s1 = state.s
+    if(s1 >= s){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.T = dm;
-  SP.v = SP1.v;
-  if(region_3(SP)==-1){SP = null;return -1;}
+  const state = region_3(v, dm)
   
-  return 1;
+  return state 
 }
 
-export function ZPS_31(SP){
-  var n;
-  var d1;
-  var d2;
-  var dm;
-  var S;
-  var SP1;
+export const ZPS_31 = (P, s) => {
+  let d1 = TsatP(P)
+  let d2 = 623.15
+  let dm
+  let v
   
-  SP1 = {};
-  
-  S=SP.s;
-  SP1.P=SP.P;
-  if(TsatP(SP1)==-1){SP = null;return -1;}
-
-  d1=SP1.T;
-  d2=623.15;
-  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.T=dm;
-    if(VPT_3(SP1)==-1){SP = null;return -1;}
-    if(region_3(SP1)==-1){SP = null;return -1;}
-    if(SP1.s >=S){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    v = VPT_3(P, dm)
+    const state = region_3(v, dm)
+    const s1 = state.s
+    if(s1 >= s){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.T = dm;
-  SP.v = SP1.v;
-  if(region_3(SP)==-1){SP = null;return -1;}
+  const state = region_3(v, dm)
   
-  return 1;
+  return state
 }
 
-export function ZPS_32(SP){
-  var n;
-  var d1;
-  var d2;
-  var dm;
-  var S;
-  var SP1;
+export const ZPS_32 = (P, s) => {
+  let d1 = Tb23P(P)
+  let d2 = TsatP(P)
+  let dm
+  let v
   
-  SP1 = {};
-  
-  S=SP.s;
-  SP1.P=SP.P;
-
-  if(Tb23P(SP1)==-1){SP = null;return -1;}
-  d1=SP1.T;
-
-  if(TsatP(SP1)==-1){SP = null;return -1;}
-  d2=SP1.T;
-  
-  for(n=1;n<=40;n++){
-    dm = (d1 + d2) * 0.5;
-    SP1.T=dm;
-    if(VPT_3(SP1)==-1){SP = null;return -1;}
-    if(region_3(SP1)==-1){SP = null;return -1;}
-    if(SP1.s >=S){
-      d1 = dm;
+  for(let n=1;n<=40;n++){
+    dm = (d1 + d2) * 0.5
+    v = VPT_3(P, dm)
+    const state = region_3(v, dm)
+    const s1 = state.s
+    if(s1 >= s){
+      d1 = dm
     }
     else{
-      d2 = dm;
+      d2 = dm
     }
   }
-  SP.T = dm;
-  SP.v = SP1.v;
-  if(region_3(SP)==-1){SP = null;return -1;}
+  const state = region_3(v, dm)
   
-  return 1;
+  return state 
 }
     

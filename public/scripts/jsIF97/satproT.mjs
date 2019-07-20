@@ -11,44 +11,42 @@ import {PsatT} from "./IF97_Sat.mjs"
 
 "use strict"
 
-export function satproT(T, SPl, SPg){
+export const satproT = (T) => {
   /* input T: K  */
-  var P;
-  var SP1;
   
-  SP1 = {};
   
-  if(T<0){
-    console.log("Temperature is lower than the minimum temperature(273.15K)");
-    return -1;
+  if(T < 0){
+    throw new RrangeError("Temperature is lower than the minimum temperature(273.15K)");
   } 
   if(T>647.096){
-    console.log("Temperature is higher than the maximam pressure(critical povar)");
-    return -1;
+    throw new RangeError("Temperature is higher than the maximam pressure(critical povar)");
   }
-  SP1.T=T;
-  if(PsatT(SP1)==-1){SPl = null;SPg = null;return -1;}
-  P=SP1.P;
-  if(T<=623.15){
-    SPl.P=P;
-    SPl.T=T;
-    SPg.P=P;
-    SPg.T=T;
-    if(region_1(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(region_2(SPg)==-1){SPl = null;SPg = null;return -1;}
+
+  const P = PsatT(T)
+
+  if(T <= 623.15){
+    const state1 = region_1(P, T)
+    const state2 = region_2(P, T)
+
+    const lg = {
+      l: state1,
+      g: state2
+    }
+
+    return lg
   }
   else{
-    if(Vsatl_3(SP1)==-1){SPl = null;SPg = null;return -1;}
-    SPl.v=SP1.Vl;
-    SPl.T=T;
-    if(Vsatg_3(SP1)==-1){SPl = null;SPg = null;return -1;}
-    SPg.v=SP1.Vg;
-    SPg.T=T;
-    if(region_3(SPl)==-1){SPl = null;SPg = null;return -1;}
-    if(region_3(SPg)==-1){SPl = null;SPg = null;return -1;}
+    const v1 = Vsatl_3(T)
+    const v2 = Vsatg_3(T)
+    const state1 = region_3(v1, T)
+    const state2 = region_3(v2, T)
+    const lg = {
+      l: state1,
+      g: state2
+    }
+
+    return lg
   }
-  
-  return 1;
 }
 
     

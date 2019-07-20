@@ -1,68 +1,11 @@
 //region 1 based on Eq.(7) of IAPWS-IF97
 "use strict"
-export function region_1(SP){
-  var P;
-  var T;
-  var pai;
-  var tau;
-  var R; //gas constant in kJ/(kg K)
-  var w2;
-  var G0;
-  var Gp;
-  var Gpp;
-  var Gt;
-  var Gtt;
-  var Gpt;
-  var Gibbs;
 
-  P = SP.P;
-  T = SP.T;
-  pai = P/16.53;
-  if(P<=0.0 || T<=0.0){
-    SP= null;
-    return -1;
-  }
-  else{
-    tau = 1386.0/T;
-  }
-  R = 0.461526;
-  Gibbs = {};
-  if(Gibbs_1(pai, tau, Gibbs)==-1){
-    SP = null;
-    return -1;
-  }
-  G0 = Gibbs.G0;
-  Gp = Gibbs.Gp;
-  Gpp = Gibbs.Gpp;
-  Gt = Gibbs.Gt;
-  Gtt = Gibbs.Gtt;
-  Gpt = Gibbs.Gpt;
-  
-  SP.g = G0 * R * T;
-  SP.u = (tau * Gt - pai * Gp) * R * T;
-  SP.v = pai * Gp * R * T / (P*1.0e3);
-  SP.h = tau * Gt * R * T;
-  SP.s = (tau * Gt - G0) * R;
-  SP.cp = -tau * tau * Gtt * R;
-  w2 = Gp * Gp / ((Gp - tau * Gpt)*(Gp - tau * Gpt)/(tau * tau * Gtt)-Gpp)* R * T * 1.0e3;
-  if(w2 <0.0){ w2=0.0;}
-  SP.w = Math.sqrt(w2);
-  return 1;
-}
+  const R = 0.461526 //gas constant in kJ/(kg K)
 
-export function Gibbs_1(pai, tau, Gibbs){
-  var i;
-  var II = [] // lengthen is 35
-  var JJ = [] // lengthen is 35
-  var an = [] // lengthen is 35
-  var pn;
-  var tn;
-  var G0;
-  var Gp;
-  var Gpp;
-  var Gt;
-  var Gtt;
-  var Gpt;
+  const II = [] // lengthen is 35
+  const JJ = [] // lengthen is 35
+  const an = [] // lengthen is 35
 
   II[ 1]= 0; JJ[ 1]= -2;  an[ 1]= 0.14632971213167e+0 ; 
   II[ 2]= 0; JJ[ 2]= -1;  an[ 2]=-0.84548187169114e+0 ; 
@@ -99,35 +42,85 @@ export function Gibbs_1(pai, tau, Gibbs){
   II[33]=31; JJ[33]=-40;  an[33]= 0.18228094581404e-23; 
   II[34]=32; JJ[34]=-41;  an[34]=-0.93537087292458e-25; 
 
-  pn = 7.1 -pai;
-  tn = tau -1.222;
-  G0 = 0.0;
-  Gp = 0.0;
-  Gpp = 0.0;
-  Gt = 0.0;
-  Gtt = 0.0;
-  Gpt = 0.0;
 
-  for(i=1;i<=34;i++){
-    G0 = G0 + an[i] * Math.pow(pn, II[i]) * Math.pow(tn, JJ[i]);
-    Gt = Gt + an[i] * Math.pow(pn, II[i]) * JJ[i] * Math.pow(tn, JJ[i] -1);
-    Gtt = Gtt + an[i] * Math.pow(pn, II[i])* JJ[i] * (JJ[i]-1) * Math.pow(tn, JJ[i] -2);
+export const region_1 = (P, T) => {
+  if(P<=0.0 || T<=0.0){
+    throw new RangeError("function region_1 P<=0 T<=0 in IF97_1.mjs")
+  }
+  const pai = P/16.53;
+  const tau = 1386.0/T;
+  const {G0, Gp, Gpp, Gt, Gtt, Gpt} = Gibbs_1(pai, tau)
+  
+  const g = G0 * R * T
+  const u = (tau * Gt - pai * Gp) * R * T
+  const v = pai * Gp * R * T / (P*1.0e3)
+  const h = tau * Gt * R * T
+  const s = (tau * Gt - G0) * R
+  const cp = -tau * tau * Gtt * R
+  const tmp = (Gp - tau * Gpt)
+  const tmp2 = tmp * tmp
+  const kappa = Gp / (pai * (tmp2 /(tau * tau * Gtt) - Gpp)) 
+  const w2 = Gp * Gp / (tmp2 / (tau * tau * Gtt) - Gpp)* R * T * 1.0e3
+  const w = w2 < 0 ? 0 : Math.sqrt(w2)
+  const state = {
+    g: g,
+    u: u,
+    v: v,
+    P: P,
+    T: T,
+    h: h,
+    s: s,
+    cp: cp,
+    k: kappa,
+    w: w,
+    MM: 1,
+  }
+  return state
+}
+
+export const Gibbs_1 = (pai, tau) => {
+  const pn = 7.1 -pai
+  const tn = tau -1.222
+
+  let G0 = 0.0
+  let Gp = 0.0
+  let Gpp = 0.0
+  let Gt = 0.0
+  let Gtt = 0.0
+  let Gpt = 0.0
+
+  const pnPow = []
+  const tnPow = []
+  const pn2 = pn * pn
+  const tn2 = tn * tn
+
+  for(let i=1;i<=34;i++){
+    pnPow[i] = Math.pow(pn, II[i])
+    tnPow[i] = Math.pow(tn, JJ[i])
   }
 
-  for(i=9; i<=34;i++){
-    Gp = Gp - an[i]*II[i]*Math.pow(pn,II[i]-1)*Math.pow(tn,JJ[i]);
-    Gpt = Gpt - an[i]*II[i]*Math.pow(pn,II[i]-1)*JJ[i]*Math.pow(tn,JJ[i]-1);
+  for(let i=1;i<=34;i++){
+    G0  += an[i] * pnPow[i] * tnPow[i]
+    Gt  += an[i] * pnPow[i] * JJ[i] * tnPow[i]/tn
+    Gtt += an[i] * pnPow[i] * JJ[i] * (JJ[i]-1) * tnPow[i]/tn2 
   }
-  for(i=15;i<=34;i++){
-    Gpp = Gpp + an[i]*II[i]*(II[i]-1)*Math.pow(pn,II[i]-2)*Math.pow(tn,JJ[i])
+
+  for(let i=9; i<=34;i++){
+    Gp  -=  an[i] * II[i] * pnPow[i]/pn * tnPow[i]
+    Gpt -=  an[i] * II[i] * pnPow[i]/pn * JJ[i] * tnPow[i]/tn
+  }
+  for(let i=15;i<=34;i++){
+    Gpp += an[i] * II[i] * (II[i]-1) * pnPow[i]/pn2 * tnPow[i]
   }
   
-  Gibbs.G0 = G0;
-  Gibbs.Gp = Gp;
-  Gibbs.Gpp = Gpp;
-  Gibbs.Gt = Gt;
-  Gibbs.Gtt = Gtt;
-  Gibbs.Gpt = Gpt;
+  const Gibbs = {
+    G0 : G0,
+    Gp : Gp,
+    Gpp : Gpp,
+    Gt : Gt,
+    Gtt : Gtt,
+    Gpt : Gpt,
+  }
 
-  return 1;
+  return Gibbs 
 }

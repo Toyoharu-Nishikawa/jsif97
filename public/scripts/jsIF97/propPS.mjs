@@ -16,85 +16,132 @@ import {RegPS} from "./Reg_ps.mjs"
 
 "use strict"
 
-export function propPS(SP){
-  var SPl;
-  var SPg;
+export const propPS = (P, s) => {
+ 
+  const M = RegPS(P, s)
+  switch(M){
+    case 1 :{
+      const state = ZPS_1(P, s)
+      state.x = 0.0
+      return state 
+    }
+    case 2 : {
+      const state = ZPS_2(P, s)
+      if(state.T >= 647.096 && state.P >= 22.064){
+        state.x = -1
+        return state
+      }
+      else{
+        state.x = 1    
+        return state
+      }
+    }
+    case 30 : {
+      const state = ZPS_30(P, s)
+      state.x=-1 //super critical region    
+      return state
+    }
+    case 31 : {
+      const state = ZPS_31(P, s)
+      state.x=0.0;    
+      return state
+    }
+    case 32 : {
+      const state = ZPS_32(P, s)
+      state.x=1.0 
+      return state
+    }
+    case 5 : {
+      const state = ZPS_5(P, s)
+      state.x=1.0
+      return state
+    }
+    case 12 : {
+      const T = TsatP(P)
+      const state1 = region_1(P, T)
+      const state2 = region_2(P, T)
 
-  SPl = {};
-  SPg = {};
-  
-  RegPS(SP);
-  if(SP.M==1){
-    SP.MM=1;
-    ZPS_1(SP);
-    SP.x=0.0;
-  }
-  else if(SP.M==2){
-    SP.MM=2;
-    ZPS_2(SP);
-    if(SP.T>=647.096 && SP.P>=22.064){
-          SP.x=-1;
+      const x = (s - state1.s) / (state2.s - state1.s)
+      const g = state2.g * x + state1.g * (1.0 - x)
+      const u = state2.u * x + state1.u * (1.0 - x)
+      const v = state2.v * x + state1.v * (1.0 - x)
+      const h = state2.h * x + state1.h * (1.0 - x)    
+      const cp = -1
+
+      const del = 1e-6
+      const Ptmp = P + del
+      const Ttmp = TsatP(Ptmp)
+      const state1Tmp = region_1(Ptmp, Ttmp)
+      const state2Tmp = region_2(Ptmp, Ttmp)
+      const xTmp = (s - state1Tmp.s) / (state2Tmp.s - state1Tmp.s)
+      const vTmp = state2Tmp.v * xTmp + state1Tmp.v * (1.0 - xTmp)
+      const kappa = - Math.log(Ptmp / P) / Math.log(vTmp / v)
+      const w = Math.sqrt(kappa * v * P * 1.0e+6)
+
+      const state = {
+        g: g,
+        u: u,
+        v: v,
+        P: P,
+        T: T,
+        h: h,
+        s: s,
+        cp: cp,
+        w: w,
+        k: kappa,
+        x: x,
+        MM: 4,
+      }
+
+      return state
+ 
     }
-    else{
-          SP.x=1;    
+    case 33 : {
+
+      const T = TsatP(P)
+      const v1 = Vsatl_3(T)
+      const v2 = Vsatg_3(T)
+      const state1 = region_3(v1, T)
+      const state2 = region_3(v2, T)
+ 
+      const x = (s - state1.s) / (state2.s - state1.s)
+      const g = state2.g * x + state1.g * (1.0 - x)
+      const u = state2.u * x + state1.u * (1.0 - x)
+      const v = state2.v * x + state1.v * (1.0 - x)
+      const h = state2.h * x + state1.h * (1.0 - x)    
+      const cp = -1
+
+      const del = 1e-6
+      const Ptmp = P + del
+      const Ttmp = TsatP(Ptmp)
+      const v1Tmp = Vsatl_3(Ttmp)
+      const v2Tmp = Vsatg_3(Ttmp)
+      const state1Tmp = region_3(v1Tmp, Ttmp)
+      const state2Tmp = region_3(v2Tmp, Ttmp)
+      const xTmp = (s - state1Tmp.s) / (state2Tmp.s - state1Tmp.s)
+      const vTmp = state2Tmp.v * xTmp + state1Tmp.v * (1.0 - xTmp)
+      const kappa = -Math.log(Ptmp / P) / Math.log(vTmp / v)
+      const w = Math.sqrt(kappa * v * P * 1.0e+6)
+
+      const state = {
+        g: g,
+        u: u,
+        v: v,
+        P: P,
+        T: T,
+        h: h,
+        s: s,
+        cp: cp,
+        w: w,
+        k: kappa,
+        x: x,
+        MM: 4,
+      }
+
+      return state
+    }
+    default : {
+      throw new RangeError("function propPS M in propPS.mjs")
     }
   }
-  else if(SP.M==30){
-    SP.MM=3;
-    ZPS_30(SP);
-    SP.x=-1;//super critical region    
-  }
-  else if(SP.M==31){
-    SP.MM=3;
-    ZPS_31(SP);
-    SP.x=0.0;    
-  }
-  else if(SP.M==32){
-    SP.MM=3;
-    ZPS_32(SP);
-    SP.x=1.0;    
-  }
-  else if(SP.M==5){
-    SP.MM=5;
-    ZPS_5(SP);
-    SP.x=1.0;    
-  }
-  else if(SP.M==12){
-    SP.MM=4;
-    SPl.P=SP.P;
-    SPg.P=SP.P;
-    TsatP(SPl);
-    TsatP(SPg);
-    region_1(SPl);
-    region_2(SPg);
-    SP.x=(SP.s-SPl.s)/(SPg.s-SPl.s);
-    SP.g=SPg.g*SP.x+SPl.g*(1.0-SP.x);
-    SP.u=SPg.u*SP.x+SPl.u*(1.0-SP.x);
-    SP.v=SPg.v*SP.x+SPl.v*(1.0-SP.x);
-    SP.h=SPg.h*SP.x+SPl.h*(1.0-SP.x);    
-    SP.T=SPl.T;
-  }
-  else if(SP.M==33){
-    SP.MM=4;
-    SPl.P=SP.P;
-    SPg.P=SP.P;
-    TsatP(SPl);
-    TsatP(SPg);
-    Vsatl_3(SPl);
-    Vsatg_3(SPg);
-    region_3(SPl);
-    region_3(SPg);
-    SP.x=(SP.s-SPl.s)/(SPg.s-SPl.s);
-    SP.g=SPg.g*SP.x+SPl.g*(1.0-SP.x);
-    SP.u=SPg.u*SP.x+SPl.u*(1.0-SP.x);
-    SP.v=SPg.v*SP.x+SPl.v*(1.0-SP.x);
-    SP.h=SPg.h*SP.x+SPl.h*(1.0-SP.x);    
-    SP.T=SPl.T;
-  }
-  else{
-    console.log("Out of IF97 applicable range.");
-    return -1;
-  }
-  
-  return 1;
 }

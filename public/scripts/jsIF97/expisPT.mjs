@@ -7,29 +7,31 @@
 import {RegPT} from "./Reg_pt.mjs"
 import {expisen1, expisen2, expisen3, expisen5} from "./expisen.mjs"
  
-export function expisPT(SP){
-  SP.NP=2;
-  if(SP.P<=0){
-    console.log("Pressure is lower thn zero");
-    return -1;
+export const expisPT = (P, T) => {
+  if(P <= 0){
+    throw new RangeError("function expisPT P<=0 in expisPT.mjs")
   }
-  if(RegPT(SP)==-1){SP = null;return -1;}
-  if(SP.M==1){
-    if(expisen1(SP)==-1){SP = null;return -1;}
+  const NP=2
+  const M = RegPT(P, T, NP)
+  switch(M){
+    case 1 :{
+      const expis = expisen1(P, T)
+      return expis
+    }
+    case 2: {
+      const expis = expisen2(P, T)
+      return expis
+    }
+    case 3: {
+      const expis = expisen3(P, T)
+      return expis
+    }
+    case 5: {
+      const expis = expisen5(P, T)
+      return expis
+    }
+    default:{
+      throw new RangeError("function expisPT M in expisPT.mjs")
+    }
   }
-  else if(SP.M==2){
-    if(expisen2(SP)==-1){SP = null;return -1;}
-  }
-  else if(SP.M==3){
-    if(expisen3(SP)==-1){SP = null;return -1;}
-  }
-  else if(SP.M==5){
-    if(expisen5(SP)==-1){SP = null;return -1;}
-  }
-  else{
-    console.log("Out of IF97 applicable range.");
-    return -1;
-  }
-  
-  return 1;
 }
