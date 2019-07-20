@@ -1,13 +1,14 @@
 import {ver} from "./version.mjs"
-import {propPT} from "./propPT.mjs"
-import {propPH} from "./propPH.mjs"
-import {propPS} from "./propPS.mjs"
-import {propHS} from "./propHS.mjs"
-import {expisPT} from "./expisPT.mjs"
-import {transPT} from "./transPT.mjs"
-import {transatP} from "./transatP.mjs"
-import {satproP} from "./satproP.mjs"
-import {satproT} from "./satproT.mjs"
+import {propPT} from "./thermdyn/propPT.mjs"
+import {propPH} from "./thermdyn/propPH.mjs"
+import {propPS} from "./thermdyn/propPS.mjs"
+import {propHS} from "./thermdyn/propHS.mjs"
+import {expisPT} from "./thermdyn/expisPT.mjs"
+import {satproP} from "./thermdyn/satproP.mjs"
+import {satproT} from "./thermdyn/satproT.mjs"
+
+import {transPT} from "./trans/transPT.mjs"
+import {transatP} from "./trans/transatP.mjs"
 
 //version()
 
