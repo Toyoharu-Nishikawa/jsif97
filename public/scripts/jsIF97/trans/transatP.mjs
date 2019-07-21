@@ -4,11 +4,11 @@
 /* and satureted vapor)
 /*******************************************************************/
 
-import {region_1} from "./IF97_1.mjs"
-import {region_2} from "./IF97_2.mjs"
-import {region_3} from "./IF97_3.mjs"
-import {PsatT, TsatP} from './IF97_Sat.mjs'
-import {Vsatl_3, Vsatg_3} from "./Aux_3.mjs"
+import {region_1} from "../thermdyn/IF97_1.mjs"
+import {region_2} from "../thermdyn/IF97_2.mjs"
+import {region_3} from "../thermdyn/IF97_3.mjs"
+import {PsatT, TsatP} from '../thermdyn/IF97_Sat.mjs'
+import {Vsatl_3, Vsatg_3} from "../thermdyn/Aux_3.mjs"
 import {viscos, conduc} from "./transp.mjs"
 
 "use strict"
