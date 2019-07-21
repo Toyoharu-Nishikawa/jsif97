@@ -21,9 +21,9 @@
  const G =  8.5641e5 
 
 
-export const ionpro(T, rho) => {
+export const ionpro = (T, rho) => {
   const log10Kw = A + B / T + C /(T * T) +D /(T * T * T)
-             + (E + F / T + G /(T * T)) * Math.log(rho * 1e-3)
+             + (E + F / T + G /(T * T)) * Math.log10(rho * 1e-3)
 
   return log10Kw
 }

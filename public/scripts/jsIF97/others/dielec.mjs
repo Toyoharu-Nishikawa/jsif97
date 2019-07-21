@@ -33,7 +33,7 @@
   const rhoc = 322
   const Tc = 647.096
   const x = 299792458
-  const eps0 = 1 / (4e-7 * 3.141592654 x * x)
+  const eps0 = 1 / (4e-7 * 3.141592654 * x * x)
   const alpha = 1.636e-40
   const mu = 6.138e-30
   const k = 1.380658e-23

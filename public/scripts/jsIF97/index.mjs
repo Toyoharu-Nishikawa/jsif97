@@ -10,6 +10,18 @@ import {satproT} from "./thermdyn/satproT.mjs"
 import {transPT} from "./trans/transPT.mjs"
 import {transatP} from "./trans/transatP.mjs"
 
+import {dielPT} from "./others/dielPT.mjs"
+import {dielsatT} from "./others/dielsatT.mjs"
+import {dielsatP} from "./others/dielsatP.mjs"
+import {ionPT} from "./others/ionPT.mjs"
+import {ionsatT} from "./others/ionsatT.mjs"
+import {ionsatP} from "./others/ionsatP.mjs"
+import {refracPT} from "./others/refracPT.mjs"
+import {refsatT} from "./others/refsatT.mjs"
+import {refsatP} from "./others/refsatP.mjs"
+import {surfsatT} from "./others/surfsatT.mjs"
+import {surfsatP} from "./others/surfsatP.mjs"
+
 //version()
 
 //pt2all(P, T) 
@@ -20,10 +32,18 @@ import {transatP} from "./trans/transatP.mjs"
 //pt2s(P, T)
 //pt2w(P, T) 
 //pt2MM(P, T) 
+//pt2expis(P, T)
 //pt2cp(p, t)
 //pt2cv(p, t)
 //pt2k(P, T)
+//pt2trans(P, T)
 //pt2mu(P, T)
+//pt2lambda(P, T)
+//pt2nu(P, T)
+//pt2Pr(P, T)
+//pt2epsilon(P, T)
+//pt2pH(P, T)
+//pt2ref(P, T, lambda)
 
 //ph2all(P, h)
 //ph2g(P, h)
@@ -64,6 +84,19 @@ import {transatP} from "./trans/transatP.mjs"
 
 //SATp2all(P)
 //SATt2all(T)
+
+//SATp2epsilon(P)
+//SATt2epsilon(T)
+
+//SATp2ion(P)
+//SATt2ion(T)
+
+//SATp2ref(P, lambda)
+//SATt2ref(T, lambda)
+
+//SATp2surf(P)
+//SATt2surf(T)
+
 
 "use strict"
 
@@ -271,6 +304,41 @@ export const  pt2Pr = (P, T) => {
   return Pr  
 }
 
+export const pt2epsilon = (P, T) => {
+  // input
+  // p:puressure [MPa] , t:temperature [K]
+
+  // output 
+  // epsilon: static dielectric constant[-]
+
+  const epsilon = dielPT(P, T)   
+
+  return epsilon
+}
+
+export const pt2pH = (P, T) => {
+  // input
+  // p:puressure [MPa] , t:temperature [K]
+
+  // output 
+  // pH: pH = -(1/2)log10(Kw)
+
+  const pH = ionPT(P, T)
+  return pH
+}
+
+export const pt2ref = (P, T, lambda) => {
+  // input
+  // p:puressure [MPa] , t:temperature [K]
+  // lambda: wavelength [micron m]
+
+  // output 
+  // n: refractive index with respect to vacuum
+
+  const n = refracPT(P, T, lambda)
+  return n
+
+}
 
 //ph
 export const ph2all = (P, h) => {
@@ -809,5 +877,123 @@ export const SATt2all = (T) => {
 
   const state= satproT(T)
   return state
+}
+
+
+export const SATp2epsilon = (P) => {
+  // input
+  // P:pressure [MPa]
+
+  //output
+  // {
+  //   l: epsiron1: liquid static dielectric constant
+  //   g: epsiron2: gas static dielectric constant
+  // }
+
+  const lg = dielsatP(P)
+  return lg
+}
+
+export const SATt2epsilon = (T) => {
+  // input
+  // T:temperature [K]
+
+  //output
+  // {
+  //   l: epsiron1: liquid static dielectric constant
+  //   g: epsiron2: gas static dielectric constant
+  // }
+
+  const lg = dielsatT(T)
+  return lg
+}
+
+export const SATp2pH = (P) => {
+  // input
+  // p:pressure [MPa]
+
+  //output
+  // {
+  //   l: pH: liquid ion pH  -(1/2)log10(Kw)
+  //   g: pH2: gas ion pH -(1/2)log10(Kw) 
+  // }
+
+  const lg = ionsatP(P)
+  return lg
+
+}
+export const SATt2pH = (T) => {
+  // input
+  // T:temperature [K]
+
+  //output
+  // {
+  //   l: pH: liquid ion pH  -(1/2)log10(Kw)
+  //   g: pH2: gas ion pH -(1/2)log10(Kw) 
+  // }
+
+  const lg = ionsatT(T)
+  return lg
+}
+
+export const SATp2ref = (P, lambda) => {
+  // input
+  // p:pressure [MPa]
+  // lambda:wavelength [micro m]
+
+  //output
+  // {
+  //   l: re: liquid refractive index with respect to vacuum
+  //   g: pH2: gas refractive index with respect to vacuum 
+  // }
+
+  const lg = refsatP(P, lambda) 
+  return lg
+}
+
+export const SATt2ref = (T, lambda) => {
+  // input
+  // T:temperature [K]
+  // lambda:wavelength [micro m]
+
+  //output
+  // {
+  //   l: re: liquid refractive index with respect to vacuum
+  //   g: pH2: gas refractive index with respect to vacuum 
+  // }
+
+  const lg = refsatT(T, lambda) 
+  return lg
+}
+
+export const SATp2surf = (P) => {
+  // input
+  // p:pressure [MPa]
+
+  //output
+  // {
+  //  sigma: surface tension in N/m
+  //  laplace: Laplace constant
+  //}
+
+  const sigmaLaplace = surfsatP(P)
+
+  return sigmaLaplace
+}
+
+export const SATt2surf = (T) => {
+  // input
+  // T:temperature [K]
+
+  //output
+  // {
+  //  sigma: surface tension in N/m
+  //  laplace: Laplace constant
+  //}
+
+
+  const sigmaLaplace = surfsatT(T)
+
+  return sigmaLaplace
 }
 

@@ -20,8 +20,13 @@
 //c     rho:    density in kg/m^3
 
 import {RegPT} from "../thermdyn/Reg_pt.mjs"
+import {region_3} from '../thermdyn/IF97_3.mjs'
+import {region_1} from "../thermdyn/IF97_1.mjs"
+import {region_2} from "../thermdyn/IF97_2.mjs"
+import {VPT_3} from "../thermdyn/Aux_3.mjs"
+import {dielec} from "./dielec.mjs"
 
-export const dielpt = (P, T) => {
+export const dielPT = (P, T) => {
   const NP = 2  
   if(P <= 0){
     throw new RrangeError("function dielpt P<=0 in dielpt.mjs")
