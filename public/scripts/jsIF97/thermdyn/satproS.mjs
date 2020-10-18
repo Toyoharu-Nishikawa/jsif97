@@ -1,6 +1,3 @@
-import {region_1,Gibbs_1} from "./IF97_1.mjs" 
-import {region_2,Gibbs_2} from "./IF97_2.mjs" 
-import {PsatT} from "./IF97_Sat.mjs"
 import {satproT} from "./satproT.mjs" 
 
 export const ZsatS = (s) => {
@@ -13,8 +10,6 @@ export const ZsatS = (s) => {
 
   let dt=0.01
   let T1 = 273.16 //start from triple povar
-  //let P1 = PsatT(T1)
-  //let state = region_2(P1, T1)
   let state = satproT(T1)
   let s1 = s > sc ? state.g.s: state.l.s
   let Flag = 0
@@ -24,8 +19,6 @@ export const ZsatS = (s) => {
   for(let n=1;n<=20;n++){
     T2 = T1 + dt
     T2 = T2 > 647.096 ? 647 : T2
-    //P1 = PsatT(T2)
-    //state = region_2(P1, T2)
     state = satproT(T2)
     s2 = s > sc ? state.g.s: state.l.s
     const del = s - s2

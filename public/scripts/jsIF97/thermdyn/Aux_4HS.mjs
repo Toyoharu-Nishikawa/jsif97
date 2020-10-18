@@ -10,6 +10,7 @@ import {region_2,Gibbs_2} from "./IF97_2.mjs"
 import {PsatT,TsatP} from './IF97_Sat.mjs'
 import {propPS} from './propPS.mjs'
 import {ZsatS} from "./satproS.mjs"
+import {satproT} from "./satproT.mjs"
 import {Back_4THS} from "./Back_4HS.mjs"
 
 "use strict"
@@ -56,15 +57,16 @@ export const ZHS_4 = (h, s) => {
 
   let dm
   let x
-  let P
   let state1
   let state2
 
   for(let n=1;n<=30;n++){
     dm = (d1 + d2) * 0.5
-    P = PsatT(dm) 
-    state1 = region_1(P, dm)
-    state2 = region_2(P, dm)
+    const state = satproT(dm) 
+
+    state1 = state.l 
+    state2 = state.g 
+
     x = (s-state1.s) / (state2.s - state1.s)
     const htmp = state2.h * x + state1.h * (1.0 - x)
     const error = Math.abs((htmp-h)/h)
@@ -81,6 +83,7 @@ export const ZHS_4 = (h, s) => {
     }
   }
 
+  const P = state2.P
   const T = dm
   const nx = 0          
   const Nin = 0
