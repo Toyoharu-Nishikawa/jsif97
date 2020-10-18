@@ -68,10 +68,8 @@ export const ZHS_4 = (h, s) => {
     x = (s-state1.s) / (state2.s - state1.s)
     const htmp = state2.h * x + state1.h * (1.0 - x)
     const error = Math.abs((htmp-h)/h)
-    console.log("error", error)
     const flag = error < 1e-10
     if(flag){
-        console.log("n", n)
         break
     }
 
