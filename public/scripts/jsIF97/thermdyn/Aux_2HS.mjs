@@ -21,7 +21,8 @@ import {Tph2,Tps2} from "./IF97_BK2.mjs"
 import {PsatT,TsatP} from './IF97_Sat.mjs'
 import {ZPH_2,ZPS_2} from './Aux_2.mjs'
 import {propPS} from './propPS.mjs'
-
+import {ZsatS} from "./satproS.mjs"
+import {ZHS_4} from "./Aux_4HS.mjs"
 
 // Auxiliary subroutines for propHS
 // The subroutines are applicable in the regions 2a and 2b.
@@ -61,41 +62,6 @@ const deri_2HS = (P, T) => {
   return deri 
 }
 
-const ZsatS = (s) => {
-//     input:  S: entropy in kJ/kgK
-//     output: properties on the saturation line
-//             p: pressure in MPa
-//             t: temperature in K
-//             h: enthalpy in kJ/kg
-
-  let dt=0.01
-  let T1 = 273.16 //start from triple povar
-  let P1 = PsatT(T1)
-  let state = region_2(P1, T1)
-  let s1 = state.s
-  let Flag = 0
-  let T2
-  let s2
-  for(let n=1;n<=20;n++){
-    T2 = T1 + dt
-    P1 = PsatT(T2)
-    state = region_2(P1, T2)
-    s2 = state.s
-    const del = s - s2
-    if(Math.abs(del)<=1.0E-9){
-      Flag=1
-      break
-    }
-    dt = del * dt / (s2 - s1)
-    T1 = T2
-    s1 = s2
-  }
-  if(Flag==0){
-    throw new RangeError("function ZsatS, Flag in Aux_2HS.mjs")
-  }
-
-  return state 
-}
 
 const ZmaxS = (s) => {
 //     input:  S: entropy in kJ/kgK
@@ -149,7 +115,7 @@ export const ZHS_2 = (h, s) => {
   
   const smax  = 9.1555; // s" at triple povar
   const ttrip = 273.16; // triple povar temperature
-  const smin  = 5.85;   // S, lower limit of region 2b
+  const smin  = 0//5.85;   // S, lower limit of region 2b
   const pmin  = 0.001;  // pressure, lower limit
   
   if(s > smax){
@@ -163,9 +129,9 @@ export const ZHS_2 = (h, s) => {
   const tmax=stateMax.T
   const hmax=stateMax.h
   
-  if(h > hmax*1.05){
-    return {Nin: 3}
-  }
+  //if(h > hmax*1.05){
+  //  return {Nin: 3}
+  //}
   
   const Tmin = TsatP(pmin)
   const state1 = region_1(pmin, Tmin)
@@ -219,62 +185,7 @@ export const ZHS_2 = (h, s) => {
     }
   }
   else{
-    //wet region
-    let d1 = tsat
-    let d2 = ttrip     
-    let dm
-    let x
-    let P
-    let state1
-    let state2
-
-    for(let n=1;n<=30;n++){
-      dm = (d1 + d2) * 0.5
-      P = PsatT(dm) 
-      state1 = region_1(P, dm)
-      state2 = region_2(P, dm)
-      x = (s-state1.s) / (state2.s - state1.s)
-      const htmp = state2.h * x + state1.h * (1.0 - x)
-      if(htmp >= h ){
-        d1=dm
-      }
-      else{
-        d2=dm
-      }
-    }
-
-    const T = dm
-    const nx = 0          
-    const Nin = 0
-    const g = state2.g * x + state1.g * (1.0-x)   
-    const u = state2.u * x + state1.u * (1.0-x)   
-    const v = state2.v * x + state1.v * (1.0-x)  
-    const cp = -1 
-
-    const del = 1e-6
-    const Ptmp = P + del
-    const stateTmp = propPS(Ptmp, s)
-
-    const kappa = -Math.log(Ptmp / P) / Math.log(stateTmp.v / v);
-    const w = Math.sqrt(kappa * v * P * 1.0e+6)
-
-
-    const state = {
-      g: g,
-      u: u,
-      v: v,
-      P: P,
-      T: T,
-      h: h,
-      s: s,
-      cp: cp,
-      w: w,
-      x: x,
-      nx: nx,
-      Nin: Nin,
-      MM: 4,
-    }
-
+    const state = ZHS_4(h, s)
     return state
   }
 }
