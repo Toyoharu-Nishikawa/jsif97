@@ -71,7 +71,7 @@ const solve = (h, s, Pini) => {
 //             v: specific volume in m^3/kg
 //             cp: specific heat in kJ/kgK
 //             w: speed of sound in m/s
-//             x: dryness in fra//tion
+//             x: dryness in fraction
 //             nx: 1: dry region
 //                 0: wet region
 //             Nin: 0: calulation valid
@@ -100,10 +100,7 @@ const solve = (h, s, Pini) => {
     flag = Math.abs(delh/h) <= 1.0E-8 
        &&  Math.abs(dels/s) <= 1.0E-8
     if(flag){
-      state3.x = 1
-      state3.nx = 1 
       state3.Nin = 0 
-      state3.MM =1 
       return state3
     }
     const {dhdv, dhdt, dsdv, dsdt} = deri_3HS(v, T)

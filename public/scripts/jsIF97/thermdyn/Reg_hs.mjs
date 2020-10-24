@@ -13,18 +13,23 @@
 //        0: out of IF97
 
 import {satproT} from "./satproT.mjs" 
-import {ZPS1} from "./Aux_1.mjs" 
-import {ZPS2} from "./Aux_2.mjs" 
-import {ZPS30} from "./Aux_3.mjs" 
+import {ZPS_1} from "./Aux_1.mjs" 
+import {ZPS_2} from "./Aux_2.mjs" 
+import {ZPS_30} from "./Aux_3.mjs" 
 import {HS800C} from "./boundary/BTmax_HS.mjs" 
+import {satS2H_1, satS2H_3a, satS2H_2ab,satS2H_2c3b} from "./boundary/Bsat_HS.mjs" 
+import {HB13} from "./boundary/B13_HS.mjs" 
+import {TB23} from "./boundary/B23_HS.mjs" 
+import {Pb23T} from "./IF97_B23.mjs" 
+import {Back_2PHSc} from "./Back_2HS.mjs" 
 
 const minState = satproT(273.15)
 const lmin = minState.l
 const gmin = minState.g
-const slmin = l.s
-const sgmin = g.s
-const hlmin = l.h
-const hgmin = g.h
+const slmin = lmin.s
+const sgmin = gmin.s
+const hlmin = lmin.h
+const hgmin = gmin.h
 
 const Hmin = s => { 
   const x = (s-slmin)/(sgmin-slmin)
@@ -68,36 +73,35 @@ export const RegHS = ( h, s) => {
   else if(s<3.397782955){ //s1(100MPa, 623.15K)
     // 1 or 4 
     const hmin = Hmin(s)  
-    const hsat = .... 
+    const hsat = satS2H_1(s) 
     const hmax = Hmax(s, 1)  
     const M = h < hmin ? 0 :
              h < hsat ? 4 :
-             h < hmax ? 1 :
+             h <= hmax ? 1 :
              0
     return M
   }
   else if(s<3.77828281340){ //s'(623.15K)
    //1 or 3a or 4
     const hmin = Hmin(s)  
-    const hsat = .... 
-    const hb13 = .... 
+    const hsat = satS2H_1(s) 
+    const hb13 = HB13(s) 
     const hmax = Hmax(s, 3)  
     const M = h < hmin ? 0 :
               h < hsat ? 4 :
-              h < hb13 ? 1
-              h < hmax ? 31 :
+              h < hb13 ? 1 :
+              h <= hmax ? 31 :
               0
     return M
   }
   else if(s<4.41202148223476){ //sc
     //3a or 4
     const hmin = Hmin(s)  
-    const hsat = .... 
-    const hb13 = .... 
+    const hsat =  satS2H_3a(s)
     const hmax = Hmax(s, 3)  
     const M = h < hmin ? 0 :
               h < hsat ? 4 :
-              h < hmax ? 31 :
+              h <= hmax ? 31 :
               0
     return M
 
@@ -106,12 +110,11 @@ export const RegHS = ( h, s) => {
   else if(s<5.048096828){ //sB23min
    //3b or4
     const hmin = Hmin(s)  
-    const hsat = .... 
-    const hb13 = .... 
+    const hsat = satS2H_2c3b(s)
     const hmax = Hmax(s, 3)  
     const M = h < hmin ? 0 :
               h < hsat ? 4 :
-              h < hmax ? 32 :
+              h <= hmax ? 32 :
               0
     return M
 
@@ -119,61 +122,88 @@ export const RegHS = ( h, s) => {
   else if(s<5.260578707){ //sB23max
    //3b or 2c or4
     const hmin = Hmin(s)  
-    const hsat = .... 
-    const hmax = Hmax(s, 3)  
-    const M = h < hmin ? 0 :
-              h < hsat ? 4 :
-              //h < hmax ? 32 :
-              //h < hmax ? 32 :
-              0
-    return M
-
+    const hsat = satS2H_2c3b(s) 
+    const hmax2c = Hmax(s, 2)  
+    const hmax3b = Hmax(s, 3)  
+    
+    if(h<hmin ){
+      const M = 0
+      return M
+    }
+    else if(s < 5.097923719535122 &&  h>hmax3b){
+      const M =0
+      return M
+    }
+    else if(s > 5.097923719535122 &&  h>hmax2c){
+      const M =0
+      return M
+    }
+    else if(h<hsat){
+      const M = 4
+      return M
+    }
+    else if(h<2563.6){
+      const M = 32
+      return 32
+      
+    }
+    else if(h>2812.9){
+      const M = 23
+      return M
+    }
+    else{
+      const T = TB23(h, s)
+      const P = Pb23T(T) 
+      const P2c =  Back_2PHSc(h, s)  
+      const M = P >= P2c ? 23 : 32
+      return M
+    }
   }
   else if(s<5.85){ //s2bcmin
    //2c or 4
     const hmin = Hmin(s)  
-    const hsat = .... 
+    const hsat = satS2H_2c3b(s) 
     const hmax = Hmax(s, 2)  
     const M = h < hmin ? 0 :
               h < hsat ? 4 :
-              h < hmax ?23 :
+              h <= hmax ?23 :
               0
     return M
 
 
   }
-  else if(s<6.040){ //
+  else if(s<6.040483671712381){ //
    //2b or 4
     const hmin = Hmin(s)  
-    const hsat = .... 
-    const hmax = Hmax2(s)  
+    const hsat =  satS2H_2ab(s)
+    const hmax = Hmax(s,2)  
     const M = h < hmin ? 0 :
               h < hsat ? 4 :
-              h < hmax ?22 :
+              h <= hmax ?22 :
               0
     return M
   }
-  else if(s<6.076){ //s2bcmin
+  else if(s<6.069709159519124){ //s2bcmin
    //2b or 4
     const hmin = Hmin(s)  
-    const hsat = .... 
+    const hsat = satS2H_2ab(s) 
     const hmax = Hmax2(s)  
     const M = h < hmin ? 0 :
               h < hsat ? 4 :
-              h < hmax ?22 :
+              h <= hmax ?22 :
               0
     return M
   }
-  else if(s<7.852){ 
+  else if(s<7.852340399878508){ 
    //2b or 2a or 4
     const hmin = Hmin(s)  
-    const hsat = .... 
-    const h2ab = .... 
+    const hsat = satS2H_2ab(s) 
+    const h2ab = ZPS_2(4, s).h 
     const hmax = Hmax2(s)  
     const M = h < hmin ? 0 :
               h < hsat ? 4 :
               h < h2ab ?21 :
-              h < hmax ?22 :
+              h <= hmax ?22 :
               0
     return M
 
@@ -181,11 +211,11 @@ export const RegHS = ( h, s) => {
   else if(s<9.155759395){ //s''(273.15K)
    //2a or 4
     const hmin = Hmin(s)  
-    const hsat = .... 
+    const hsat = satS2H_2ab(s) 
     const hmax = Hmax2(s)  
     const M = h < hmin ? 0 :
               h < hsat ? 4 :
-              h < hmax ?21 :
+              h <= hmax ?21 :
               0
     return M
   }
@@ -194,7 +224,7 @@ export const RegHS = ( h, s) => {
     const hmin = Hmin2(s)  
     const hmax = Hmax2(s)  
     const M = h < hmin ? 0 :
-              h < hmax ?21 :
+              h <= hmax ?21 :
               0
    return M
   }
