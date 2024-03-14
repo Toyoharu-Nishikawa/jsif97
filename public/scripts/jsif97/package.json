@@ -1,6 +1,6 @@
 {
-  "name": "jsIF97",
-  "version": "4.0.1",
+  "name": "jsif97",
+  "version": "4.0.2",
   "type": "module",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://localhost:10080/npm/jsIF97.git"
+    "url": "http://localhost:10080/npm/jsif97.git"
   },
   "keywords": [
     "steam",
