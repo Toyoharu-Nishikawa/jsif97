@@ -113,12 +113,26 @@ import {surfsatP} from "./others/surfsatP.js"
 export const version = ver
 
 
-// pt
+/**
+ * calculates state quantities from pressure and temperature 
+ * @module pt2state
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Object} returns object for state quantities
+ */
 export const pt2state = (P, T) => {
   const state = propPT(P, T)
   return state
 }
 
+/**
+ * calculates physical quantities from pressure, temperature and wavelength
+ * @module pt2all
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @parameter {Number} lambda - wavelength [micron m]
+ * @return {Object} returns object for pysical quantities
+ */
 export const pt2all = (P, T, lambda) => {
   const state = pt2state(P, T)
   const trans = pt2trans(P, T)
@@ -133,9 +147,16 @@ export const pt2all = (P, T, lambda) => {
 
 }
 
+/**
+ * calculates Gibbs free enagy from pressure and temperature 
+ * @module pt2g
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} g - Gibbs free enagy [kJ/kg]
+ */
 export const pt2g = (P, T) => { 
   // input
-  // P:pressure [Pa], T:temperature [K]
+  // P:pressure [MPa], T:temperature [K]
   
   // output
   // g:Gibbs free enagy [kJ/kg]
@@ -146,9 +167,16 @@ export const pt2g = (P, T) => {
   return g
 }
 
+/**
+ * calculates internal enagy from pressure and temperature 
+ * @module pt2u
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} u - internal enagy [kJ/kg]
+ */
 export const pt2u = (P, T) => {
   // input
-  // P:pressure [Pa], T:temperature [K]
+  // P:pressure [MPa], T:temperature [K]
   
   // output
   // u:internal energy [kJ/kg]
@@ -159,9 +187,16 @@ export const pt2u = (P, T) => {
   return u
 }
 
+/**
+ * calculates specific volume from pressure and temperature 
+ * @module pt2v
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} v - specific volume [m^3/kg]
+ */
 export const pt2v = (P, T) => {
   // input
-  // P:pressure [Pa], T:temperature [K]
+  // P:pressure [MPa], T:temperature [K]
   
   // output
   // v:specific volume [m^3/kg]
@@ -172,9 +207,16 @@ export const pt2v = (P, T) => {
   return v
 }
 
+/**
+ * calculates specific enthalpy from pressure and temperature 
+ * @module pt2h
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} h -specific enthalpy [kJ/kg]
+ */
 export const pt2h = (P, T) => {
   // input
-  // P:pressure [Pa], T:temperature [K]
+  // P:pressure [MPa], T:temperature [K]
   
   // output
   // h:specific enthalpy [kJ/kg]
@@ -185,9 +227,16 @@ export const pt2h = (P, T) => {
   return h
 }
 
+/**
+ * calculates specific entropy from pressure and temperature 
+ * @module pt2s
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} s -specific entropy [kJ/kgK]
+ */
 export const pt2s = (P, T) => {
   // input
-  // P:pressure [Pa], T:temperature [K]
+  // P:pressure [MPa], T:temperature [K]
   
   // output
   // s:specific entropy [kJ/kgK]
@@ -197,23 +246,37 @@ export const pt2s = (P, T) => {
   
   return s
 }
-  
+
+/**
+ * calculates speed of sound from pressure and temperature 
+ * @module pt2w
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} w -speed of sound [m/s]
+ */ 
 export const pt2w = (P, T) => { 
   // input
-  // P:pressure [Pa], T:temperature [K]
+  // P:pressure [MPa], T:temperature [K]
   
   // output
-  // w: speed of sound in m/s
+  // w: speed of sound [m/s]
   
   const state = pt2state(P, T)
   const w = state.w
 
   return w
 }
-  
+
+/**
+ * calculates region number for thermodynamic phase defined by IAPWS from pressure and temperature 
+ * @module pt2w
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} MM -region number [-]
+ */ 
 export const pt2MM = (P, T) => { 
   // input
-  // P:pressure [Pa], T:temperature [K]
+  // P:pressure [MPa], T:temperature [K]
   
   // output
   // MM: Region
@@ -223,13 +286,20 @@ export const pt2MM = (P, T) => {
 
   return MM
 }
-  
+
+/**
+ * calculates isobaric spcific heat from pressure and temperature 
+ * @module pt2w
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} cp - isobaric spcific heat [kJ/kgK]
+ */ 
 export const pt2cp = (P, T) => {
   // input
   // p:puressure [MPa] , t:temperature [K]
   
   // output
-  // cp: isobaric spcific heat in kJ/kgK
+  // cp: isobaric spcific heat [kJ/kgK]
   
   const state = pt2state(P, T)
   const cp = state.cp
@@ -237,6 +307,13 @@ export const pt2cp = (P, T) => {
   return cp 
 }
 
+/**
+ * calculates isobaric exponent from pressure and temperature 
+ * @module pt2w
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} expis - isobaric exponent [-]
+ */
 export const pt2expis = (P, T) => {
 
   const expis = expisPT(P, T)
