@@ -106,11 +106,12 @@ import {surfsatP} from "./others/surfsatP.js"
 
 "use strict"
 
-//version
-export const version = ()=> {
-  //version
-  return ver
-}
+/**
+ * version 
+ * @type {String}
+ */
+export const version = ver
+
 
 // pt
 export const pt2state = (P, T) => {
