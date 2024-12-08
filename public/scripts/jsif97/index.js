@@ -308,11 +308,11 @@ export const pt2cp = (P, T) => {
 }
 
 /**
- * calculates isobaric exponent from pressure and temperature 
- * @module pt2w
+ * calculates specific heat from pressure and temperature 
+ * @module pt2expis
  * @parameter {Number} P - pressure [MPa]
  * @parameter {Number} T - temperature [K]
- * @return {Number} expis - isobaric exponent [-]
+ * @return {Object}  returns object for specific heat at constant pressure and constant volume, and isentropic exponent 
  */
 export const pt2expis = (P, T) => {
 
@@ -320,13 +320,20 @@ export const pt2expis = (P, T) => {
 
   return expis
 }
-  
+
+/**
+ * calculates spcific heat at constant volume from pressure and temperature 
+ * @module pt2w
+ * @parameter {Number} P - pressure [MPa]
+ * @parameter {Number} T - temperature [K]
+ * @return {Number} cv - spcific heat at constant volume [kJ/kgK]
+ */ 
 export const pt2cv = (P, T) => {
   // input
   // p:puressure [MPa] , t:temperature [K]
   
   // output
-  // cv: isobaric spcific heat in kJ/kgK
+  // cv: spcific heat at constant volume [kJ/kgK]
   
   const expis = expisPT(P, T)
   const cv = expis.cv
